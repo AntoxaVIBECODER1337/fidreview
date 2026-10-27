@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Zap } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { useStore } from '../store/StoreContext'
+import { DEMO_USER, useStore } from '../store/StoreContext'
 
 /**
  * Флаг Беларуси — SVG-плашка (эмодзи 🇧🇾 на Windows не рисуется,
@@ -28,7 +29,7 @@ function FlagBY() {
  */
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { login, showToast } = useStore()
+  const { login, demoLogin, showToast } = useStore()
   const [step, setStep] = useState('phone')
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
@@ -45,6 +46,11 @@ export default function LoginPage() {
     login(`+375 ${digits}`)
     showToast('Добро пожаловать в ОМА!')
     navigate('/profile')
+  }
+
+  const quick = () => {
+    demoLogin()
+    navigate(-1)
   }
 
   return (
@@ -73,7 +79,26 @@ export default function LoginPage() {
 
         {step === 'phone' ? (
           <>
-            <div className="mt-6 flex h-14 w-full items-center gap-2.5 rounded-[10px] border border-line bg-white px-2.5 focus-within:ring-2 focus-within:ring-brand-200">
+            {/* Быстрый вход для демо — без полей и SMS */}
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={quick}
+              className="mt-6 flex w-full items-center gap-3 rounded-2xl bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_100%)] p-4 text-left text-white shadow-[0_8px_24px_rgb(29_93_190/0.35)]"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/20">
+                <Zap size={22} fill="currentColor" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-extrabold">Быстрый вход для демо</span>
+                <span className="block truncate text-[12px] text-white/80">
+                  {DEMO_USER.name} · {DEMO_USER.phone}
+                </span>
+              </span>
+            </motion.button>
+            <div className="mt-5 flex w-full items-center gap-3 text-[12px] text-muted">
+              <span className="h-px flex-1 bg-line" /> или по номеру <span className="h-px flex-1 bg-line" />
+            </div>
+            <div className="mt-5 flex h-14 w-full items-center gap-2.5 rounded-[10px] border border-line bg-white px-2.5 focus-within:ring-2 focus-within:ring-brand-200">
               {/* Серый чип с флагом — перед номером */}
               <span className="flex h-8 shrink-0 items-center rounded-md bg-panel px-2">
                 <FlagBY />

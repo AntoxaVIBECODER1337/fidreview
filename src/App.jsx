@@ -2,15 +2,13 @@ import { useEffect, useRef } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { HelpCircle } from 'lucide-react'
-import BottomNav, { tabIndexFor } from './components/BottomNav.jsx'
+import BottomNav, { screenKey, tabIndexFor } from './components/BottomNav.jsx'
 import EmptyState from './components/EmptyState.jsx'
 import Toast from './components/Toast.jsx'
-import CatalogPage from './pages/CatalogPage.jsx'
 import AllSectionsPage from './pages/AllSectionsPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
-import FavoritesPage from './pages/FavoritesPage.jsx'
 import Home from './pages/Home.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import MyHomePage from './pages/MyHomePage.jsx'
@@ -38,13 +36,13 @@ export default function App() {
   const prev = useRef(pathname)
   const dir = useRef(1)
 
-  if (prev.current !== pathname) {
+  if (prev.current !== pathname && screenKey(prev.current) !== screenKey(pathname)) {
     const a = tabIndexFor(prev.current)
     const b = tabIndexFor(pathname)
     dir.current =
       a !== b && a >= 0 && b >= 0 ? (b > a ? 1 : -1) : depth(pathname) >= depth(prev.current) ? 1 : -1
-    prev.current = pathname
   }
+  prev.current = pathname
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -56,7 +54,7 @@ export default function App() {
         <main className="pb-28">
           <AnimatePresence mode="wait" custom={dir.current} initial={false}>
             <motion.div
-              key={pathname}
+              key={screenKey(pathname)}
               custom={dir.current}
               variants={pageVariants}
               initial="enter"
@@ -66,7 +64,7 @@ export default function App() {
             >
               <Routes location={location}>
                 <Route path="/" element={<Home />} />
-                <Route path="/catalog" element={<CatalogPage />} />
+                <Route path="/catalog" element={<Home />} />
                 <Route path="/sections" element={<AllSectionsPage />} />
                 <Route path="/category/:id" element={<CategoryPage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
@@ -74,7 +72,7 @@ export default function App() {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order-success" element={<OrderSuccessPage />} />
-                <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/favorites" element={<CartPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/orders" element={<OrdersPage />} />

@@ -1,21 +1,29 @@
 import { useState } from 'react'
-import { Banknote, CheckCircle2, CreditCard, MapPin, ShoppingBag, Truck } from 'lucide-react'
+import { Banknote, CheckCircle2, CreditCard, MapPin, ShoppingBag, Truck, Zap } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
-import { useStore } from '../store/StoreContext'
+import { DEMO_USER, useStore } from '../store/StoreContext'
 
 const STORE_ADDRESS = 'Самовывоз: г. Минск, ул. Притыцкого, 62 — сегодня, бесплатно'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
-  const { cart, placeOrder, showToast } = useStore()
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
+  const { cart, placeOrder, showToast, user, demoLogin } = useStore()
+  /* Данные получателя подставляются из профиля */
+  const [name, setName] = useState(user?.name ?? '')
+  const [phone, setPhone] = useState(user?.phone ?? '')
   const [delivery, setDelivery] = useState('Самовывоз')
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState(user?.address ?? '')
+
+  const fillDemo = () => {
+    if (!user) demoLogin()
+    setName(DEMO_USER.name)
+    setPhone(DEMO_USER.phone)
+    setAddress(DEMO_USER.address)
+  }
   const [payment, setPayment] = useState('При получении')
 
   const items = Object.entries(cart).flatMap(([id, qty]) => {
@@ -97,7 +105,17 @@ export default function CheckoutPage() {
       </section>
 
       <section className="mt-5 px-4">
-        <h3 className="text-[14px] font-bold text-navy">Данные получателя</h3>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-[14px] font-bold text-navy">Данные получателя</h3>
+          {!(name && phone) && (
+            <button
+              onClick={fillDemo}
+              className="flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-bold text-brand-700 hide-tap active:bg-brand-100"
+            >
+              <Zap size={13} fill="currentColor" /> Заполнить за меня
+            </button>
+          )}
+        </div>
         <div className="mt-2 flex flex-col gap-3">
           <div>
             <label className={labelCls}>Имя и фамилия*</label>

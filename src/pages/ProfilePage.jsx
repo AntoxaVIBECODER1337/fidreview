@@ -34,7 +34,7 @@ const HELP = [
 
 export default function ProfilePage() {
   const navigate = useNavigate()
-  const { user, orders, logout, showToast } = useStore()
+  const { user, orders, logout, showToast, demoLogin } = useStore()
 
   const onRow = (row) => {
     if (row.to) navigate(row.to)
@@ -60,10 +60,16 @@ export default function ProfilePage() {
       {!user ? (
         <div className="pt-4">
           <button
-            onClick={() => navigate('/login')}
-            className="h-12 w-full rounded-lg bg-brand-600 text-[15px] font-semibold text-white hide-tap active:bg-brand-700"
+            onClick={demoLogin}
+            className="h-12 w-full rounded-lg bg-brand-600 text-[15px] font-semibold text-white shadow-[0_6px_20px_rgb(29_93_190/0.35)] hide-tap active:bg-brand-700"
           >
-            Войти / Зарегистрироваться
+            ⚡ Быстрый вход для демо
+          </button>
+          <button
+            onClick={() => navigate('/login')}
+            className="mt-2 h-11 w-full rounded-lg border border-brand-600/40 bg-white text-[14px] font-semibold text-brand-600 hide-tap active:bg-brand-50"
+          >
+            Войти по номеру телефона
           </button>
           <p className="mt-2.5 text-center text-[12px] text-muted">
             Войдите, чтобы подключить карту лояльности
@@ -72,11 +78,20 @@ export default function ProfilePage() {
       ) : (
         <div className="mt-4 flex items-center gap-3 rounded-xl bg-brand-50 p-4">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-600 text-[14px] font-bold text-white">
-            {user.phone.slice(-2)}
+            {user.name
+              ? user.name
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+              : user.phone.slice(-2)}
           </div>
-          <div className="flex-1">
-            <p className="text-[14px] font-bold text-navy">{user.phone}</p>
-            <p className="text-[11px] text-muted">Заказов: {orders.length}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[14px] font-bold text-navy">{user.name || user.phone}</p>
+            <p className="truncate text-[11px] text-muted">
+              {user.name ? `${user.phone} · ` : ''}Заказов: {orders.length}
+              {user.demo ? ' · демо' : ''}
+            </p>
           </div>
           <button
             onClick={logout}

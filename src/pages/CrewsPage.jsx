@@ -34,7 +34,7 @@ export default function CrewsPage() {
   return (
     <div className="min-h-dvh bg-bg">
       {/* Шапка на бренд-градиенте */}
-      <header className="relative overflow-hidden bg-[linear-gradient(160deg,#1d5dbe_0%,#2a6ccc_55%,#174c9d_100%)] pb-5">
+      <header className="relative overflow-clip bg-[linear-gradient(160deg,#1d5dbe_0%,#2a6ccc_55%,#174c9d_100%)] pb-5">
         <div className="mesh-blob absolute -top-24 -right-20 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(127,190,255,0.45),transparent_65%)] blur-2xl" />
         <div className="relative flex h-16 items-center justify-between px-4">
           <h1 className="text-[20px] font-black tracking-tight text-white">Бригады</h1>

@@ -50,7 +50,7 @@ export default function ProjectPage() {
   return (
     <div className="min-h-dvh bg-bg">
       {/* Hero */}
-      <div className="relative overflow-hidden bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_100%)] pb-6">
+      <div className="relative overflow-clip bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_100%)] pb-6">
         <div className="mesh-blob absolute -top-16 -right-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.18),transparent_70%)]" />
         <Tap
           onClick={() => navigate('/my-home')}

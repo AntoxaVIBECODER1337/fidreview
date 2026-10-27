@@ -10,10 +10,12 @@ import { rub } from '../lib/format'
 
 /**
  * Шторка «Подборка ОМА» (перенос AIResultSheet из oma-ozon):
- * 3 комплекта с чекбоксами товаров, тумблер «своими силами / с бригадой»,
- * выбор бригады, итог. Без бригады → корзина, с бригадой → проект.
+ * 3 комплекта с чекбоксами товаров и итог.
+ * mode='buy' — закупка: всё в корзину.
+ * mode='project' — проект ремонта: своими силами или с бригадой.
  */
-export default function AIResultSheet({ task, result, onClose, onToCart, onToProject }) {
+export default function AIResultSheet({ task, mode = 'project', result, onClose, onToCart, onToProject }) {
+  const isProject = mode === 'project'
   const { kits, area, scenario, recognized } = result
   const { city } = useStore()
   /* Бригады города: ОМА первая, затем 2 лучших партнёра под задачу */
@@ -48,8 +50,8 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
 
   const submit = () => {
     if (!chosen.length) return
-    if (withCrew && crew) onToProject({ items: chosen, crew: crewSnapshot(crew), area })
-    else onToCart(chosen)
+    if (!isProject) onToCart(chosen)
+    else onToProject({ items: chosen, crew: withCrew && crew ? crewSnapshot(crew) : null, area })
   }
 
   return createPortal(
@@ -79,7 +81,9 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <Sparkles size={17} className="text-brand-600" />
-                <h2 className="text-[19px] font-black text-navy">Подборка ОМА</h2>
+                <h2 className="text-[19px] font-black text-navy">
+                  {isProject ? 'Проект ремонта' : 'Закупка материалов'}
+                </h2>
               </div>
               <p className="mt-0.5 line-clamp-1 text-[12.5px] text-muted">«{task}»</p>
             </div>
@@ -104,7 +108,8 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
             </span>
           </div>
 
-          {/* Тумблер: своими силами / с бригадой */}
+          {/* Тумблер: своими силами / с бригадой — только для проекта */}
+          {isProject && (
           <div className="mt-3 flex rounded-xl bg-panel p-1">
             {[
               { v: false, label: 'Своими силами' },
@@ -129,6 +134,7 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
               </button>
             ))}
           </div>
+          )}
         </div>
 
         {/* Содержимое */}
@@ -277,8 +283,9 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
           </AnimatePresence>
 
           <p className="mt-3 px-1 text-center text-[11px] leading-relaxed text-muted">
-            Товары зарезервируются в магазине ОМА. Все бригады города и их отзывы — во
-            вкладке «Бригады»: там можно сменить бригаду для проекта.
+            {isProject
+              ? 'Проект появится в «Моём доме» с этапами работ. Все бригады города и отзывы — во вкладке «Бригады»: там бригаду можно выбрать или сменить.'
+              : 'Товары попадут в корзину и зарезервируются в магазине ОМА. Хотите с бригадой — выберите «Проект ремонта».'}
           </p>
         </div>
 
@@ -300,7 +307,7 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
             disabled={!chosen.length}
             className="h-12 w-full rounded-lg bg-brand-600 text-[15px] font-semibold text-white shadow-[0_6px_20px_rgb(29_93_190/0.35)] transition-colors duration-150 active:bg-brand-700 disabled:opacity-50"
           >
-            {withCrew ? 'Создать проект с бригадой' : 'Всё в корзину'}
+            {!isProject ? 'Всё в корзину' : withCrew ? 'Создать проект с бригадой' : 'Создать проект'}
           </motion.button>
         </div>
       </motion.div>

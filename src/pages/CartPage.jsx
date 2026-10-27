@@ -1,15 +1,122 @@
 import { useState } from 'react'
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Hammer, Heart, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
+import ProductCard from '../components/ProductCard.jsx'
+import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
+import { cn } from '../lib/cn'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
 import { PROMOS } from '../lib/promo'
 import { useStore } from '../store/StoreContext'
 
+/** «Корзина» с разделом «Избранное» (бывшая отдельная вкладка) */
 export default function CartPage() {
-  const { cart, setQty, removeFromCart, promo, applyPromo, clearPromo } = useStore()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const { cartCount, favorites } = useStore()
+  const tab = pathname === '/favorites' ? 'fav' : 'cart'
+
+  const TABS = [
+    { id: 'cart', to: '/cart', label: 'Корзина', count: cartCount },
+    { id: 'fav', to: '/favorites', label: 'Избранное', count: favorites.length },
+  ]
+
+  return (
+    <div>
+      <Header title={tab === 'fav' ? 'Избранное' : 'Корзина'} />
+
+      <div className="px-4 pt-3">
+        <div className="relative flex rounded-xl bg-panel p-1">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => tab !== t.id && navigate(t.to, { replace: true })}
+              className={cn(
+                'relative flex-1 rounded-lg py-2 text-[13px] font-bold transition-colors hide-tap',
+                tab === t.id ? 'text-white' : 'text-muted',
+              )}
+            >
+              {tab === t.id && (
+                <motion.span
+                  layoutId="cart-toggle"
+                  className="absolute inset-0 rounded-lg bg-brand-600"
+                  transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center justify-center gap-1.5">
+                {t.id === 'fav' && <Heart size={14} fill={tab === 'fav' ? 'currentColor' : 'none'} />}
+                {t.label}
+                {t.count > 0 && (
+                  <motion.span
+                    key={t.count}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 600, damping: 20 }}
+                    className={cn(
+                      'flex h-[17px] min-w-[17px] items-center justify-center rounded-full px-1 text-[10px] font-black',
+                      tab === t.id ? 'bg-white text-brand-600' : 'bg-accent text-white',
+                    )}
+                  >
+                    {t.count > 99 ? '99+' : t.count}
+                  </motion.span>
+                )}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, x: tab === 'fav' ? 16 : -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: tab === 'fav' ? 16 : -16 }}
+          transition={{ duration: 0.22 }}
+        >
+          {tab === 'fav' ? <FavoritesView /> : <CartView />}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function FavoritesView() {
+  const { favorites } = useStore()
+  const items = favorites.map(getProduct).filter(Boolean)
+  if (items.length === 0) {
+    return (
+      <EmptyState
+        icon={Heart}
+        title="У вас нет избранных товаров"
+        subtitle="Нажмите на ♡ на карточке товара, чтобы вернуться к нему позже"
+        buttonLabel="В каталог"
+        to="/catalog"
+      />
+    )
+  }
+  return (
+    <motion.section
+      variants={staggerParent}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-2 items-stretch gap-3 px-4 pt-4 pb-6"
+    >
+      {items.map((p) => (
+        <motion.div key={p.id} variants={staggerChild} className="h-full">
+          <ProductCard product={p} />
+        </motion.div>
+      ))}
+    </motion.section>
+  )
+}
+
+function CartView() {
+  const navigate = useNavigate()
+  const { cart, setQty, removeFromCart, promo, applyPromo, clearPromo, createProjectFromCart } = useStore()
   const [code, setCode] = useState('')
 
   const items = Object.entries(cart).flatMap(([id, qty]) => {
@@ -25,10 +132,13 @@ export default function CartPage() {
   const promoAmount = Math.round(subtotal * promoPct) / 100
   const total = subtotal - promoAmount
 
+  const toProject = () => {
+    const p = createProjectFromCart()
+    if (p) navigate('/my-home')
+  }
+
   return (
     <div>
-      <Header title="Корзина" />
-
       {items.length === 0 ? (
         <EmptyState
           icon={ShoppingBag}
@@ -151,6 +261,17 @@ export default function CartPage() {
               Перейти к оформлению
             </Link>
           </section>
+          <div className="mx-4 mt-2">
+            <Tap
+              onClick={toProject}
+              className="flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-brand-600/40 bg-white text-[13.5px] font-bold text-brand-600 transition-colors active:bg-brand-50"
+            >
+              <Hammer size={15} /> Сделать проект ремонта из корзины
+            </Tap>
+            <p className="mt-1.5 px-2 text-center text-[11px] text-muted">
+              Проект появится в «Моём доме» — там можно выбрать бригаду
+            </p>
+          </div>
         </>
       )}
     </div>

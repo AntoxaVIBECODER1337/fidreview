@@ -71,7 +71,7 @@ function OmaCrewCard({ crew, onOpen }) {
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 550, damping: 28 }}
       onClick={onOpen}
-      className="relative w-full overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_60%,#123e80_100%)] p-4 text-left text-white shadow-[0_10px_30px_rgb(29_93_190/0.35)]"
+      className="relative w-full overflow-clip rounded-2xl bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_60%,#123e80_100%)] p-4 text-left text-white shadow-[0_10px_30px_rgb(29_93_190/0.35)]"
     >
       <span className="mesh-blob absolute -top-16 -right-14 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.22),transparent_70%)]" />
       <span className="relative flex items-center justify-between gap-2">

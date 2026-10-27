@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
-import { CircleUserRound, HardHat, Heart, LayoutGrid, ListFilter, ShoppingBag } from 'lucide-react'
+import { CircleUserRound, HardHat, LayoutGrid, ShoppingBag } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
 
@@ -25,25 +25,26 @@ function HouseIcon({ className, strokeWidth }) {
 
 export const TABS = [
   { to: '/', label: 'Главная', Icon: LayoutGrid },
-  { to: '/catalog', label: 'Каталог', Icon: ListFilter },
   { to: '/my-home', label: 'Мой дом', Icon: HouseIcon },
   { to: '/crews', label: 'Бригады', Icon: HardHat },
   { to: '/cart', label: 'Корзина', Icon: ShoppingBag },
-  { to: '/favorites', label: 'Избранное', Icon: Heart },
   { to: '/profile', label: 'Профиль', Icon: CircleUserRound },
 ]
 
 /** К какой вкладке относится путь (для подсветки и направления анимации) */
 export function tabIndexFor(pathname) {
-  if (pathname === '/') return 0
-  if (pathname.startsWith('/catalog') || pathname.startsWith('/category') || pathname.startsWith('/sections') || pathname.startsWith('/product') || pathname.startsWith('/search')) return 1
-  if (pathname.startsWith('/my-home')) return 2
-  if (pathname.startsWith('/crews')) return 3
-  if (pathname.startsWith('/cart') || pathname.startsWith('/checkout') || pathname.startsWith('/order-success')) return 4
-  if (pathname.startsWith('/favorites')) return 5
-  if (pathname.startsWith('/profile') || pathname.startsWith('/login') || pathname.startsWith('/orders')) return 6
+  const is = (...ps) => ps.some((p) => pathname === p || pathname.startsWith(p + '/'))
+  if (pathname === '/' || is('/catalog', '/category', '/sections', '/product', '/search')) return 0
+  if (is('/my-home')) return 1
+  if (is('/crews')) return 2
+  if (is('/cart', '/favorites', '/checkout', '/order-success')) return 3
+  if (is('/profile', '/login', '/orders')) return 4
   return -1
 }
+
+/** Вкладки-«родственники» внутри одного экрана: переключаются без слайда страницы */
+export const screenKey = (pathname) =>
+  pathname === '/' || pathname === '/catalog' ? 'home' : pathname === '/favorites' ? '/cart' : pathname
 
 /** Стеклянное плавающее меню с «пилюлей» активной вкладки (дизайн oma-ozon) */
 export default function BottomNav() {
@@ -65,7 +66,7 @@ export default function BottomNav() {
                     <motion.span
                       whileTap={{ scale: 0.92 }}
                       transition={{ type: 'spring', stiffness: 550, damping: 28 }}
-                      className="relative flex h-[50px] flex-col items-center justify-center gap-1 rounded-2xl"
+                      className="relative flex h-[52px] flex-col items-center justify-center gap-1 rounded-2xl"
                     >
                       {active && (
                         <motion.span
@@ -81,8 +82,7 @@ export default function BottomNav() {
                             active ? 'text-brand-600' : 'text-muted',
                           )}
                           strokeWidth={active ? 2.4 : 2}
-                          fill={t.label === 'Избранное' && active ? 'currentColor' : 'none'}
-                        />
+                                                  />
                         {t.to === '/cart' && cartCount > 0 && (
                           <motion.span
                             key={cartCount}
@@ -97,7 +97,7 @@ export default function BottomNav() {
                       </span>
                       <span
                         className={cn(
-                          'relative z-10 max-w-full truncate text-[9px] leading-none tracking-[-0.02em] transition-colors duration-200',
+                          'relative z-10 max-w-full truncate text-[10.5px] leading-none transition-colors duration-200',
                           active ? 'font-bold text-brand-600' : 'font-medium text-muted',
                         )}
                       >

@@ -8,13 +8,6 @@ import { getProduct } from './catalog'
  * и собирает 3 комплекта: Минимальный / Стандарт / Профессиональный.
  */
 
-/* Бригады-партнёры ОМА */
-export const CREWS = [
-  { id: 'masterok', name: 'МастерОК', rating: 4.8, reviews: 214, rate: 35, term: 'старт через 3 дня' },
-  { id: 'bylBuilder', name: 'БылБилдер', rating: 4.6, reviews: 156, rate: 28, term: 'старт через 5 дней' },
-  { id: 'profiRem', name: 'Проф и Рем', rating: 4.9, reviews: 89, rate: 45, term: 'старт завтра' },
-]
-
 /**
  * Сценарии. qty — на базовую площадь 20 м²; perArea: true — количество
  * масштабируется по площади, иначе берётся как есть (инструмент, сантехника).

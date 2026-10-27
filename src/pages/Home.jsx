@@ -1,22 +1,49 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Blocks, ChevronDown, Droplet, Lamp, Lightbulb, MapPin, Nut, Sprout, Wrench } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ChevronDown, MapPin } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import CategoryCard from '../components/CategoryCard.jsx'
 import CityPicker from '../components/CityPicker.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { staggerChild, staggerParent } from '../components/ui.jsx'
-import { popularProducts, saleProducts } from '../lib/catalog'
+import { categories, popularProducts, saleProducts } from '../lib/catalog'
+import { getCatIcon } from '../lib/categoryIcons'
+import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 
-const CHIPS = [
-  { label: 'Шуруповёрты', to: '/category/instrument', Icon: Wrench },
-  { label: 'Смесители', to: '/category/santehnika', Icon: Droplet },
-  { label: 'Стройматериалы', to: '/category/stroymaterialy', Icon: Blocks },
-  { label: 'Освещение', to: '/category/electrika?sub=Светильники', Icon: Lamp },
-  { label: 'Электрика', to: '/category/electrika', Icon: Lightbulb },
-  { label: 'Крепёж', to: '/category/krepesh', Icon: Nut },
-  { label: 'Сад', to: '/category/blagoustroystvo', Icon: Sprout },
+/** Порядок разделов: сначала ремонтные, как в приложении ОМА */
+const ORDER = ['interier', 'stroymaterialy', 'instrument', 'santehnika', 'electrika', 'krepesh', 'blagoustroystvo', 'mebel', 'bytovaya-tehnika', 'tovary-dlya-doma']
+const SECTIONS = [
+  { id: 'akcii', name: 'Акции' },
+  ...ORDER.map((id) => categories.find((c) => c.id === id)).filter(Boolean),
+  ...categories.filter((c) => !ORDER.includes(c.id)),
+]
+
+/** Короткие подписи для ленты категорий */
+const SHORT = {
+  interier: 'Отделка',
+  stroymaterialy: 'Материалы',
+  instrument: 'Инструмент',
+  santehnika: 'Сантехника',
+  electrika: 'Электрика',
+  krepesh: 'Крепёж',
+  blagoustroystvo: 'Сад и дача',
+  mebel: 'Мебель',
+  'bytovaya-tehnika': 'Техника',
+  'tovary-dlya-doma': 'Для дома',
+  'inzhenernye-sistemy': 'Инженерка',
+  'sport-i-otdyh': 'Спорт',
+  'novyy-god': 'Новый год',
+  avtotovary: 'Авто',
+  elektronika: 'Электроника',
+  'tovary-dlya-detey': 'Детям',
+  'krasota-i-zdorove': 'Красота',
+}
+
+const TABS = [
+  { to: '/', label: 'Главная' },
+  { to: '/catalog', label: 'Каталог' },
 ]
 
 const BANNERS = [
@@ -47,6 +74,9 @@ export default function Home() {
   const [bannerIdx, setBannerIdx] = useState(0)
   const [cityOpen, setCityOpen] = useState(false)
   const { city } = useStore()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const tab = pathname === '/catalog' ? '/catalog' : '/'
 
   /** Определяет ближайший баннер к левому краю — для точек-индикаторов */
   const onBannerScroll = (e) => {
@@ -68,48 +98,115 @@ export default function Home() {
 
   return (
     <div>
-      {/* Шапка */}
-      <header className="sticky top-0 z-40 border-b border-line bg-white">
-        <div className="flex items-center justify-between px-4 pt-3 pb-2">
-          <Link to="/" className="flex items-center gap-2 hide-tap">
-            <span className="text-[22px] font-black tracking-wide text-brand-600">ОМА</span>
-          </Link>
-          <button
-            onClick={() => setCityOpen(true)}
-            className="flex items-center gap-1 text-[14px] font-semibold text-navy hide-tap"
-          >
-            <MapPin className="h-4 w-4 text-brand-600" />
-            {city}
-            <ChevronDown className="h-4 w-4 text-muted" />
-          </button>
-        </div>
-        <div className="px-4 pb-3">
+      {/* Логотип и город */}
+      <div className="flex items-center justify-between bg-white px-4 pt-3 pb-1">
+        <Link to="/" className="flex items-center gap-2 hide-tap">
+          <span className="text-[22px] font-black tracking-wide text-brand-600">ОМА</span>
+        </Link>
+        <button
+          onClick={() => setCityOpen(true)}
+          className="flex items-center gap-1 text-[14px] font-semibold text-navy hide-tap"
+        >
+          <MapPin className="h-4 w-4 text-brand-600" />
+          {city}
+          <ChevronDown className="h-4 w-4 text-muted" />
+        </button>
+      </div>
+
+      {/* Поиск + вкладки «Главная / Каталог» — прилипают к верху */}
+      <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+        <div className="px-4 pt-2">
           <SearchBar />
+        </div>
+        <div className="flex px-4">
+          {TABS.map((t) => {
+            const active = tab === t.to
+            return (
+              <button
+                key={t.to}
+                onClick={() => !active && navigate(t.to)}
+                className={cn(
+                  'relative flex-1 py-3 text-[14px] font-bold transition-colors hide-tap',
+                  active ? 'text-brand-600' : 'text-muted',
+                )}
+              >
+                {t.label}
+                {active && (
+                  <motion.span
+                    layoutId="home-tab"
+                    className="absolute inset-x-6 bottom-0 h-[3px] rounded-full bg-brand-600"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                )}
+              </button>
+            )
+          })}
         </div>
       </header>
 
-      {/* Быстрые категории — листаются вправо */}
-      <section className="relative mt-4">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4">
-          {CHIPS.map(({ label, to, Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className="flex h-10 shrink-0 items-center gap-2 rounded-lg border border-line bg-white px-3 text-[13px] font-medium text-navy hide-tap active:border-brand-300"
-            >
-              <Icon className="h-4 w-4 text-brand-600" strokeWidth={2} />
-              {label}
-            </Link>
-          ))}
+      {/* Лента категорий */}
+      <section className="relative border-b border-line bg-white py-3">
+        <div className="no-scrollbar flex gap-1 overflow-x-auto px-3">
+          {SECTIONS.map((c) => {
+            const Icon = getCatIcon(c.id)
+            return (
+              <Link
+                key={c.id}
+                to={`/category/${c.id}`}
+                className="flex w-[70px] shrink-0 flex-col items-center gap-1.5 hide-tap"
+              >
+                <motion.span
+                  whileTap={{ scale: 0.9 }}
+                  className={cn(
+                    'flex h-[52px] w-[52px] items-center justify-center rounded-2xl',
+                    c.id === 'akcii' ? 'bg-price/10 text-price' : 'bg-brand-50 text-brand-600',
+                  )}
+                >
+                  <Icon className="h-6 w-6" strokeWidth={1.8} />
+                </motion.span>
+                <span className="line-clamp-2 w-full px-0.5 text-center text-[10.5px] leading-[13px] font-medium break-words text-navy">
+                  {SHORT[c.id] ?? c.name}
+                </span>
+              </Link>
+            )
+          })}
         </div>
-        {/* Мягкая подсказка, что справа ещё есть чипсы */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-7 bg-gradient-to-l from-white via-white/80 to-transparent" />
       </section>
 
+      <AnimatePresence mode="wait" initial={false}>
+        {tab === '/catalog' ? (
+          <motion.section
+            key="catalog"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 24 }}
+            transition={{ duration: 0.22 }}
+          >
+            <motion.div
+              variants={staggerParent}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-2 items-stretch gap-3 px-4 pt-4 pb-6"
+            >
+              {SECTIONS.map((c) => (
+                <motion.div key={c.id} variants={staggerChild} className="h-full">
+                  <CategoryCard section={c} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.section>
+        ) : (
+          <motion.div
+            key="main"
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.22 }}
+          >
       {/* Промо-баннеры — листаются, точки показывают позицию */}
       <section
         onScroll={onBannerScroll}
-        className="no-scrollbar mt-4 flex snap-x snap-proximity gap-3 overflow-x-auto px-4"
+        className="no-scrollbar mt-4 flex snap-x snap-proximity scroll-px-4 gap-3 overflow-x-auto px-4"
       >
         {BANNERS.map((b) => (
           <Link
@@ -146,7 +243,7 @@ export default function Home() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-[18px] font-bold text-navy">Популярные товары</h2>
           <Link to="/catalog" className="text-[12px] font-medium text-brand-600">
-            Все
+            Каталог
           </Link>
         </div>
         <motion.div
@@ -187,11 +284,14 @@ export default function Home() {
         </section>
       )}
 
-      <AnimatePresence>{cityOpen && <CityPicker onClose={() => setCityOpen(false)} />}</AnimatePresence>
-
       <footer className="mt-10 pb-2 text-center text-[11px] text-muted">
         ОМА · всё для дома и ремонта · MVP для хакатона
       </footer>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>{cityOpen && <CityPicker onClose={() => setCityOpen(false)} />}</AnimatePresence>
     </div>
   )
 }

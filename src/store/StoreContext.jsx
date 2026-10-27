@@ -10,6 +10,14 @@ const PROMO_KEY = 'oma.promo'
 const PROJECTS_KEY = 'oma.projects'
 const CITY_KEY = 'oma.city'
 
+/** Демо-пользователь для быстрого входа на защите */
+export const DEMO_USER = {
+  name: 'Дмитрий Ковалёв',
+  phone: '+375 29 123-45-67',
+  address: 'г. Минск, пр. Независимости, 58, кв. 12',
+  demo: true,
+}
+
 /** Этапы проекта — 4 шага как в репозитории oma-ozon */
 export const PROJECT_STAGES = [
   { name: 'Замер и подтверждение сметы' },
@@ -101,12 +109,18 @@ export function StoreProvider({ children }) {
   )
 
   const login = useCallback(
-    (phone) => {
-      setUser({ phone })
-      showToast('Вы вошли в аккаунт')
+    (phone, profile = {}) => {
+      setUser({ phone, ...profile })
+      showToast(profile.name ? `Добро пожаловать, ${profile.name}!` : 'Вы вошли в аккаунт')
     },
     [showToast],
   )
+
+  /** Быстрый вход для демо: готовый профиль без заполнения полей */
+  const demoLogin = useCallback(() => {
+    setUser({ ...DEMO_USER })
+    showToast(`Добро пожаловать, ${DEMO_USER.name.split(' ')[0]}!`)
+  }, [showToast])
 
   const logout = useCallback(() => {
     setUser(null)
@@ -171,7 +185,8 @@ export function StoreProvider({ children }) {
       currentStage: 0,
     }
     setProjects((prev) => [project, ...prev])
-    showToast('Проект создан из корзины')
+    setCart({})
+    showToast('Проект создан — товары перенесены из корзины')
     return project
   }, [cart, showToast])
 
@@ -259,6 +274,7 @@ export function StoreProvider({ children }) {
         clearCart,
         toggleFav,
         login,
+        demoLogin,
         logout,
         applyPromo,
         clearPromo,

@@ -1,16 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Hammer, ShoppingCart, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import avatar from '../assets/avatar.jpg'
 import { DEFAULT_TASK, SCENARIOS } from '../lib/ai'
 import { products } from '../lib/catalog'
+import { useStore } from '../store/StoreContext'
 import { PrimaryButton, Tap, staggerChild, staggerParent } from './ui.jsx'
 
-const LOADER_STEPS = [
-  'Анализирую задачу…',
-  `Подбираю товары из каталога ОМА (${products.length})…`,
-  'Считаю варианты сметы…',
+const LOADER_STEPS = {
+  project: [
+    'Анализирую задачу…',
+    `Подбираю материалы из каталога ОМА (${products.length})…`,
+    'Планирую этапы работ и смету…',
+  ],
+  buy: ['Анализирую задачу…', `Подбираю товары из каталога ОМА (${products.length})…`, 'Считаю количество…'],
+}
+
+/** Вопрос ИИ после ввода задачи */
+const CHOICES = [
+  {
+    mode: 'project',
+    Icon: Hammer,
+    title: 'Проект ремонта',
+    desc: 'Смета, этапы работ и бригада',
+  },
+  {
+    mode: 'buy',
+    Icon: ShoppingCart,
+    title: 'Только закупка',
+    desc: 'Подберу материалы в корзину',
+  },
 ]
 
 /**
@@ -18,33 +38,44 @@ const LOADER_STEPS = [
  * mesh-градиент, поле задачи, лоадер с шагами, быстрые сценарии.
  * По окончании «подбора» зовёт onResult(task).
  */
-export default function AIAssistant({ userName, onResult }) {
+export default function AIAssistant({ onResult }) {
+  const { user } = useStore()
+  const userName = user?.name?.split(' ')[0]
   const [task, setTask] = useState(DEFAULT_TASK)
-  const [loading, setLoading] = useState(false)
+  /* input → ask (ИИ уточняет: проект или закупка) → loading */
+  const [phase, setPhase] = useState('input')
+  const [mode, setMode] = useState(null)
   const [step, setStep] = useState(0)
+  const loading = phase === 'loading'
   const onResultRef = useRef(onResult)
   onResultRef.current = onResult
 
   useEffect(() => {
     if (!loading) return undefined
-    const t1 = setInterval(() => setStep((s) => Math.min(s + 1, LOADER_STEPS.length - 1)), 700)
+    const steps = LOADER_STEPS[mode]
+    const t1 = setInterval(() => setStep((s) => Math.min(s + 1, steps.length - 1)), 700)
     const t2 = setTimeout(() => {
-      setLoading(false)
+      setPhase('input')
       setStep(0)
-      onResultRef.current(task)
+      onResultRef.current(task, mode)
     }, 2100)
     return () => {
       clearInterval(t1)
       clearTimeout(t2)
     }
-  }, [loading, task])
+  }, [loading, task, mode])
 
   const start = () => {
-    if (task.trim() && !loading) setLoading(true)
+    if (task.trim() && phase === 'input') setPhase('ask')
+  }
+
+  const choose = (m) => {
+    setMode(m)
+    setPhase('loading')
   }
 
   return (
-    <section className="relative overflow-hidden pb-10">
+    <section className="relative overflow-clip pb-10">
       {/* Mesh-градиент */}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#1d5dbe_0%,#4a84d4_58%,#76a3e2_86%,#ffffff_100%)]" />
       <div className="mesh-blob absolute -top-32 -right-24 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(127,190,255,0.55),transparent_65%)] blur-2xl" />
@@ -86,7 +117,10 @@ export default function AIAssistant({ userName, onResult }) {
             </div>
             <textarea
               value={task}
-              onChange={(e) => setTask(e.target.value)}
+              onChange={(e) => {
+                setTask(e.target.value)
+                if (phase === 'ask') setPhase('input')
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) start()
               }}
@@ -94,12 +128,68 @@ export default function AIAssistant({ userName, onResult }) {
               placeholder="Опишите задачу — ИИ подберёт товары из ОМА и посчитает смету"
               className="w-full resize-none rounded-xl border border-line bg-panel/60 p-3 text-[14px] leading-snug text-navy transition outline-none placeholder:text-muted focus:border-brand-600/40 focus:bg-white"
             />
-            <PrimaryButton onClick={start} disabled={loading || !task.trim()} className="mt-4 w-full">
-              <span className="flex items-center justify-center gap-2">
-                {loading ? 'ИИ подбирает…' : 'Подобрать товары'}
-                {!loading && <ArrowRight size={17} />}
-              </span>
-            </PrimaryButton>
+            <AnimatePresence initial={false} mode="wait">
+              {phase === 'ask' ? (
+                <motion.div
+                  key="ask"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  className="mt-4"
+                >
+                  {/* Реплика ИИ */}
+                  <div className="flex items-start gap-2">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600">
+                      <Sparkles size={14} className="text-white" />
+                    </span>
+                    <p className="rounded-2xl rounded-tl-md bg-brand-50 px-3 py-2 text-[13.5px] leading-snug font-semibold text-navy">
+                      Понял задачу! Делаем из этого проект ремонта или просто закупаем материалы?
+                    </p>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {CHOICES.map((c, i) => (
+                      <motion.button
+                        key={c.mode}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.12 + i * 0.06, type: 'spring', stiffness: 420, damping: 30 }}
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => choose(c.mode)}
+                        className={`flex flex-col items-start gap-1.5 rounded-2xl border-2 p-3 text-left transition-colors ${
+                          c.mode === 'project'
+                            ? 'border-brand-600 bg-brand-600 text-white shadow-[0_6px_20px_rgb(29_93_190/0.35)]'
+                            : 'border-brand-600/30 bg-white text-navy active:bg-brand-50'
+                        }`}
+                      >
+                        <c.Icon size={20} className={c.mode === 'project' ? 'text-white' : 'text-brand-600'} />
+                        <span className="text-[14px] leading-tight font-extrabold">{c.title}</span>
+                        <span
+                          className={`text-[11.5px] leading-snug ${c.mode === 'project' ? 'text-white/80' : 'text-muted'}`}
+                        >
+                          {c.desc}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setPhase('input')}
+                    className="mt-2 w-full py-1 text-center text-[12px] font-semibold text-muted"
+                  >
+                    Изменить задачу
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div key="btn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <PrimaryButton onClick={start} disabled={loading || !task.trim()} className="mt-4 w-full">
+                    <span className="flex items-center justify-center gap-2">
+                      {loading ? 'ИИ подбирает…' : 'Подобрать с ИИ'}
+                      {!loading && <ArrowRight size={17} />}
+                    </span>
+                  </PrimaryButton>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Мини-лоадер со сменой шагов */}
             <AnimatePresence>
@@ -123,7 +213,7 @@ export default function AIAssistant({ userName, onResult }) {
                         exit={{ opacity: 0, y: -6 }}
                         className="text-[13px] font-medium text-brand-700"
                       >
-                        {LOADER_STEPS[step]}
+                        {LOADER_STEPS[mode]?.[step]}
                       </motion.span>
                     </AnimatePresence>
                   </div>
@@ -139,7 +229,10 @@ export default function AIAssistant({ userName, onResult }) {
               {SCENARIOS.map((s) => (
                 <Tap
                   key={s.id}
-                  onClick={() => setTask(s.task)}
+                  onClick={() => {
+                    setTask(s.task)
+                    if (phase === 'ask') setPhase('input')
+                  }}
                   disabled={loading}
                   className={`flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 backdrop-blur-md transition-colors ${
                     task === s.task
