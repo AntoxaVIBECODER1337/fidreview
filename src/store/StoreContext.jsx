@@ -172,6 +172,30 @@ export function StoreProvider({ children }) {
     return project
   }, [cart, showToast])
 
+  /** Проект из ИИ-подборки: материалы + (опционально) бригада ОМА */
+  const createProject = useCallback(
+    ({ title, items, crew = null, area = null }) => {
+      const clean = items.filter((i) => getProduct(i.id))
+      const itemsTotal = clean.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
+      const crewTotal = crew && area ? crew.rate * area : 0
+      const project = {
+        id: 'p' + Date.now(),
+        title,
+        items: clean.map(({ id, qty }) => ({ id, qty })),
+        itemsTotal,
+        crewTotal,
+        crew,
+        area,
+        status: 'pending',
+        currentStage: 0,
+      }
+      setProjects((prev) => [project, ...prev])
+      showToast(crew ? `Проект с бригадой ${crew.name} создан` : 'Проект создан')
+      return project
+    },
+    [showToast],
+  )
+
   /** «Оформить и начать работу»: pending → active */
   const approveProject = useCallback(
     (id) => {
@@ -208,6 +232,7 @@ export function StoreProvider({ children }) {
         projects,
         toast,
         createProjectFromCart,
+        createProject,
         approveProject,
         advanceStage,
         addToCart,

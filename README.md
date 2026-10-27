@@ -1,32 +1,50 @@
-# React + TypeScript + Vite
+# ОМА — всё для дома и ремонта (хакатон)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Мобильный веб-клиент ОМА с ИИ-помощником по ремонту.
 
-Currently, two official plugins are available:
+Проект собран из двух репозиториев:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **[hackaton_Oma](https://github.com/tsimurik/hackaton_Oma)** — основа и функционал: каталог, категории, поиск, карточка товара, корзина с промокодами, оформление заказа, заказы, избранное, вход, профиль.
+- **[oma-ozon](https://github.com/dimasahnovic21-ai/oma-ozon)** — дизайн и анимации: тени и mesh-градиенты, стеклянное нижнее меню с «пилюлей», направленные слайды между экранами, press-анимации, stagger-появление, ИИ-подборка.
 
-## React Compiler
+## Запуск
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Открыть адрес из терминала (обычно http://localhost:5173) и включить мобильный режим в DevTools (ширина ~390 px).
+
+Сборка для деплоя: `npm run build`, результат в `dist/`. Для Vercel/Netlify включите SPA-фолбэк на `index.html` (маршруты на react-router).
+
+## «Мой дом» — ИИ-помощник
+
+Вкладка «Мой дом» начинается со скрипта вкладки «Главное» из oma-ozon:
+
+1. Пользователь описывает задачу своими словами («Положить плитку в ванной 8 м²») или жмёт быстрый сценарий.
+2. Лоадер показывает шаги анализа.
+3. ИИ (`src/lib/ai.js`) распознаёт сценарий по ключевым словам, вытаскивает площадь и собирает 3 комплекта из реального каталога `products.json`: Минимальный / Стандарт / Профессиональный. Количество материалов масштабируется по площади.
+4. В шторке можно снять ненужные позиции и выбрать: **своими силами** → всё в корзину, или **с бригадой ОМА** → проект со сметой работ.
+5. Проект проходит 4 этапа (замер → доставка → черновые → чистовые) на экране `/my-home/project/:id`.
+
+Сценарии: стяжка и полы, ванная, электрика, стены, отопление, мебель, сад, инструмент.
+
+## Что исправлено относительно hackaton_Oma
+
+- `src/pages/MyHomePage.jsx` был обрезан на середине строки — проект не собирался. Корзина во вкладке дописана.
+- Карточка проекта вела на несуществующий маршрут `/my-home/project/:id` — добавлен экран проекта.
+- Токены `shadow-soft / shadow-lift / shadow-glass` использовались, но не были объявлены.
+
+## Структура
+
+```
+src/
+  components/AIAssistant.jsx    ИИ-ввод задачи (скрипт «Главное» из oma-ozon)
+  components/AIResultSheet.jsx  шторка «Подборка ОМА»: комплекты, бригады, итог
+  components/BottomNav.jsx      стеклянное меню с анимированной пилюлей
+  lib/ai.js                     распознавание задачи и сборка комплектов
+  pages/MyHomePage.jsx          ИИ + Проекты / Корзина
+  pages/ProjectPage.jsx         этапы проекта
+  store/StoreContext.jsx        корзина, избранное, заказы, проекты (localStorage)
+```

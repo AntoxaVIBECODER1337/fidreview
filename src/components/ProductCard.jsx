@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Heart, Minus, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { discountPercent, rub } from '../lib/format'
@@ -17,7 +18,11 @@ export default function ProductCard({ product }) {
 
   return (
     <Link to={`/product/${product.id}`} className="block h-full hide-tap">
-      <div className="flex h-full flex-col">
+      <motion.div
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 550, damping: 28 }}
+        className="flex h-full flex-col"
+      >
         <div className="relative">
           <div className="flex h-36 items-center justify-center overflow-hidden rounded-xl bg-panel">
             <span className="text-[42px] leading-none">{product.emoji}</span>
@@ -73,7 +78,8 @@ export default function ProductCard({ product }) {
 
         <div className="mt-auto pt-2">
           {qty === 0 ? (
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -82,7 +88,7 @@ export default function ProductCard({ product }) {
               className="h-9 w-full rounded-lg bg-brand-600 text-[13px] font-semibold text-white active:bg-brand-700"
             >
               В корзину
-            </button>
+            </motion.button>
           ) : (
             <div className="flex h-9 w-full items-center justify-between rounded-lg border border-brand-200 bg-brand-50 px-1.5">
               <button
@@ -96,7 +102,15 @@ export default function ProductCard({ product }) {
               >
                 <Minus className="h-3.5 w-3.5" />
               </button>
-              <span className="text-[13px] font-bold text-navy">{qty}</span>
+              <motion.span
+                key={qty}
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 22 }}
+                className="text-[13px] font-bold text-navy"
+              >
+                {qty}
+              </motion.span>
               <button
                 onClick={(e) => {
                   e.preventDefault()
@@ -111,7 +125,7 @@ export default function ProductCard({ product }) {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </Link>
   )
 }

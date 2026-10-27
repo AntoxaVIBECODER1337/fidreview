@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Blocks, ChevronDown, Droplet, Lamp, Lightbulb, MapPin, Nut, Sprout, Wrench } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
+import { staggerChild, staggerParent } from '../components/ui.jsx'
 import { popularProducts, saleProducts } from '../lib/catalog'
 
 const CHIPS = [
@@ -140,13 +142,21 @@ export default function Home() {
             Все
           </Link>
         </div>
-        <div className="grid grid-cols-2 items-stretch gap-3">
+        <motion.div
+          variants={staggerParent}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-2 items-stretch gap-3"
+        >
           {popularProducts()
             .slice(0, 8)
             .map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <motion.div key={p.id} variants={staggerChild} className="h-full">
+                <ProductCard product={p} />
+              </motion.div>
             ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Акции */}
