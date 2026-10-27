@@ -7,6 +7,7 @@ import CityPicker from '../components/CityPicker.jsx'
 import Logo from '../components/Logo.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import { ProductGridSkeleton, useSkeleton } from '../components/Skeleton.jsx'
+import { DecorPacksRow } from '../components/DecorPacks.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { staggerChild, staggerParent } from '../components/ui.jsx'
 import { categories, popularProducts, saleProducts } from '../lib/catalog'
@@ -14,9 +15,10 @@ import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 
 /** Порядок разделов: сначала ремонтные, как в приложении ОМА */
-const ORDER = ['interier', 'stroymaterialy', 'instrument', 'santehnika', 'electrika', 'krepesh', 'blagoustroystvo', 'mebel', 'bytovaya-tehnika', 'tovary-dlya-doma']
+const ORDER = ['dekor', 'interier', 'stroymaterialy', 'instrument', 'santehnika', 'electrika', 'krepesh', 'blagoustroystvo', 'mebel', 'bytovaya-tehnika', 'tovary-dlya-doma']
 const SECTIONS = [
   { id: 'akcii', name: 'Акции' },
+  { id: 'paket-dekora', name: 'Пакеты декора', to: '/decor' },
   ...ORDER.map((id) => categories.find((c) => c.id === id)).filter(Boolean),
   ...categories.filter((c) => !ORDER.includes(c.id)),
 ]
@@ -189,6 +191,9 @@ export default function Home() {
           />
         ))}
       </div>
+
+      {/* Пакеты декора */}
+      <DecorPacksRow />
 
       {/* Популярные товары */}
       <section className="mt-7 px-4">

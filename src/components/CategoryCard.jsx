@@ -10,13 +10,13 @@ import { getCatIcon } from '../lib/categoryIcons'
  * @param {{ id: string, name: string, image?: string }} section
  */
 export default function CategoryCard({ section }) {
-  const { id, name, image } = section
+  const { id, name, image, to } = section
   const [imgFailed, setImgFailed] = useState(false)
   const Icon = getCatIcon(id)
   const showImage = image && !imgFailed
 
   return (
-    <Link to={`/category/${id}`} className="h-full hide-tap">
+    <Link to={to ?? `/category/${id}`} className="h-full hide-tap">
       <div className="relative flex h-full min-h-40 flex-col rounded-xl border border-line bg-white p-4 shadow-sm active:border-brand-300">
         <span className="max-w-[62%] text-[15px] font-bold leading-tight text-navy">{name}</span>
 

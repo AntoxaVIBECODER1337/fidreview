@@ -7,6 +7,7 @@ import Header from '../components/Header.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { cn } from '../lib/cn'
+import { bundlePrice, getPack } from '../lib/decor'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
 import { PROMOS } from '../lib/promo'
@@ -116,21 +117,23 @@ function FavoritesView() {
 
 function CartView() {
   const navigate = useNavigate()
-  const { cart, setQty, removeFromCart, promo, applyPromo, clearPromo, createProjectFromCart } = useStore()
+  const { cart, setQty, removeFromCart, promo, applyPromo, clearPromo, createProjectFromCart, bundles, removeBundle } =
+    useStore()
   const [code, setCode] = useState('')
 
   const items = Object.entries(cart).flatMap(([id, qty]) => {
     const p = getProduct(id)
     return p ? [{ product: p, qty }] : []
   })
-  const subtotal = items.reduce((s, i) => s + i.product.price * i.qty, 0)
+  const bundlesTotal = bundles.reduce((s, b) => s + bundlePrice(b), 0)
+  const subtotal = Math.round((items.reduce((s, i) => s + i.product.price * i.qty, 0) + bundlesTotal) * 100) / 100
   const savings = items.reduce(
     (s, i) => s + (i.product.oldPrice ? i.product.oldPrice - i.product.price : 0) * i.qty,
     0,
   )
   const promoPct = promo ? PROMOS[promo] : 0
   const promoAmount = Math.round(subtotal * promoPct) / 100
-  const total = subtotal - promoAmount
+  const total = Math.round((subtotal - promoAmount) * 100) / 100
 
   const toProject = () => {
     const p = createProjectFromCart()
@@ -139,7 +142,7 @@ function CartView() {
 
   return (
     <div>
-      {items.length === 0 ? (
+      {items.length === 0 && bundles.length === 0 ? (
         <EmptyState
           icon={ShoppingBag}
           title="В вашей корзине пусто"
@@ -178,6 +181,17 @@ function CartView() {
           )}
 
           <FreeDelivery subtotal={subtotal} />
+
+          {/* Пакеты декора */}
+          {bundles.length > 0 && (
+            <section className="flex flex-col gap-2 px-4 pt-3">
+              <AnimatePresence initial={false}>
+                {bundles.map((b) => (
+                  <BundleCard key={b.id} bundle={b} onRemove={() => removeBundle(b.id)} />
+                ))}
+              </AnimatePresence>
+            </section>
+          )}
 
           {/* Товары */}
           <section className="px-4 pt-3">
@@ -318,5 +332,62 @@ function FreeDelivery({ subtotal }) {
         />
       </div>
     </section>
+  )
+}
+
+/** Пакет декора в корзине: состав, цена, «убрать» и «изменить» */
+function BundleCard({ bundle, onRemove }) {
+  const [open, setOpen] = useState(false)
+  const pack = getPack(bundle.packId)
+  const lines = bundle.items.map((i) => ({ ...i, product: getProduct(i.id) })).filter((l) => l.product)
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, height: 0 }}
+      className="overflow-clip rounded-xl border border-line bg-white"
+    >
+      <div className="flex items-center gap-3 p-3">
+        <span
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-[28px]"
+          style={pack ? { background: `linear-gradient(150deg, ${pack.from}, ${pack.to})` } : undefined}
+        >
+          {bundle.emoji}
+        </span>
+        <button onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 text-left">
+          <span className="block text-[11px] font-bold tracking-wide text-brand-600 uppercase">Пакет декора</span>
+          <span className="block truncate text-[14px] font-extrabold text-navy">«{bundle.title}»</span>
+          <span className="block text-[12px] text-muted">
+            {lines.length}
+            {pack ? ` из ${pack.slots.length}` : ''} позиций · {open ? 'скрыть' : 'состав'}
+          </span>
+        </button>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <span className="text-[15px] font-black text-navy">{rub(bundlePrice(bundle))}</span>
+          <button onClick={onRemove} aria-label="Убрать пакет" className="flex h-7 w-7 items-center justify-center rounded-md text-muted active:bg-panel">
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.ul
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-clip border-t border-line px-3 py-1.5"
+          >
+            {lines.map((l) => (
+              <li key={l.id} className="flex items-center gap-2 py-1.5 text-[12.5px]">
+                <span className="text-[15px]">{l.product.emoji}</span>
+                <span className="min-w-0 flex-1 truncate text-navy">{l.product.name}</span>
+                <span className="shrink-0 font-semibold text-muted">{rub(l.product.price)}</span>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }

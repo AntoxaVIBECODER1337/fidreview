@@ -6,6 +6,7 @@ import Header from '../components/Header.jsx'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
 import { cashbackFor } from '../lib/bonus'
+import { bundlePrice } from '../lib/decor'
 import { DEMO_USER, FREE_DELIVERY_FROM, useStore } from '../store/StoreContext'
 
 const DELIVERY_FEE = 5.9
@@ -14,7 +15,7 @@ const STORE_ADDRESS = 'Самовывоз: г. Минск, ул. Притыцк�
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
-  const { cart, placeOrder, showToast, user, demoLogin, bonus } = useStore()
+  const { cart, placeOrder, showToast, user, demoLogin, bonus, bundles } = useStore()
   const [useBonus, setUseBonus] = useState(false)
   /* Данные получателя подставляются из профиля */
   const [name, setName] = useState(user?.name ?? '')
@@ -34,13 +35,14 @@ export default function CheckoutPage() {
     const p = getProduct(id)
     return p ? [{ product: p, qty }] : []
   })
-  const subtotal = items.reduce((s, i) => s + i.product.price * i.qty, 0)
+  const subtotal =
+    Math.round((items.reduce((s, i) => s + i.product.price * i.qty, 0) + bundles.reduce((s, b) => s + bundlePrice(b), 0)) * 100) / 100
   const fee = delivery === 'Доставка' && subtotal < FREE_DELIVERY_FROM ? DELIVERY_FEE : 0
   const bonusOff = useBonus ? Math.min(bonus.balance, Math.floor(subtotal * 0.3)) : 0
   const total = Math.round((subtotal - bonusOff + fee) * 100) / 100
   const willEarn = user ? cashbackFor(subtotal - bonusOff, bonus.spent) : 0
 
-  if (items.length === 0) {
+  if (items.length === 0 && bundles.length === 0) {
     return (
       <div>
         <Header back title="Оформление" />

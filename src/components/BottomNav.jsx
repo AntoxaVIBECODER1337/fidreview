@@ -35,7 +35,7 @@ export const TABS = [
 /** К какой вкладке относится путь (для подсветки и направления анимации) */
 export function tabIndexFor(pathname) {
   const is = (...ps) => ps.some((p) => pathname === p || pathname.startsWith(p + '/'))
-  if (pathname === '/' || is('/catalog', '/category', '/sections', '/product', '/search')) return 0
+  if (pathname === '/' || is('/catalog', '/category', '/sections', '/product', '/search', '/decor')) return 0
   if (is('/my-home')) return 1
   if (is('/crews')) return 2
   if (is('/cart', '/favorites', '/checkout', '/order-success')) return 3

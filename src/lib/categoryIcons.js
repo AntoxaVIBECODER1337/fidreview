@@ -7,6 +7,8 @@ import {
   Dumbbell,
   Drill,
   Flame,
+  Flower2,
+  Gift,
   Layers,
   HeartPulse,
   House,
@@ -30,6 +32,8 @@ import {
  */
 const MAP = {
   akcii: BadgePercent,
+  'paket-dekora': Gift,
+  dekor: Flower2,
   interier: Paintbrush,
   blagoustroystvo: Sprout,
   stroymaterialy: BrickWall,

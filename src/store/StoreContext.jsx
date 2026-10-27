@@ -15,6 +15,7 @@ const CHATS_KEY = 'oma.chats'
 const COMPARE_KEY = 'oma.compare'
 const BONUS_KEY = 'oma.bonus'
 const ONBOARD_KEY = 'oma.onboarded'
+const BUNDLES_KEY = 'oma.bundles'
 
 /** Сравнение — не больше 4 товаров */
 export const COMPARE_MAX = 4
@@ -73,6 +74,8 @@ export function StoreProvider({ children }) {
   /* Бонусы: balance — баллы, spent — сумма покупок (для уровня), history — операции */
   const [bonus, setBonus] = useState(() => load(BONUS_KEY, { balance: 0, spent: 0, history: [] }))
   const [onboarded, setOnboarded] = useState(() => load(ONBOARD_KEY, false))
+  /* Пакеты декора в корзине: [{ id, packId, title, emoji, items: [{ id, qty }] }] */
+  const [bundles, setBundles] = useState(() => load(BUNDLES_KEY, []))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -86,6 +89,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(COMPARE_KEY, compare), [compare])
   useEffect(() => persist(BONUS_KEY, bonus), [bonus])
   useEffect(() => persist(ONBOARD_KEY, onboarded), [onboarded])
+  useEffect(() => persist(BUNDLES_KEY, bundles), [bundles])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -117,7 +121,23 @@ export function StoreProvider({ children }) {
     })
   }, [])
 
-  const clearCart = useCallback(() => setCart({}), [])
+  const clearCart = useCallback(() => {
+    setCart({})
+    setBundles([])
+  }, [])
+
+  /** Пакет декора → корзина (отдельной позицией) */
+  const addBundle = useCallback(
+    ({ packId, title, emoji, items }) => {
+      const bundle = { id: 'b' + Date.now(), packId, title, emoji, items }
+      setBundles((prev) => [...prev, bundle])
+      vibrate(HAPTIC.add)
+      showToast(`Пакет «${title}» в корзине`)
+      return bundle
+    },
+    [showToast],
+  )
+  const removeBundle = useCallback((id) => setBundles((prev) => prev.filter((b) => b.id !== id)), [])
 
   const toggleFav = useCallback(
     (id) => {
@@ -186,6 +206,12 @@ export function StoreProvider({ children }) {
         const p = getProduct(id)
         return p ? [{ id, name: p.name, qty, price: p.price }] : []
       })
+      for (const b of bundles) {
+        for (const i of b.items) {
+          const p = getProduct(i.id)
+          if (p) items.push({ id: i.id, name: `${p.name} · пакет «${b.title}»`, qty: i.qty, price: p.price })
+        }
+      }
       const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0)
       /* Списание баллов: не больше 30% суммы заказа */
       const spend = info.useBonus ? Math.min(bonus.balance, Math.floor(subtotal * 0.3)) : 0
@@ -205,6 +231,7 @@ export function StoreProvider({ children }) {
       }
       setOrders((prev) => [order, ...prev])
       setCart({})
+      setBundles([])
       if (user) {
         setBonus((b) => ({
           balance: b.balance - spend + earned,
@@ -219,7 +246,7 @@ export function StoreProvider({ children }) {
       vibrate(HAPTIC.success)
       return order
     },
-    [cart, bonus, user],
+    [cart, bundles, bonus, user],
   )
 
   /** Сравнение: добавить / убрать товар (не больше COMPARE_MAX) */
@@ -246,6 +273,15 @@ export function StoreProvider({ children }) {
       const p = getProduct(id)
       return p ? [{ id, qty }] : []
     })
+    /* Товары пакетов декора — туда же; одинаковые позиции складываем */
+    for (const b of bundles) {
+      for (const i of b.items) {
+        if (!getProduct(i.id)) continue
+        const same = items.find((x) => x.id === i.id)
+        if (same) same.qty += i.qty
+        else items.push({ id: i.id, qty: i.qty })
+      }
+    }
     if (!items.length) return null
     const itemsTotal = items.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
     const project = {
@@ -259,9 +295,10 @@ export function StoreProvider({ children }) {
     }
     setProjects((prev) => [project, ...prev])
     setCart({})
+    setBundles([])
     showToast('Проект создан — товары перенесены из корзины')
     return project
-  }, [cart, showToast])
+  }, [cart, bundles, showToast])
 
   /** Проект из ИИ-подборки: материалы + (опционально) бригада ОМА */
   const createProject = useCallback(
@@ -326,7 +363,7 @@ export function StoreProvider({ children }) {
     )
   }, [])
 
-  const cartCount = Object.values(cart).reduce((s, q) => s + q, 0)
+  const cartCount = Object.values(cart).reduce((s, q) => s + q, 0) + bundles.length
 
   return (
     <StoreCtx.Provider
@@ -349,6 +386,9 @@ export function StoreProvider({ children }) {
         clearCompare,
         bonus,
         onboarded,
+        bundles,
+        addBundle,
+        removeBundle,
         setOnboarded,
         addMessage,
         setCity,
