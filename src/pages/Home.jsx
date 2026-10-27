@@ -4,11 +4,11 @@ import { ChevronDown, MapPin } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import CategoryCard from '../components/CategoryCard.jsx'
 import CityPicker from '../components/CityPicker.jsx'
+import Logo from '../components/Logo.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { staggerChild, staggerParent } from '../components/ui.jsx'
 import { categories, popularProducts, saleProducts } from '../lib/catalog'
-import { getCatIcon } from '../lib/categoryIcons'
 import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 
@@ -19,27 +19,6 @@ const SECTIONS = [
   ...ORDER.map((id) => categories.find((c) => c.id === id)).filter(Boolean),
   ...categories.filter((c) => !ORDER.includes(c.id)),
 ]
-
-/** Короткие подписи для ленты категорий */
-const SHORT = {
-  interier: 'Отделка',
-  stroymaterialy: 'Материалы',
-  instrument: 'Инструмент',
-  santehnika: 'Сантехника',
-  electrika: 'Электрика',
-  krepesh: 'Крепёж',
-  blagoustroystvo: 'Сад и дача',
-  mebel: 'Мебель',
-  'bytovaya-tehnika': 'Техника',
-  'tovary-dlya-doma': 'Для дома',
-  'inzhenernye-sistemy': 'Инженерка',
-  'sport-i-otdyh': 'Спорт',
-  'novyy-god': 'Новый год',
-  avtotovary: 'Авто',
-  elektronika: 'Электроника',
-  'tovary-dlya-detey': 'Детям',
-  'krasota-i-zdorove': 'Красота',
-}
 
 const TABS = [
   { to: '/', label: 'Главная' },
@@ -100,8 +79,8 @@ export default function Home() {
     <div>
       {/* Логотип и город */}
       <div className="flex items-center justify-between bg-white px-4 pt-3 pb-1">
-        <Link to="/" className="flex items-center gap-2 hide-tap">
-          <span className="text-[22px] font-black tracking-wide text-brand-600">ОМА</span>
+        <Link to="/" aria-label="ОМА — на главную" className="flex items-center hide-tap">
+          <Logo className="h-8 w-auto" />
         </Link>
         <button
           onClick={() => setCityOpen(true)}
@@ -143,35 +122,6 @@ export default function Home() {
           })}
         </div>
       </header>
-
-      {/* Лента категорий */}
-      <section className="relative border-b border-line bg-white py-3">
-        <div className="no-scrollbar flex gap-1 overflow-x-auto px-3">
-          {SECTIONS.map((c) => {
-            const Icon = getCatIcon(c.id)
-            return (
-              <Link
-                key={c.id}
-                to={`/category/${c.id}`}
-                className="flex w-[70px] shrink-0 flex-col items-center gap-1.5 hide-tap"
-              >
-                <motion.span
-                  whileTap={{ scale: 0.9 }}
-                  className={cn(
-                    'flex h-[52px] w-[52px] items-center justify-center rounded-2xl',
-                    c.id === 'akcii' ? 'bg-price/10 text-price' : 'bg-brand-50 text-brand-600',
-                  )}
-                >
-                  <Icon className="h-6 w-6" strokeWidth={1.8} />
-                </motion.span>
-                <span className="line-clamp-2 w-full px-0.5 text-center text-[10.5px] leading-[13px] font-medium break-words text-navy">
-                  {SHORT[c.id] ?? c.name}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
-      </section>
 
       <AnimatePresence mode="wait" initial={false}>
         {tab === '/catalog' ? (

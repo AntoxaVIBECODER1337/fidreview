@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronRight, Hammer, HardHat, House } from 'lucide-react'
+import { ChevronRight, Hammer, HardHat, House, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import AIAssistant from '../components/AIAssistant.jsx'
 import AIResultSheet from '../components/AIResultSheet.jsx'
+import NewProjectSheet from '../components/NewProjectSheet.jsx'
 import { Card, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { analyzeTask } from '../lib/ai'
 import { cn } from '../lib/cn'
@@ -20,6 +21,7 @@ export default function MyHomePage() {
   const { projects, createProject, approveProject, addToCart, showToast } = useStore()
   /* ИИ-подборка: { task, mode, result } */
   const [ai, setAi] = useState(null)
+  const [manual, setManual] = useState(false)
 
   const scrollToList = () =>
     setTimeout(() => document.getElementById('mh-list')?.scrollIntoView({ behavior: 'smooth' }), 350)
@@ -56,11 +58,23 @@ export default function MyHomePage() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {manual && <NewProjectSheet onClose={() => setManual(false)} onCreated={scrollToList} />}
+      </AnimatePresence>
+
       {/* Проекты */}
       <section id="mh-list" className="scroll-mt-2 px-4 pt-1 pb-6">
-        <div className="mb-3 flex items-baseline justify-between px-1">
-          <h2 className="text-[18px] font-bold text-navy">Мои проекты</h2>
-          {projects.length > 0 && <span className="text-[12.5px] font-semibold text-muted">{projects.length}</span>}
+        <div className="mb-3 flex items-center justify-between gap-2 px-1">
+          <h2 className="text-[18px] font-bold text-navy">
+            Мои проекты
+            {projects.length > 0 && <span className="ml-1.5 text-[13px] font-semibold text-muted">{projects.length}</span>}
+          </h2>
+          <Tap
+            onClick={() => setManual(true)}
+            className="flex h-9 items-center gap-1 rounded-full border border-brand-600/40 bg-white px-3 text-[12.5px] font-bold text-brand-600 active:bg-brand-50"
+          >
+            <Plus size={15} /> Создать вручную
+          </Tap>
         </div>
         <motion.div variants={staggerParent} initial="hidden" animate="show" className="flex flex-col gap-3">
           {projects.length === 0 ? (
@@ -71,9 +85,15 @@ export default function MyHomePage() {
                 </span>
                 <h2 className="text-[16px] font-extrabold text-navy">Проектов пока нет</h2>
                 <p className="text-[12.5px] leading-relaxed text-muted">
-                  Опишите задачу выше и выберите «Проект ремонта» — ИИ соберёт смету, этапы работ, и
-                  можно будет выбрать бригаду
+                  Опишите задачу выше и выберите «Проект ремонта» — ИИ соберёт смету и этапы. Или
+                  создайте проект сами и сразу выберите бригаду
                 </p>
+                <Tap
+                  onClick={() => setManual(true)}
+                  className="mt-1 flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_6px_20px_rgb(29_93_190/0.35)] active:bg-brand-700"
+                >
+                  <Plus size={15} /> Создать проект вручную
+                </Tap>
               </Card>
             </motion.div>
           ) : (
@@ -99,7 +119,7 @@ function ProjectCard({ project, onOpen, onApprove, onPickCrew }) {
   const pending = project.status === 'pending'
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-stretch gap-3.5 p-4">
+      <Tap onClick={onOpen} className="flex w-full items-stretch gap-3.5 p-4 text-left">
         <div
           className={cn(
             'flex h-14 w-14 shrink-0 items-center justify-center rounded-xl',
@@ -136,14 +156,17 @@ function ProjectCard({ project, onOpen, onApprove, onPickCrew }) {
             )}
           </p>
           <p className="mt-1 text-[12.5px] text-muted">
-            {project.items.length} поз. • материалы {rub(round2(project.itemsTotal))}
+            {project.items.length
+              ? `${project.items.length} поз. • материалы ${rub(round2(project.itemsTotal))}`
+              : 'Материалы уточнятся на замере'}
             {project.crewTotal > 0 && ` • работа ${rub(project.crewTotal)}`}
           </p>
           <p className="mt-1.5 text-[15px] font-black text-navy">
             {rub(round2(project.itemsTotal + project.crewTotal))}
           </p>
         </div>
-      </div>
+        <ChevronRight size={18} className="shrink-0 self-center text-muted" />
+      </Tap>
 
       {!project.crew && (
         <Tap

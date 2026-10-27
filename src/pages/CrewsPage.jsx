@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ChevronDown, Handshake, Hammer, HardHat, House, Info, MapPin, X } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import ChatSheet from '../components/ChatSheet.jsx'
 import CityPicker from '../components/CityPicker.jsx'
 import CrewCard from '../components/CrewCard.jsx'
 import CrewSheet from '../components/CrewSheet.jsx'
@@ -28,6 +29,7 @@ export default function CrewsPage() {
   const [sort, setSort] = useState('rec')
   const [cityOpen, setCityOpen] = useState(false)
   const [openCrew, setOpenCrew] = useState(null)
+  const [chatCrew, setChatCrew] = useState(null)
 
   const { oma, partners, omaInCity } = crewsForCity(city, { specialty, sort })
 
@@ -49,6 +51,48 @@ export default function CrewsPage() {
           Проверенные мастера на маркетплейсе ОМА. Оплата через ОМА — только после приёмки этапа.
         </p>
       </header>
+
+      {/* Фильтр и сортировка — закреплены при прокрутке */}
+      <div className="sticky top-0 z-30 border-b border-line/70 bg-bg/90 py-2.5 backdrop-blur-md">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4">
+          {[{ id: null, label: 'Все работы' }, ...SPECIALTIES].map((s) => {
+            const active = specialty === s.id
+            return (
+              <Tap
+                key={s.label}
+                onClick={() => setSpecialty(s.id)}
+                className={cn(
+                  'relative h-9 shrink-0 rounded-full border px-3.5 text-[12.5px] font-semibold transition-colors',
+                  active ? 'border-brand-600 text-white' : 'border-line bg-white text-navy',
+                )}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="spec-pill"
+                    className="absolute inset-0 rounded-full bg-brand-600"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                )}
+                <span className="relative z-10">{s.label}</span>
+              </Tap>
+            )
+          })}
+        </div>
+        <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto px-4">
+          {SORTS.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setSort(s.id)}
+              className={cn(
+                'h-8 shrink-0 rounded-lg px-3 text-[12px] font-semibold transition-colors',
+                sort === s.id ? 'bg-navy text-white' : 'bg-white text-muted',
+              )}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <motion.div variants={staggerParent} initial="hidden" animate="show" className="flex flex-col gap-4 px-4 pt-4 pb-6">
         {/* Для какого проекта подбираем */}
@@ -94,36 +138,10 @@ export default function CrewsPage() {
           )
         )}
 
-        {/* Фильтр по специализации */}
-        <motion.div variants={staggerChild} className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
-          {[{ id: null, label: 'Все работы' }, ...SPECIALTIES].map((s) => {
-            const active = specialty === s.id
-            return (
-              <Tap
-                key={s.label}
-                onClick={() => setSpecialty(s.id)}
-                className={cn(
-                  'relative h-9 shrink-0 rounded-full border px-3.5 text-[12.5px] font-semibold transition-colors',
-                  active ? 'border-brand-600 text-white' : 'border-line bg-white text-navy',
-                )}
-              >
-                {active && (
-                  <motion.span
-                    layoutId="spec-pill"
-                    className="absolute inset-0 rounded-full bg-brand-600"
-                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
-                  />
-                )}
-                <span className="relative z-10">{s.label}</span>
-              </Tap>
-            )
-          })}
-        </motion.div>
-
         {/* Бригада ОМА — всегда первая */}
         {oma && (
           <motion.section variants={staggerChild} layout>
-            <CrewCard crew={oma} onOpen={() => setOpenCrew(oma)} />
+            <CrewCard crew={oma} onOpen={() => setOpenCrew(oma)} onChat={() => setChatCrew(oma)} />
           </motion.section>
         )}
         {!omaInCity && (
@@ -142,20 +160,6 @@ export default function CrewsPage() {
             <h2 className="text-[15px] font-extrabold text-navy">
               Партнёры ОМА <span className="font-semibold text-muted">• {partners.length}</span>
             </h2>
-          </div>
-          <div className="no-scrollbar -mx-4 mb-3 flex gap-1.5 overflow-x-auto px-4">
-            {SORTS.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => setSort(s.id)}
-                className={cn(
-                  'h-8 shrink-0 rounded-lg px-3 text-[12px] font-semibold transition-colors',
-                  sort === s.id ? 'bg-navy text-white' : 'bg-white text-muted',
-                )}
-              >
-                {s.label}
-              </button>
-            ))}
           </div>
 
           {partners.length === 0 ? (
@@ -178,7 +182,12 @@ export default function CrewsPage() {
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                   >
-                    <CrewCard crew={c} highlightSpecialty={specialty} onOpen={() => setOpenCrew(c)} />
+                    <CrewCard
+                      crew={c}
+                      highlightSpecialty={specialty}
+                      onOpen={() => setOpenCrew(c)}
+                      onChat={() => setChatCrew(c)}
+                    />
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -218,8 +227,15 @@ export default function CrewsPage() {
             crew={openCrew}
             presetProjectId={forProject?.id}
             onClose={() => setOpenCrew(null)}
+            onChat={() => {
+              setChatCrew(openCrew)
+              setOpenCrew(null)
+            }}
           />
         )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {chatCrew && <ChatSheet key={chatCrew.id} crew={chatCrew} onClose={() => setChatCrew(null)} />}
       </AnimatePresence>
     </div>
   )

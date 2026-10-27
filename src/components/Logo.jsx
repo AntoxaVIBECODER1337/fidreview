@@ -1,22 +1,27 @@
+import { useState } from 'react'
+import { cn } from '../lib/cn'
+
 /**
- * Логотип ОМА — реальная картинка с oma.by (public/img/oma-logo.png).
- * Если файл не найден — рисуем точную копию в SVG.
+ * Официальный логотип ОМА: положите файл в public/img/oma-logo.png
+ * (или .svg — тогда поменяйте путь ниже).
+ * Пока файла нет, показываем текстовую надпись «ОМА».
  */
+const LOGO_SRC = '/img/oma-logo.png'
+
 export default function Logo({ className = 'h-8 w-auto' }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return <span className="text-[22px] leading-8 font-black tracking-wide text-brand-600">ОМА</span>
+  }
+
   return (
     <img
-      src="/img/oma-logo.png"
+      src={LOGO_SRC}
       alt="ОМА"
-      className={className}
-      onError={(e) => {
-        // fallback: подменяем src на инлайновый SVG
-        e.currentTarget.onerror = null
-        e.currentTarget.src =
-          'data:image/svg+xml;utf8,' +
-          encodeURIComponent(
-            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 64"><circle cx="28" cy="34" r="24" fill="#0b5bf5"/><path d="M44 58 L62 10 L80 58 Z" fill="#0b5bf5"/><path d="M68 58 L86 10 L104 58 Z" fill="#0b5bf5"/><path d="M92 58 L110 10 L128 58 Z" fill="#0b5bf5"/></svg>',
-          )
-      }}
+      className={cn('object-contain', className)}
+      onError={() => setFailed(true)}
+      draggable={false}
     />
   )
 }

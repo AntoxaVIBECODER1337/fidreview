@@ -23,6 +23,9 @@ export const specialtyLabel = (id) => SPECIALTIES.find((s) => s.id === id)?.labe
 export const CREWS = [
   {
     id: 'oma-service',
+    phone: '+375 17 300-00-00',
+    telegram: 'oma_service_demo',
+    instagram: 'oma.service.demo',
     name: 'ОМА Сервис',
     isOma: true,
     cities: ['Минск', 'Брест', 'Гомель', 'Гродно'],
@@ -46,6 +49,9 @@ export const CREWS = [
   },
   {
     id: 'masterok',
+    phone: '+375 29 101-11-01',
+    telegram: 'masterok_brigada',
+    instagram: 'masterok.remont',
     name: 'МастерОК',
     cities: ['Минск', 'Гродно'],
     rating: 4.8,
@@ -67,6 +73,8 @@ export const CREWS = [
   },
   {
     id: 'bylbuilder',
+    phone: '+375 33 202-22-02',
+    telegram: 'bylbuilder_by',
     name: 'БылБилдер',
     cities: ['Минск', 'Брест', 'Витебск'],
     rating: 4.6,
@@ -88,6 +96,9 @@ export const CREWS = [
   },
   {
     id: 'profirem',
+    phone: '+375 29 303-33-03',
+    telegram: 'profirem_minsk',
+    instagram: 'profi.rem',
     name: 'Проф и Рем',
     cities: ['Минск'],
     rating: 4.9,
@@ -108,6 +119,8 @@ export const CREWS = [
   },
   {
     id: 'tok-plus',
+    phone: '+375 44 404-44-04',
+    telegram: 'tokplus_electro',
     name: 'Ток+',
     cities: ['Минск', 'Могилёв', 'Гомель'],
     rating: 4.7,
@@ -128,6 +141,9 @@ export const CREWS = [
   },
   {
     id: 'aqua-brest',
+    phone: '+375 29 505-55-05',
+    telegram: 'aquadom_brest',
+    instagram: 'aquadom.brest',
     name: 'АкваДом',
     cities: ['Брест', 'Гродно'],
     rating: 4.5,
@@ -146,6 +162,9 @@ export const CREWS = [
   },
   {
     id: 'sad-master',
+    phone: '+375 33 606-66-06',
+    telegram: 'zeleny_dvor',
+    instagram: 'zeleny.dvor.by',
     name: 'Зелёный двор',
     cities: ['Минск', 'Гомель', 'Могилёв', 'Витебск'],
     rating: 4.8,
@@ -164,6 +183,8 @@ export const CREWS = [
   },
   {
     id: 'remstroy-vit',
+    phone: '+375 29 707-77-07',
+    telegram: 'remstroy_sever',
     name: 'РемСтрой Север',
     cities: ['Витебск', 'Могилёв'],
     rating: 4.4,
@@ -182,6 +203,8 @@ export const CREWS = [
   },
   {
     id: 'teplo-gomel',
+    phone: '+375 44 808-88-08',
+    telegram: 'teplomontazh_by',
     name: 'ТеплоМонтаж',
     cities: ['Гомель', 'Брест'],
     rating: 4.7,
@@ -200,6 +223,9 @@ export const CREWS = [
   },
   {
     id: 'mebel-sborka',
+    phone: '+375 29 909-99-09',
+    telegram: 'sborkapro_by',
+    instagram: 'sborkapro',
     name: 'СборкаПро',
     cities: ['Минск', 'Брест', 'Гомель', 'Гродно', 'Витебск', 'Могилёв'],
     rating: 4.6,
@@ -245,6 +271,13 @@ export function crewsForCity(city, { specialty = null, sort = 'rec' } = {}) {
 
 /** Ближайшие города, где есть бригада ОМА (для подсказки) */
 export const omaCities = () => CREWS.find((c) => c.isOma)?.cities ?? []
+
+/** Ссылки для связи: звонок, Telegram, Instagram (демо-контакты) */
+export const telHref = (c) => `tel:${c.phone.replace(/[^+\d]/g, '')}`
+export const tgHref = (c) => `https://t.me/${c.telegram}`
+export const igHref = (c) => `https://instagram.com/${c.instagram}`
+
+export const crewById = (id) => CREWS.find((c) => c.id === id)
 
 /** Что сохраняем в проекте — снимок бригады на момент выбора */
 export const crewSnapshot = (c) => ({

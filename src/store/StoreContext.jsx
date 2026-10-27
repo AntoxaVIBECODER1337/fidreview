@@ -9,6 +9,7 @@ const USER_KEY = 'oma.user'
 const PROMO_KEY = 'oma.promo'
 const PROJECTS_KEY = 'oma.projects'
 const CITY_KEY = 'oma.city'
+const CHATS_KEY = 'oma.chats'
 
 /** Демо-пользователь для быстрого входа на защите */
 export const DEMO_USER = {
@@ -56,6 +57,8 @@ export function StoreProvider({ children }) {
   const [promo, setPromo] = useState(() => load(PROMO_KEY, null))
   const [projects, setProjects] = useState(() => load(PROJECTS_KEY, []))
   const [city, setCity] = useState(() => load(CITY_KEY, 'Минск'))
+  /* Переписка с бригадами: { [crewId]: [{ from: 'me' | 'crew', text, ts }] } */
+  const [chats, setChats] = useState(() => load(CHATS_KEY, {}))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -65,6 +68,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(PROMO_KEY, promo), [promo])
   useEffect(() => persist(PROJECTS_KEY, projects), [projects])
   useEffect(() => persist(CITY_KEY, city), [city])
+  useEffect(() => persist(CHATS_KEY, chats), [chats])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -215,6 +219,11 @@ export function StoreProvider({ children }) {
     [showToast],
   )
 
+  /** Сообщение в чат бригады */
+  const addMessage = useCallback((crewId, from, text) => {
+    setChats((prev) => ({ ...prev, [crewId]: [...(prev[crewId] ?? []), { from, text, ts: Date.now() }] }))
+  }, [])
+
   /** Выбор бригады для проекта: цена работ = ставка × площадь */
   const assignCrew = useCallback(
     (projectId, crew, area) => {
@@ -265,6 +274,8 @@ export function StoreProvider({ children }) {
         createProject,
         assignCrew,
         city,
+        chats,
+        addMessage,
         setCity,
         approveProject,
         advanceStage,

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, BadgeCheck, Check, Hammer, HardHat, House, Minus, Plus, Star } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Check, Hammer, HardHat, House, MessageCircle, Minus, Plus, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { crewSnapshot, specialtyLabel, startLabel } from '../data/crews'
 import { cn } from '../lib/cn'
 import { rub } from '../lib/format'
 import { useStore } from '../store/StoreContext'
+import { ContactList } from './CrewContacts.jsx'
 import Sheet from './Sheet.jsx'
 import { PrimaryButton, Tap } from './ui.jsx'
 
@@ -14,7 +15,7 @@ import { PrimaryButton, Tap } from './ui.jsx'
  * Выбрать бригаду можно только для проекта из «Моего дома»:
  * если проектов нет — ведём создавать проект.
  */
-export default function CrewSheet({ crew, presetProjectId, onClose }) {
+export default function CrewSheet({ crew, presetProjectId, onClose, onChat }) {
   const navigate = useNavigate()
   const { projects, assignCrew } = useStore()
   const preset = projects.find((p) => p.id === presetProjectId)
@@ -40,9 +41,17 @@ export default function CrewSheet({ crew, presetProjectId, onClose }) {
 
   const footer =
     step === 'info' ? (
-      <PrimaryButton className="w-full" onClick={choose}>
-        Выбрать для проекта
-      </PrimaryButton>
+      <div className="flex gap-2">
+        <Tap
+          onClick={onChat}
+          className="flex h-12 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-brand-600/40 bg-white px-4 text-[14px] font-bold text-brand-600 active:bg-brand-50"
+        >
+          <MessageCircle size={17} /> Написать
+        </Tap>
+        <PrimaryButton className="flex-1" onClick={choose}>
+          Выбрать для проекта
+        </PrimaryButton>
+      </div>
     ) : step === 'assign' ? (
       <div>
         <div className="mb-2.5 flex items-baseline justify-between px-1">
@@ -224,6 +233,11 @@ function Info({ crew }) {
             </span>
           ))}
         </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-[13px] font-bold text-navy">Связаться до оформления проекта</p>
+        <ContactList crew={crew} />
       </div>
 
       <div>

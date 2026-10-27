@@ -2,17 +2,19 @@ import { motion } from 'framer-motion'
 import { BadgeCheck, Clock, HardHat, ShieldCheck, Star, Store } from 'lucide-react'
 import { specialtyLabel, startLabel } from '../data/crews'
 import { cn } from '../lib/cn'
+import { QuickContact } from './CrewContacts.jsx'
 
 /** Карточка бригады в списке. Бригада ОМА — крупная, на бренд-градиенте. */
-export default function CrewCard({ crew, onOpen, highlightSpecialty }) {
-  if (crew.isOma) return <OmaCrewCard crew={crew} onOpen={onOpen} />
+export default function CrewCard({ crew, onOpen, onChat, highlightSpecialty }) {
+  if (crew.isOma) return <OmaCrewCard crew={crew} onOpen={onOpen} onChat={onChat} />
 
   return (
+    <div className="rounded-xl border border-line/70 bg-white shadow-soft">
     <motion.button
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 550, damping: 28 }}
       onClick={onOpen}
-      className="flex w-full flex-col gap-2.5 rounded-xl border border-line/70 bg-white p-4 text-left shadow-soft"
+      className="flex w-full flex-col gap-2.5 p-4 pb-3 text-left"
     >
       <div className="flex items-center gap-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-panel text-[15px] font-black text-navy">
@@ -62,16 +64,19 @@ export default function CrewCard({ crew, onOpen, highlightSpecialty }) {
         </span>
       </div>
     </motion.button>
+    <QuickContact crew={crew} onChat={onChat} className="px-4 pb-4" />
+    </div>
   )
 }
 
-function OmaCrewCard({ crew, onOpen }) {
+function OmaCrewCard({ crew, onOpen, onChat }) {
   return (
+    <div className="relative overflow-clip rounded-2xl bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_60%,#123e80_100%)] text-white shadow-[0_10px_30px_rgb(29_93_190/0.35)]">
     <motion.button
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 550, damping: 28 }}
       onClick={onOpen}
-      className="relative w-full overflow-clip rounded-2xl bg-[linear-gradient(135deg,#1d5dbe_0%,#174c9d_60%,#123e80_100%)] p-4 text-left text-white shadow-[0_10px_30px_rgb(29_93_190/0.35)]"
+      className="relative w-full p-4 pb-3 text-left"
     >
       <span className="mesh-blob absolute -top-16 -right-14 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.22),transparent_70%)]" />
       <span className="relative flex items-center justify-between gap-2">
@@ -113,5 +118,7 @@ function OmaCrewCard({ crew, onOpen }) {
         </span>
       </span>
     </motion.button>
+    <QuickContact crew={crew} onChat={onChat} variant="dark" className="relative px-4 pb-4" />
+    </div>
   )
 }

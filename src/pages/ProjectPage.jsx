@@ -1,7 +1,11 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, Check, ChevronRight, HardHat, MessageCircleMore, ShieldCheck, ShoppingBag, Star, Users } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ChatSheet from '../components/ChatSheet.jsx'
+import { QuickContact } from '../components/CrewContacts.jsx'
 import EmptyState from '../components/EmptyState.jsx'
+import { crewById } from '../data/crews'
 import { Card, PrimaryButton, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
@@ -22,11 +26,15 @@ export default function ProjectPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { projects, approveProject, advanceStage, showToast } = useStore()
+  const [chatOpen, setChatOpen] = useState(false)
   const project = projects.find((p) => p.id === id)
 
   if (!project) {
     return <EmptyState icon={HelpCircle} title="Проект не найден" buttonLabel="Мой дом" to="/my-home" />
   }
+
+  /* Полные данные бригады (контакты, ответы в чате) по снимку из проекта */
+  const crew = project.crew ? { ...crewById(project.crew.id), ...project.crew } : null
 
   const pending = project.status === 'pending'
   const finished = !pending && project.currentStage >= PROJECT_STAGES.length - 1
@@ -103,7 +111,8 @@ export default function ProjectPage() {
         {/* Бригада */}
         <motion.div variants={staggerChild}>
           {project.crew ? (
-            <Card className="flex items-center gap-3 p-4">
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
               <span
                 className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[15px] font-black text-white ${
                   project.crew.isOma ? 'bg-brand-600' : 'bg-navy'
@@ -134,6 +143,8 @@ export default function ProjectPage() {
                   Сменить
                 </Tap>
               )}
+              </div>
+              <QuickContact crew={crew} onChat={() => setChatOpen(true)} className="mt-3" />
             </Card>
           ) : (
             <Tap
@@ -269,14 +280,16 @@ export default function ProjectPage() {
         >
           <ShieldCheck size={20} className="shrink-0 text-brand-600" />
           <p className="text-[12.5px] leading-snug text-navy">
-            Гарантия на работы — <b>2 года</b>. Чат с бригадой доступен 24/7.
+            Гарантия на работы — <b>{crew?.guarantee ?? 2} {(crew?.guarantee ?? 2) === 1 ? 'год' : 'года'}</b>. Чат с бригадой — кнопка слева, до и после оформления.
           </p>
         </motion.div>
 
         {/* CTA */}
         <motion.div variants={staggerChild} className="flex gap-2.5">
           <Tap
-            onClick={() => showToast('Чат с бригадой откроется после старта проекта')}
+            onClick={() =>
+              crew ? setChatOpen(true) : showToast('Сначала выберите бригаду — потом можно написать ей')
+            }
             aria-label="Чат"
             className="flex h-12 w-14 shrink-0 items-center justify-center rounded-lg border border-brand-600/30 bg-white text-brand-600 transition-colors active:bg-brand-50"
           >
@@ -287,6 +300,10 @@ export default function ProjectPage() {
           </PrimaryButton>
         </motion.div>
       </motion.div>
+
+      <AnimatePresence>
+        {chatOpen && crew && <ChatSheet crew={crew} onClose={() => setChatOpen(false)} />}
+      </AnimatePresence>
     </div>
   )
 }
