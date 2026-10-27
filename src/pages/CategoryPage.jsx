@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import ProductCard from '../components/ProductCard.jsx'
+import { ProductGridSkeleton, useSkeleton } from '../components/Skeleton.jsx'
 import { getCategory, productsByCategory, saleProducts } from '../lib/catalog'
 import { countProducts } from '../lib/format'
 
@@ -19,6 +20,7 @@ export default function CategoryPage() {
   }, [searchParams])
 
   const isAkcii = id === 'akcii'
+  const loading = useSkeleton(600, [id, sub, sort])
   const cat = getCategory(id)
 
   const list = useMemo(() => {
@@ -79,13 +81,19 @@ export default function CategoryPage() {
         </select>
       </div>
 
-      <section className="grid grid-cols-2 gap-3 px-4 pt-3 pb-6">
-        {list.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </section>
+      {loading ? (
+        <div className="px-4 pt-3 pb-6">
+          <ProductGridSkeleton count={6} />
+        </div>
+      ) : (
+        <section className="grid grid-cols-2 gap-3 px-4 pt-3 pb-6">
+          {list.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </section>
+      )}
 
-      {list.length === 0 && (
+      {!loading && list.length === 0 && (
         <EmptyState
           icon={PackageX}
           title="Товаров пока нет"

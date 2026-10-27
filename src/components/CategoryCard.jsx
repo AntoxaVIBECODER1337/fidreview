@@ -29,10 +29,14 @@ export default function CategoryCard({ section }) {
             className="absolute bottom-3 right-3 h-20 w-24 object-contain"
           />
         ) : (
-          <Icon
-            className="absolute bottom-4 right-4 h-11 w-11 text-[#243044]"
-            strokeWidth={1.4}
-          />
+          /* Единый стиль иконок категорий: брендовая плитка + линейная иконка */
+          <span
+            className={`absolute right-3.5 bottom-3.5 flex h-14 w-14 items-center justify-center rounded-2xl ${
+              id === 'akcii' ? 'bg-price/10 text-price' : 'bg-brand-50 text-brand-600'
+            }`}
+          >
+            <Icon className="h-7 w-7" strokeWidth={1.8} />
+          </span>
         )}
       </div>
     </Link>

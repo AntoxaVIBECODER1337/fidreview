@@ -12,6 +12,7 @@ import {
   UserRound,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import BonusCard from '../components/BonusCard.jsx'
 import Header from '../components/Header.jsx'
 import { useStore } from '../store/StoreContext'
 
@@ -29,7 +30,7 @@ const HELP = [
   { icon: Undo2, label: 'Возврат и гарантия', action: 'toast' },
   { icon: FileText, label: 'Договор публичной оферты', action: 'toast' },
   { icon: Store, label: 'Адреса магазинов', action: 'toast' },
-  { icon: ListChecks, label: 'Список сравнения', action: 'toast' },
+  { icon: ListChecks, label: 'Список сравнения', to: '/compare' },
 ]
 
 export default function ProfilePage() {
@@ -101,6 +102,8 @@ export default function ProfilePage() {
           </button>
         </div>
       )}
+
+      <BonusCard />
 
       <h2 className="mt-7 text-[16px] font-bold text-navy">Личный кабинет</h2>
       <div className="mt-1">{ACCOUNT.map((r) => Row(r))}</div>

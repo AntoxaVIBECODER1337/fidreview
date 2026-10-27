@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
+import { overlayRoot } from '../lib/overlay'
 
 /**
  * Нижняя шторка в стиле oma-ozon: затемнение, пружинный выезд,
@@ -10,7 +11,7 @@ import { X } from 'lucide-react'
 export default function Sheet({ title, subtitle, onClose, children, footer, maxH = '90dvh' }) {
   return createPortal(
     <motion.div
-      className="fixed inset-0 z-50 mx-auto flex max-w-[430px] flex-col justify-end"
+      className="fixed inset-0 z-50 mx-auto flex max-w-[430px] flex-col justify-end overflow-clip"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -25,7 +26,7 @@ export default function Sheet({ title, subtitle, onClose, children, footer, maxH
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 0.6 }}
         onDragEnd={(_, info) => info.offset.y > 110 && onClose()}
-        style={{ maxHeight: maxH }}
+        style={{ maxHeight: `min(${maxH}, 94%)` }}
         className="relative flex flex-col rounded-t-3xl bg-white shadow-lift"
       >
         <div className="shrink-0 px-5 pt-3 pb-2">
@@ -54,6 +55,6 @@ export default function Sheet({ title, subtitle, onClose, children, footer, maxH
         )}
       </motion.div>
     </motion.div>,
-    document.body,
+    overlayRoot(),
   )
 }

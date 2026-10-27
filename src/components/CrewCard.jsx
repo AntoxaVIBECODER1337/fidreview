@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { BadgeCheck, Clock, HardHat, ShieldCheck, Star, Store } from 'lucide-react'
 import { specialtyLabel, startLabel } from '../data/crews'
+import { getWorkIcon } from '../lib/categoryIcons'
 import { cn } from '../lib/cn'
 import { QuickContact } from './CrewContacts.jsx'
 
@@ -42,17 +43,21 @@ export default function CrewCard({ crew, onOpen, onChat, highlightSpecialty }) {
       </div>
 
       <div className="flex flex-wrap gap-1.5">
-        {crew.specialties.slice(0, 4).map((s) => (
+        {crew.specialties.slice(0, 4).map((s) => {
+          const I = getWorkIcon(s)
+          return (
           <span
             key={s}
             className={cn(
-              'rounded-full px-2 py-0.5 text-[10.5px] font-semibold',
+              'flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold',
               s === highlightSpecialty ? 'bg-brand-600 text-white' : 'bg-panel text-navy',
             )}
           >
+            <I size={11} strokeWidth={2.2} />
             {specialtyLabel(s)}
           </span>
-        ))}
+          )
+        })}
       </div>
 
       <div className="flex items-center justify-between border-t border-line pt-2.5 text-[11.5px]">

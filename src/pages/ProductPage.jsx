@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { Heart, HelpCircle, ListPlus, Minus, Plus, ShoppingBag } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
+import { ArrowRight, Heart, HelpCircle, ListChecks, ListPlus, Maximize2, Minus, Plus, ShoppingBag } from 'lucide-react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import Stars from '../components/Stars.jsx'
+import ZoomViewer from '../components/ZoomViewer.jsx'
 import { getProduct, products } from '../lib/catalog'
+import { flyToCart } from '../lib/fly'
 import { discountPercent, rub } from '../lib/format'
 import { useStore } from '../store/StoreContext'
 
@@ -20,8 +23,10 @@ function buyWith(product) {
 export default function ProductPage() {
   const { id } = useParams()
   const product = getProduct(id)
-  const { cart, addToCart, favorites, toggleFav, showToast } = useStore()
+  const navigate = useNavigate()
+  const { cart, addToCart, favorites, toggleFav, compare, toggleCompare } = useStore()
   const [tab, setTab] = useState('desc')
+  const [zoom, setZoom] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
   if (!product) {
@@ -49,8 +54,15 @@ export default function ProductPage() {
       <Header back title={product.name} />
 
       {/* Галерея */}
-      <div className="relative flex h-64 items-center justify-center bg-white">
+      <button
+        onClick={() => setZoom(true)}
+        aria-label="Открыть фото"
+        className="relative flex h-64 w-full items-center justify-center bg-white hide-tap"
+      >
         <span className="text-[110px] leading-none">{product.emoji}</span>
+        <span className="absolute right-4 bottom-3 flex items-center gap-1 rounded-full bg-panel px-2.5 py-1 text-[11px] font-semibold text-muted">
+          <Maximize2 size={12} /> Увеличить
+        </span>
         {product.image && (
           <img
             src={product.image}
@@ -61,7 +73,8 @@ export default function ProductPage() {
             className="absolute inset-0 h-full w-full object-cover"
           />
         )}
-      </div>
+      </button>
+      <AnimatePresence>{zoom && <ZoomViewer product={product} onClose={() => setZoom(false)} />}</AnimatePresence>
 
       <div className="px-4 pt-2">
         <p className="text-[11px] text-muted">Арт. {product.sku}</p>
@@ -97,7 +110,10 @@ export default function ProductPage() {
           </button>
           {inCart === 0 ? (
             <button
-              onClick={() => addToCart(product.id, 1)}
+              onClick={(e) => {
+                addToCart(product.id, 1)
+                flyToCart(e.currentTarget, product.emoji)
+              }}
               className="flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-brand-600 text-[14px] font-semibold text-white hide-tap active:bg-brand-700"
             >
               <ShoppingBag className="h-5 w-5" />
@@ -115,7 +131,10 @@ export default function ProductPage() {
               </button>
               <span className="text-[15px] font-bold text-navy">{inCart}</span>
               <button
-                onClick={() => addToCart(product.id, 1)}
+                onClick={(e) => {
+                  addToCart(product.id, 1)
+                  flyToCart(e.currentTarget, product.emoji)
+                }}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white active:bg-brand-700"
                 aria-label="Добавить ещё"
               >
@@ -125,13 +144,29 @@ export default function ProductPage() {
           )}
         </div>
 
-        <button
-          onClick={() => showToast('Список сравнения — в следующей версии')}
-          className="mt-3 flex items-center gap-2 text-[13px] font-medium text-navy hide-tap"
-        >
-          <ListPlus className="h-5 w-5 text-[#243044]" strokeWidth={1.7} />
-          Добавить к сравнению
-        </button>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <button
+            onClick={() => toggleCompare(product.id)}
+            className={`flex items-center gap-2 text-[13px] font-medium hide-tap ${
+              compare.includes(product.id) ? 'text-brand-600' : 'text-navy'
+            }`}
+          >
+            {compare.includes(product.id) ? (
+              <ListChecks className="h-5 w-5" strokeWidth={1.9} />
+            ) : (
+              <ListPlus className="h-5 w-5 text-[#243044]" strokeWidth={1.7} />
+            )}
+            {compare.includes(product.id) ? 'В сравнении' : 'Добавить к сравнению'}
+          </button>
+          {compare.length > 0 && (
+            <button
+              onClick={() => navigate('/compare')}
+              className="flex items-center gap-1 text-[13px] font-bold text-brand-600 hide-tap"
+            >
+              Сравнить ({compare.length}) <ArrowRight size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Табы: Описание / Параметры */}

@@ -39,6 +39,11 @@ export default function OrderSuccessPage() {
       <div className="mt-4 rounded-xl border border-line bg-panel px-5 py-3 text-[15px] font-extrabold text-navy">
         {rub(last.total)}
       </div>
+      {last.bonusEarned > 0 && (
+        <p className="mt-3 rounded-full bg-emerald-50 px-4 py-1.5 text-[13px] font-bold text-emerald-700">
+          +{last.bonusEarned} баллов на карту ОМА Бонус
+        </p>
+      )}
       <div className="mt-6 flex w-full flex-col gap-2">
         <Link
           to="/orders"

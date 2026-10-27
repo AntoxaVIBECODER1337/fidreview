@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Hammer, Heart, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { Hammer, Heart, Minus, PartyPopper, Plus, ShoppingBag, Trash2, Truck, X } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
@@ -10,7 +10,7 @@ import { cn } from '../lib/cn'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
 import { PROMOS } from '../lib/promo'
-import { useStore } from '../store/StoreContext'
+import { FREE_DELIVERY_FROM, useStore } from '../store/StoreContext'
 
 /** «Корзина» с разделом «Избранное» (бывшая отдельная вкладка) */
 export default function CartPage() {
@@ -177,6 +177,8 @@ function CartView() {
             </div>
           )}
 
+          <FreeDelivery subtotal={subtotal} />
+
           {/* Товары */}
           <section className="px-4 pt-3">
             {items.map(({ product, qty }) => (
@@ -275,5 +277,46 @@ function CartView() {
         </>
       )}
     </div>
+  )
+}
+
+/** «Осталось до бесплатной доставки» — прогресс по сумме корзины */
+function FreeDelivery({ subtotal }) {
+  const left = Math.max(0, Math.round((FREE_DELIVERY_FROM - subtotal) * 100) / 100)
+  const pct = Math.min(100, (subtotal / FREE_DELIVERY_FROM) * 100)
+  const done = left === 0
+  return (
+    <section className="mx-4 mt-3 rounded-xl border border-line bg-white p-3">
+      <div className="flex items-center gap-2.5">
+        <span
+          className={cn(
+            'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors',
+            done ? 'bg-emerald-50 text-emerald-600' : 'bg-brand-50 text-brand-600',
+          )}
+        >
+          {done ? <PartyPopper size={16} /> : <Truck size={16} />}
+        </span>
+        <p className="min-w-0 flex-1 text-[13px] leading-snug text-navy">
+          {done ? (
+            <b className="text-emerald-700">Доставка бесплатно!</b>
+          ) : (
+            <>
+              Ещё <b>{rub(left)}</b> до бесплатной доставки
+            </>
+          )}
+          <span className="block text-[11px] text-muted">
+            {done ? `Заказ от ${rub(FREE_DELIVERY_FROM)} — доставим завтра без оплаты` : `Доставка 5.90 р. · бесплатно от ${rub(FREE_DELIVERY_FROM)}`}
+          </span>
+        </p>
+      </div>
+      <div className="mt-2.5 h-2 overflow-hidden rounded-full bg-line">
+        <motion.div
+          className={cn('h-full rounded-full', done ? 'bg-emerald-500' : 'bg-brand-600')}
+          initial={false}
+          animate={{ width: `${pct}%` }}
+          transition={{ type: 'spring', stiffness: 160, damping: 24 }}
+        />
+      </div>
+    </section>
   )
 }

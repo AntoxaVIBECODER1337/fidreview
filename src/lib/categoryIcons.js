@@ -6,6 +6,8 @@ import {
   Car,
   Dumbbell,
   Drill,
+  Flame,
+  Layers,
   HeartPulse,
   House,
   Lightbulb,
@@ -50,3 +52,20 @@ const MAP = {
 }
 
 export const getCatIcon = (id) => MAP[id] ?? Box
+
+/**
+ * Виды работ (сценарии ИИ, специализации бригад) — из того же набора,
+ * что и категории: ванная = сантехника, электрика = электрика и т.д.
+ */
+const WORK = {
+  floors: Layers,
+  bath: ShowerHead,
+  electric: Lightbulb,
+  walls: Paintbrush,
+  heating: Flame,
+  furniture: Sofa,
+  garden: Sprout,
+  repair: Drill,
+}
+
+export const getWorkIcon = (id) => WORK[id] ?? Wrench

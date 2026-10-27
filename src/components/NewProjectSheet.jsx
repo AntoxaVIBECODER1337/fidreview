@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check, HardHat, Minus, Plus, Star } from 'lucide-react'
 import { SPECIALTIES, crewSnapshot, crewsForCity, startLabel } from '../data/crews'
+import { getWorkIcon } from '../lib/categoryIcons'
 import { cn } from '../lib/cn'
 import { rub } from '../lib/format'
 import { useStore } from '../store/StoreContext'
@@ -85,6 +86,7 @@ export default function NewProjectSheet({ onClose, onCreated }) {
           <div className="flex flex-wrap gap-1.5">
             {SPECIALTIES.map((s) => {
               const active = s.id === scenario
+              const I = getWorkIcon(s.id)
               return (
                 <button
                   key={s.id}
@@ -93,10 +95,11 @@ export default function NewProjectSheet({ onClose, onCreated }) {
                     setCrewId('none')
                   }}
                   className={cn(
-                    'h-9 rounded-full border px-3.5 text-[12.5px] font-semibold transition-colors',
+                    'flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-[12.5px] font-semibold transition-colors',
                     active ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-white text-navy',
                   )}
                 >
+                  <I size={14} strokeWidth={2} />
                   {s.label}
                 </button>
               )

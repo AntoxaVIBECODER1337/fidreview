@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 import { CircleUserRound, HardHat, LayoutGrid, ShoppingBag } from 'lucide-react'
@@ -51,6 +52,13 @@ export default function BottomNav() {
   const { pathname } = useLocation()
   const { cartCount } = useStore()
   const activeIdx = tabIndexFor(pathname)
+  /* «Поп» бейджа корзины, когда товар долетел до иконки */
+  const [bumpKey, setBumpKey] = useState(0)
+  useEffect(() => {
+    const f = () => setBumpKey((k) => k + 1)
+    window.addEventListener('cart:bump', f)
+    return () => window.removeEventListener('cart:bump', f)
+  }, [])
 
   return (
     <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
@@ -75,7 +83,7 @@ export default function BottomNav() {
                           transition={{ type: 'spring', stiffness: 480, damping: 36 }}
                         />
                       )}
-                      <span className="relative z-10">
+                      <span className="relative z-10" {...(t.to === '/cart' ? { 'data-cart-target': '' } : {})}>
                         <Icon
                           className={cn(
                             'h-[21px] w-[21px] transition-colors duration-200',
@@ -85,10 +93,10 @@ export default function BottomNav() {
                                                   />
                         {t.to === '/cart' && cartCount > 0 && (
                           <motion.span
-                            key={cartCount}
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: 'spring', stiffness: 600, damping: 20 }}
+                            key={`${cartCount}-${bumpKey}`}
+                            initial={{ scale: 0.2 }}
+                            animate={{ scale: [0.2, 1.45, 1] }}
+                            transition={{ duration: 0.45, ease: 'easeOut' }}
                             className="absolute -top-1.5 -right-2.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white"
                           >
                             {cartCount > 99 ? '99+' : cartCount}

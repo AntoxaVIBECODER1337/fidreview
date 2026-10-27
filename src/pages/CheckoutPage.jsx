@@ -5,13 +5,17 @@ import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import { getProduct } from '../lib/catalog'
 import { rub } from '../lib/format'
-import { DEMO_USER, useStore } from '../store/StoreContext'
+import { cashbackFor } from '../lib/bonus'
+import { DEMO_USER, FREE_DELIVERY_FROM, useStore } from '../store/StoreContext'
+
+const DELIVERY_FEE = 5.9
 
 const STORE_ADDRESS = 'Самовывоз: г. Минск, ул. Притыцкого, 62 — сегодня, бесплатно'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
-  const { cart, placeOrder, showToast, user, demoLogin } = useStore()
+  const { cart, placeOrder, showToast, user, demoLogin, bonus } = useStore()
+  const [useBonus, setUseBonus] = useState(false)
   /* Данные получателя подставляются из профиля */
   const [name, setName] = useState(user?.name ?? '')
   const [phone, setPhone] = useState(user?.phone ?? '')
@@ -30,7 +34,11 @@ export default function CheckoutPage() {
     const p = getProduct(id)
     return p ? [{ product: p, qty }] : []
   })
-  const total = items.reduce((s, i) => s + i.product.price * i.qty, 0)
+  const subtotal = items.reduce((s, i) => s + i.product.price * i.qty, 0)
+  const fee = delivery === 'Доставка' && subtotal < FREE_DELIVERY_FROM ? DELIVERY_FEE : 0
+  const bonusOff = useBonus ? Math.min(bonus.balance, Math.floor(subtotal * 0.3)) : 0
+  const total = Math.round((subtotal - bonusOff + fee) * 100) / 100
+  const willEarn = user ? cashbackFor(subtotal - bonusOff, bonus.spent) : 0
 
   if (items.length === 0) {
     return (
@@ -52,7 +60,7 @@ export default function CheckoutPage() {
       showToast('Заполните имя, телефон и адрес')
       return
     }
-    placeOrder({ name, phone, delivery, address, payment })
+    placeOrder({ name, phone, delivery, address, payment, useBonus, fee })
     navigate('/order-success')
   }
 
@@ -93,7 +101,9 @@ export default function CheckoutPage() {
             <Truck className="h-5 w-5 text-accent" />
             <span className="flex-1">
               <span className="block text-[14px] font-semibold text-navy">Доставка по Минску</span>
-              <span className="block text-[11px] text-muted">Завтра, 5.90 р. · бесплатно от 500 р.</span>
+              <span className="block text-[11px] text-muted">
+                Завтра, {subtotal >= FREE_DELIVERY_FROM ? 'бесплатно' : `${rub(DELIVERY_FEE)} · бесплатно от ${rub(FREE_DELIVERY_FROM)}`}
+              </span>
             </span>
             <span
               className={`h-5 w-5 rounded-full border-2 ${
@@ -166,9 +176,52 @@ export default function CheckoutPage() {
         </div>
       </section>
 
+      {/* Бонусы */}
+      {user && bonus.balance > 0 && (
+        <section className="mx-4 mt-5">
+          <button
+            onClick={() => setUseBonus((v) => !v)}
+            className={`flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition-colors hide-tap ${
+              useBonus ? 'border-brand-600 bg-brand-50/60' : 'border-line bg-white'
+            }`}
+          >
+            <span
+              className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${useBonus ? 'bg-brand-600' : 'bg-line'}`}
+            >
+              <span
+                className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-all ${useBonus ? 'left-5' : 'left-1'}`}
+              />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[14px] font-semibold text-navy">Списать баллы ОМА Бонус</span>
+              <span className="block text-[11.5px] text-muted">
+                На карте {bonus.balance} · можно списать до 30% заказа
+              </span>
+            </span>
+            {useBonus && <span className="shrink-0 text-[14px] font-black text-brand-600">−{rub(bonusOff)}</span>}
+          </button>
+        </section>
+      )}
+
       {/* Итог */}
       <section className="mx-4 mt-6 rounded-xl bg-navy p-4 text-white">
-        <div className="flex items-baseline justify-between">
+        <div className="flex justify-between text-[13px] text-white/80">
+          <span>Товары</span>
+          <span>{rub(Math.round(subtotal * 100) / 100)}</span>
+        </div>
+        {delivery === 'Доставка' && (
+          <div className="mt-1 flex justify-between text-[13px] text-white/80">
+            <span>Доставка</span>
+            <span>{fee ? rub(fee) : 'бесплатно'}</span>
+          </div>
+        )}
+        {bonusOff > 0 && (
+          <div className="mt-1 flex justify-between text-[13px] text-white/80">
+            <span>Баллами</span>
+            <span>−{rub(bonusOff)}</span>
+          </div>
+        )}
+        <div className="mt-2 flex items-baseline justify-between">
           <span className="text-[15px] font-bold">Итого:</span>
           <span className="text-[20px] font-black">{rub(total)}</span>
         </div>
@@ -179,6 +232,11 @@ export default function CheckoutPage() {
           <CheckCircle2 className="h-5 w-5" />
           Подтвердить заказ
         </button>
+        {willEarn > 0 && (
+          <p className="mt-2 text-center text-[12px] text-white/75">
+            +{willEarn} баллов ОМА Бонус начислится за этот заказ
+          </p>
+        )}
       </section>
     </div>
   )

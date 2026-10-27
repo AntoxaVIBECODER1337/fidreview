@@ -3,12 +3,16 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { HelpCircle } from 'lucide-react'
 import BottomNav, { screenKey, tabIndexFor } from './components/BottomNav.jsx'
+import CompareBar from './components/CompareBar.jsx'
 import EmptyState from './components/EmptyState.jsx'
+import Onboarding from './components/Onboarding.jsx'
+import { PhoneFrame, usePhoneFrame } from './components/PhoneFrame.jsx'
 import Toast from './components/Toast.jsx'
 import AllSectionsPage from './pages/AllSectionsPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
+import ComparePage from './pages/ComparePage.jsx'
 import Home from './pages/Home.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import MyHomePage from './pages/MyHomePage.jsx'
@@ -19,6 +23,7 @@ import ProfilePage from './pages/ProfilePage.jsx'
 import ProjectPage from './pages/ProjectPage.jsx'
 import CrewsPage from './pages/CrewsPage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
+import { useStore } from './store/StoreContext'
 
 /* Направленные слайды между экранами (из oma-ozon) */
 const pageVariants = {
@@ -35,6 +40,9 @@ export default function App() {
   const { pathname } = location
   const prev = useRef(pathname)
   const dir = useRef(1)
+  const framed = usePhoneFrame()
+  const { onboarded } = useStore()
+  const scroller = useRef(null)
 
   if (prev.current !== pathname && screenKey(prev.current) !== screenKey(pathname)) {
     const a = tabIndexFor(prev.current)
@@ -45,12 +53,11 @@ export default function App() {
   prev.current = pathname
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    if (scroller.current) scroller.current.scrollTop = 0
+    else window.scrollTo(0, 0)
   }, [pathname])
 
-  return (
-    <div className="flex min-h-dvh justify-center">
-      <div className="relative w-full max-w-[430px] overflow-x-clip bg-white shadow-[0_0_80px_rgb(0_0_0/0.5)]">
+  const screen = (
         <main className="pb-28">
           <AnimatePresence mode="wait" custom={dir.current} initial={false}>
             <motion.div
@@ -79,6 +86,7 @@ export default function App() {
                 <Route path="/my-home" element={<MyHomePage />} />
                 <Route path="/my-home/project/:id" element={<ProjectPage />} />
                 <Route path="/crews" element={<CrewsPage />} />
+                <Route path="/compare" element={<ComparePage />} />
                 <Route
                   path="*"
                   element={
@@ -94,8 +102,32 @@ export default function App() {
             </motion.div>
           </AnimatePresence>
         </main>
-        <Toast />
-        <BottomNav />
+  )
+
+  /* Меню, тосты, сравнение, онбординг и шторки (#overlay-root) — поверх экрана */
+  const overlay = (
+    <>
+      <CompareBar />
+      <Toast />
+      <BottomNav />
+      <AnimatePresence>{!onboarded && <Onboarding key="onboarding" />}</AnimatePresence>
+      <div id="overlay-root" />
+    </>
+  )
+
+  if (framed) {
+    return (
+      <PhoneFrame ref={scroller} overlay={overlay}>
+        {screen}
+      </PhoneFrame>
+    )
+  }
+
+  return (
+    <div className="flex min-h-dvh justify-center">
+      <div className="relative w-full max-w-[430px] overflow-x-clip bg-white shadow-[0_0_80px_rgb(0_0_0/0.5)]">
+        {screen}
+        {overlay}
       </div>
     </div>
   )

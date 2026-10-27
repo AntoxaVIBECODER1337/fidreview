@@ -6,6 +6,7 @@ import CategoryCard from '../components/CategoryCard.jsx'
 import CityPicker from '../components/CityPicker.jsx'
 import Logo from '../components/Logo.jsx'
 import ProductCard from '../components/ProductCard.jsx'
+import { ProductGridSkeleton, useSkeleton } from '../components/Skeleton.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { staggerChild, staggerParent } from '../components/ui.jsx'
 import { categories, popularProducts, saleProducts } from '../lib/catalog'
@@ -56,6 +57,7 @@ export default function Home() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const tab = pathname === '/catalog' ? '/catalog' : '/'
+  const loading = useSkeleton(650)
 
   /** Определяет ближайший баннер к левому краю — для точек-индикаторов */
   const onBannerScroll = (e) => {
@@ -196,6 +198,9 @@ export default function Home() {
             Каталог
           </Link>
         </div>
+        {loading ? (
+          <ProductGridSkeleton count={4} />
+        ) : (
         <motion.div
           variants={staggerParent}
           initial="hidden"
@@ -211,6 +216,7 @@ export default function Home() {
               </motion.div>
             ))}
         </motion.div>
+        )}
       </section>
 
       {/* Акции */}

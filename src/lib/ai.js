@@ -1,5 +1,5 @@
-import { Bath, Flame, Hammer, Layers, PaintRoller, Sofa, Sprout, Zap } from 'lucide-react'
 import { getProduct } from './catalog'
+import { getWorkIcon } from './categoryIcons'
 
 /**
  * ИИ-помощник ОМА (логика из вкладки «Главное» репозитория oma-ozon,
@@ -16,7 +16,6 @@ export const SCENARIOS = [
   {
     id: 'floors',
     name: 'Стяжка и полы',
-    Icon: Layers,
     task: 'Залить стяжку в комнате 20 м² под ламинат',
     keys: ['стяжк', 'пол', 'ламинат', 'линолеум', 'цемент', 'бетон'],
     kits: {
@@ -28,7 +27,6 @@ export const SCENARIOS = [
   {
     id: 'bath',
     name: 'Ванная',
-    Icon: Bath,
     task: 'Ремонт ванной 6 м²: плитка, смеситель, раковина',
     keys: ['ванн', 'плитк', 'душ', 'санузел', 'туалет', 'унитаз', 'раковин', 'смесит'],
     base: 6,
@@ -41,7 +39,6 @@ export const SCENARIOS = [
   {
     id: 'electric',
     name: 'Электрика',
-    Icon: Zap,
     task: 'Электрика в комнате 18 м²: кабель, розетки, свет',
     keys: ['электр', 'розетк', 'кабел', 'провод', 'свет', 'выключат', 'автомат', 'щиток'],
     kits: {
@@ -53,7 +50,6 @@ export const SCENARIOS = [
   {
     id: 'walls',
     name: 'Стены',
-    Icon: PaintRoller,
     task: 'Выровнять стены гипсокартоном в комнате 15 м²',
     keys: ['стен', 'гипсокартон', 'шпакл', 'перегород', 'выровн', 'покрас'],
     kits: {
@@ -65,7 +61,6 @@ export const SCENARIOS = [
   {
     id: 'heating',
     name: 'Отопление',
-    Icon: Flame,
     task: 'Поменять батареи и трубы отопления',
     keys: ['отоплен', 'батаре', 'радиатор', 'котёл', 'котел', 'труб', 'бойлер', 'водонагрев'],
     kits: {
@@ -77,7 +72,6 @@ export const SCENARIOS = [
   {
     id: 'furniture',
     name: 'Мебель',
-    Icon: Sofa,
     task: 'Обставить спальню: кровать, комод, шкаф',
     keys: ['мебел', 'спальн', 'шкаф', 'кроват', 'диван', 'комод', 'стол', 'гостин'],
     kits: {
@@ -89,7 +83,6 @@ export const SCENARIOS = [
   {
     id: 'garden',
     name: 'Сад',
-    Icon: Sprout,
     task: 'Привести в порядок участок: газон и полив',
     keys: ['сад', 'участ', 'газон', 'полив', 'дач', 'косил', 'трав', 'мангал'],
     kits: {
@@ -101,7 +94,6 @@ export const SCENARIOS = [
   {
     id: 'repair',
     name: 'Инструмент',
-    Icon: Hammer,
     task: 'Собрать набор инструментов для ремонта',
     keys: ['инструмент', 'дрел', 'шуруп', 'перфорат', 'болгар'],
     kits: {
@@ -111,6 +103,9 @@ export const SCENARIOS = [
     },
   },
 ]
+
+/* Иконки сценариев — из общего набора иконок категорий */
+for (const s of SCENARIOS) s.Icon = getWorkIcon(s.id)
 
 export const DEFAULT_TASK = SCENARIOS[0].task
 

@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { getProduct } from '../lib/catalog'
 import { PROMOS } from '../lib/promo'
+import { WELCOME_BONUS, cashbackFor } from '../lib/bonus'
+import { HAPTIC, vibrate } from '../lib/haptics'
 
 const CART_KEY = 'oma.cart'
 const FAV_KEY = 'oma.favorites'
@@ -10,6 +12,14 @@ const PROMO_KEY = 'oma.promo'
 const PROJECTS_KEY = 'oma.projects'
 const CITY_KEY = 'oma.city'
 const CHATS_KEY = 'oma.chats'
+const COMPARE_KEY = 'oma.compare'
+const BONUS_KEY = 'oma.bonus'
+const ONBOARD_KEY = 'oma.onboarded'
+
+/** Сравнение — не больше 4 товаров */
+export const COMPARE_MAX = 4
+/** Бесплатная доставка от этой суммы */
+export const FREE_DELIVERY_FROM = 200
 
 /** Демо-пользователь для быстрого входа на защите */
 export const DEMO_USER = {
@@ -59,6 +69,10 @@ export function StoreProvider({ children }) {
   const [city, setCity] = useState(() => load(CITY_KEY, 'Минск'))
   /* Переписка с бригадами: { [crewId]: [{ from: 'me' | 'crew', text, ts }] } */
   const [chats, setChats] = useState(() => load(CHATS_KEY, {}))
+  const [compare, setCompare] = useState(() => load(COMPARE_KEY, []))
+  /* Бонусы: balance — баллы, spent — сумма покупок (для уровня), history — операции */
+  const [bonus, setBonus] = useState(() => load(BONUS_KEY, { balance: 0, spent: 0, history: [] }))
+  const [onboarded, setOnboarded] = useState(() => load(ONBOARD_KEY, false))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -69,6 +83,9 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(PROJECTS_KEY, projects), [projects])
   useEffect(() => persist(CITY_KEY, city), [city])
   useEffect(() => persist(CHATS_KEY, chats), [chats])
+  useEffect(() => persist(COMPARE_KEY, compare), [compare])
+  useEffect(() => persist(BONUS_KEY, bonus), [bonus])
+  useEffect(() => persist(ONBOARD_KEY, onboarded), [onboarded])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -84,6 +101,7 @@ export function StoreProvider({ children }) {
   }, [])
 
   const addToCart = useCallback((id, qty = 1) => {
+    if (qty > 0) vibrate(HAPTIC.add)
     setCart((prev) => {
       const next = { ...prev, [id]: (prev[id] ?? 0) + qty }
       if (next[id] <= 0) delete next[id]
@@ -112,19 +130,34 @@ export function StoreProvider({ children }) {
     [showToast],
   )
 
+  /** Приветственные баллы при первом входе */
+  const grantWelcome = useCallback(() => {
+    setBonus((b) =>
+      b.history.some((h) => h.type === 'welcome')
+        ? b
+        : {
+            ...b,
+            balance: b.balance + WELCOME_BONUS,
+            history: [{ type: 'welcome', amount: WELCOME_BONUS, text: 'Приветственные баллы', ts: Date.now() }, ...b.history],
+          },
+    )
+  }, [])
+
   const login = useCallback(
     (phone, profile = {}) => {
       setUser({ phone, ...profile })
+      grantWelcome()
       showToast(profile.name ? `Добро пожаловать, ${profile.name}!` : 'Вы вошли в аккаунт')
     },
-    [showToast],
+    [showToast, grantWelcome],
   )
 
   /** Быстрый вход для демо: готовый профиль без заполнения полей */
   const demoLogin = useCallback(() => {
     setUser({ ...DEMO_USER })
+    grantWelcome()
     showToast(`Добро пожаловать, ${DEMO_USER.name.split(' ')[0]}!`)
-  }, [showToast])
+  }, [showToast, grantWelcome])
 
   const logout = useCallback(() => {
     setUser(null)
@@ -153,7 +186,11 @@ export function StoreProvider({ children }) {
         const p = getProduct(id)
         return p ? [{ id, name: p.name, qty, price: p.price }] : []
       })
-      const total = items.reduce((s, i) => s + i.price * i.qty, 0)
+      const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0)
+      /* Списание баллов: не больше 30% суммы заказа */
+      const spend = info.useBonus ? Math.min(bonus.balance, Math.floor(subtotal * 0.3)) : 0
+      const total = Math.round((subtotal - spend + (info.fee ?? 0)) * 100) / 100
+      const earned = user ? cashbackFor(subtotal - spend, bonus.spent) : 0
       const order = {
         number: String(Math.floor(Math.random() * 900000) + 100000),
         date: new Date().toISOString(),
@@ -163,13 +200,45 @@ export function StoreProvider({ children }) {
         delivery: info.delivery,
         address: info.address || 'Самовывоз, г. Минск, ул. Притыцкого, 62',
         payment: info.payment,
+        bonusSpent: spend,
+        bonusEarned: earned,
       }
       setOrders((prev) => [order, ...prev])
       setCart({})
+      if (user) {
+        setBonus((b) => ({
+          balance: b.balance - spend + earned,
+          spent: b.spent + subtotal - spend,
+          history: [
+            { type: 'earn', amount: earned, text: `Кэшбэк за заказ №${order.number}`, ts: Date.now() },
+            ...(spend ? [{ type: 'spend', amount: -spend, text: `Оплата баллами, заказ №${order.number}`, ts: Date.now() }] : []),
+            ...b.history,
+          ],
+        }))
+      }
+      vibrate(HAPTIC.success)
       return order
     },
-    [cart],
+    [cart, bonus, user],
   )
+
+  /** Сравнение: добавить / убрать товар (не больше COMPARE_MAX) */
+  const toggleCompare = useCallback(
+    (id) => {
+      if (compare.includes(id)) {
+        setCompare(compare.filter((x) => x !== id))
+        return
+      }
+      if (compare.length >= COMPARE_MAX) {
+        showToast(`В сравнении уже ${COMPARE_MAX} товара — уберите один`)
+        return
+      }
+      setCompare([...compare, id])
+      showToast('Добавлено к сравнению')
+    },
+    [compare, showToast],
+  )
+  const clearCompare = useCallback(() => setCompare([]), [])
 
   /** Создать проект из текущей корзины (данные — только свои, из products.json) */
   const createProjectFromCart = useCallback(() => {
@@ -275,6 +344,12 @@ export function StoreProvider({ children }) {
         assignCrew,
         city,
         chats,
+        compare,
+        toggleCompare,
+        clearCompare,
+        bonus,
+        onboarded,
+        setOnboarded,
         addMessage,
         setCity,
         approveProject,

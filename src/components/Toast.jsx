@@ -14,7 +14,7 @@ export default function Toast() {
   if (!toast || !toast.text) return null
 
   return (
-    <div className="pointer-events-none fixed bottom-24 inset-x-0 z-50 flex justify-center">
+    <div className="pointer-events-none fixed bottom-[148px] inset-x-0 z-50 flex justify-center px-6 text-center">
       <div className="rounded-full bg-navy/90 px-4 py-2.5 text-[13px] text-white shadow-lg">
         {toast.text}
       </div>

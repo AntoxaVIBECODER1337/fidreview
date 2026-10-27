@@ -6,6 +6,7 @@ import { crewSnapshot, crewsForCity, specialtyLabel, startLabel } from '../data/
 import { kitTotal } from '../lib/ai'
 import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
+import { overlayRoot } from '../lib/overlay'
 import { rub } from '../lib/format'
 
 /**
@@ -72,7 +73,8 @@ export default function AIResultSheet({ task, mode = 'project', result, onClose,
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 0.6 }}
         onDragEnd={(_, info) => info.offset.y > 110 && onClose()}
-        className="relative flex max-h-[93dvh] flex-col rounded-t-3xl bg-white shadow-lift"
+        style={{ maxHeight: 'min(93dvh, 94%)' }}
+        className="relative flex flex-col rounded-t-3xl bg-white shadow-lift"
       >
         {/* Шапка */}
         <div className="shrink-0 px-5 pt-3 pb-2">
@@ -312,7 +314,7 @@ export default function AIResultSheet({ task, mode = 'project', result, onClose,
         </div>
       </motion.div>
     </motion.div>,
-    document.body,
+    overlayRoot(),
   )
 }
 

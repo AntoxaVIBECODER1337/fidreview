@@ -18,6 +18,9 @@
   --color-accent-dark: #e2710a;
   --color-accent-soft: #fef3e6;
 
+  /* Звёзды рейтинга */
+  --color-star: #f5a623;
+
   /* Цена / скидки */
   --color-price: #e30613;
 
@@ -109,6 +112,26 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .mesh-blob {
+    animation: none;
+  }
+}
+
+/* Скелетоны загрузки: мягкое мерцание */
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, #eef1f5 25%, #f8fafc 45%, #eef1f5 65%);
+  background-size: 300% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
     animation: none;
   }
 }

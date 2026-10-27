@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Heart, Minus, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { flyToCart } from '../lib/fly'
 import { discountPercent, rub } from '../lib/format'
 import { useStore } from '../store/StoreContext'
 import Stars from './Stars.jsx'
@@ -84,6 +85,7 @@ export default function ProductCard({ product }) {
                 e.preventDefault()
                 e.stopPropagation()
                 addToCart(product.id)
+                flyToCart(e.currentTarget, product.emoji)
               }}
               className="h-9 w-full rounded-lg bg-brand-600 text-[13px] font-semibold text-white active:bg-brand-700"
             >
@@ -116,6 +118,7 @@ export default function ProductCard({ product }) {
                   e.preventDefault()
                   e.stopPropagation()
                   setQty(product.id, qty + 1)
+                  flyToCart(e.currentTarget, product.emoji)
                 }}
                 aria-label="Больше"
                 className="flex h-7 w-9 items-center justify-center rounded-md bg-brand-600 text-white active:bg-brand-700"

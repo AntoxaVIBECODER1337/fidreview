@@ -8,6 +8,7 @@ import CrewCard from '../components/CrewCard.jsx'
 import CrewSheet from '../components/CrewSheet.jsx'
 import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { SORTS, SPECIALTIES, crewsForCity, omaCities } from '../data/crews'
+import { getWorkIcon } from '../lib/categoryIcons'
 import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 
@@ -73,7 +74,14 @@ export default function CrewsPage() {
                     transition={{ type: 'spring', stiffness: 480, damping: 36 }}
                   />
                 )}
-                <span className="relative z-10">{s.label}</span>
+                <span className="relative z-10 flex items-center gap-1.5">
+                  {s.id &&
+                    (() => {
+                      const I = getWorkIcon(s.id)
+                      return <I size={14} strokeWidth={2} />
+                    })()}
+                  {s.label}
+                </span>
               </Tap>
             )
           })}
