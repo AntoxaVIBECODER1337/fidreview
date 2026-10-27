@@ -64,3 +64,4 @@ src/
   data/crews.js                 бригады, города, сортировки
   store/StoreContext.jsx        корзина, избранное, заказы, проекты (localStorage)
 ```
+# hackaton_Oma
