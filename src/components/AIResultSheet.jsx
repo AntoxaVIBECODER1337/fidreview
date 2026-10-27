@@ -7,6 +7,7 @@ import { kitTotal } from '../lib/ai'
 import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
 import { overlayRoot } from '../lib/overlay'
+import ProductImage from './ProductImage.jsx'
 import { rub } from '../lib/format'
 
 /**
@@ -218,9 +219,7 @@ export default function AIResultSheet({ task, mode = 'project', result, onClose,
                                 >
                                   {on && <Check size={11} className="text-white" strokeWidth={3.5} />}
                                 </span>
-                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-panel text-[17px]">
-                                  {p.emoji}
-                                </span>
+                                <ProductImage product={p} size={17} className="h-9 w-9" />
                                 <span className="min-w-0 flex-1">
                                   <span className="block truncate text-[12.5px] font-semibold text-navy">
                                     {p.name}

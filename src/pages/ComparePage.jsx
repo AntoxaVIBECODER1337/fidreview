@@ -4,6 +4,7 @@ import { ListChecks, Plus, Star, Trash2, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
+import ProductImage from '../components/ProductImage.jsx'
 import { getCategory, getProduct } from '../lib/catalog'
 import { cn } from '../lib/cn'
 import { flyToCart } from '../lib/fly'
@@ -107,7 +108,7 @@ export default function ComparePage() {
                     <X size={14} />
                   </button>
                   <Link to={`/product/${p.id}`} className="block hide-tap">
-                    <div className="flex h-24 items-center justify-center rounded-xl bg-panel text-[44px]">{p.emoji}</div>
+                    <ProductImage product={p} size={44} rounded="rounded-xl" className="h-24 w-full" />
                     <p className="mt-2 line-clamp-3 min-h-[51px] text-[12px] leading-[17px] text-navy">{p.name}</p>
                   </Link>
                   <p
@@ -122,7 +123,7 @@ export default function ComparePage() {
                   <button
                     onClick={(e) => {
                       addToCart(p.id)
-                      flyToCart(e.currentTarget, p.emoji)
+                      flyToCart(e.currentTarget, p.emoji, p.image)
                     }}
                     className="mt-2 flex h-8 w-full items-center justify-center gap-1 rounded-lg bg-brand-600 text-[12px] font-semibold text-white active:bg-brand-700"
                   >

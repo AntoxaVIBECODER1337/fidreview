@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import Stars from '../components/Stars.jsx'
 import ZoomViewer from '../components/ZoomViewer.jsx'
+import ProductImage from '../components/ProductImage.jsx'
 import { getProduct, products } from '../lib/catalog'
 import { flyToCart } from '../lib/fly'
 import { discountPercent, rub } from '../lib/format'
@@ -60,7 +61,7 @@ export default function ProductPage() {
         className="relative flex h-64 w-full items-center justify-center bg-white hide-tap"
       >
         <span className="text-[110px] leading-none">{product.emoji}</span>
-        <span className="absolute right-4 bottom-3 flex items-center gap-1 rounded-full bg-panel px-2.5 py-1 text-[11px] font-semibold text-muted">
+        <span className="absolute right-4 bottom-3 z-10 flex items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-semibold text-muted backdrop-blur">
           <Maximize2 size={12} /> Увеличить
         </span>
         {product.image && (
@@ -112,7 +113,7 @@ export default function ProductPage() {
             <button
               onClick={(e) => {
                 addToCart(product.id, 1)
-                flyToCart(e.currentTarget, product.emoji)
+                flyToCart(e.currentTarget, product.emoji, product.image)
               }}
               className="flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-brand-600 text-[14px] font-semibold text-white hide-tap active:bg-brand-700"
             >
@@ -133,7 +134,7 @@ export default function ProductPage() {
               <button
                 onClick={(e) => {
                   addToCart(product.id, 1)
-                  flyToCart(e.currentTarget, product.emoji)
+                  flyToCart(e.currentTarget, product.emoji, product.image)
                 }}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white active:bg-brand-700"
                 aria-label="Добавить ещё"
@@ -234,9 +235,7 @@ export default function ProductPage() {
           <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-4">
             {withItems.map((p) => (
               <Link key={p.id} to={`/product/${p.id}`} className="w-[110px] shrink-0 hide-tap">
-                <div className="flex h-24 items-center justify-center rounded-xl bg-panel text-[40px]">
-                  {p.emoji}
-                </div>
+                <ProductImage product={p} size={40} rounded="rounded-xl" className="h-24 w-full" />
                 <p className="mt-1.5 text-[13px] font-bold text-navy">{rub(p.price)}</p>
                 <p className="line-clamp-2 text-[11px] leading-4 text-muted">{p.name}</p>
               </Link>

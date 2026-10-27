@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import ProductCard from '../components/ProductCard.jsx'
+import ProductImage from '../components/ProductImage.jsx'
 import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { cn } from '../lib/cn'
 import { bundlePrice, getPack } from '../lib/decor'
@@ -201,9 +202,7 @@ function CartView() {
                 className="flex gap-3 border-b border-line py-3 last:border-b-0"
               >
                 <Link to={`/product/${product.id}`} className="hide-tap">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-panel text-4xl">
-                    {product.emoji}
-                  </div>
+                  <ProductImage product={product} size={36} className="h-20 w-20" />
                 </Link>
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-2 text-[13px] leading-4 text-navy">{product.name}</p>
@@ -380,7 +379,7 @@ function BundleCard({ bundle, onRemove }) {
           >
             {lines.map((l) => (
               <li key={l.id} className="flex items-center gap-2 py-1.5 text-[12.5px]">
-                <span className="text-[15px]">{l.product.emoji}</span>
+                <ProductImage product={l.product} size={14} rounded="rounded-md" className="h-7 w-7" />
                 <span className="min-w-0 flex-1 truncate text-navy">{l.product.name}</span>
                 <span className="shrink-0 font-semibold text-muted">{rub(l.product.price)}</span>
               </li>

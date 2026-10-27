@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ListChecks, X } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getProduct } from '../lib/catalog'
+import ProductImage from './ProductImage.jsx'
 import { useStore } from '../store/StoreContext'
 
 /** Плавающая плашка «Сравнить (N)» над меню — на экранах каталога и товара */
@@ -27,12 +28,13 @@ export default function CompareBar() {
             <button onClick={() => navigate('/compare')} className="flex items-center gap-2 pr-2">
               <span className="flex -space-x-2">
                 {items.map((p) => (
-                  <span
+                  <ProductImage
                     key={p.id}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-navy bg-white text-[14px]"
-                  >
-                    {p.emoji}
-                  </span>
+                    product={p}
+                    size={14}
+                    rounded="rounded-full"
+                    className="h-7 w-7 border-2 border-navy"
+                  />
                 ))}
               </span>
               <ListChecks size={15} />

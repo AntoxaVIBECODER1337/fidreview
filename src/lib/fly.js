@@ -3,7 +3,7 @@
  * Рисуем копию (эмодзи товара) поверх всего и ведём её по дуге
  * от кнопки к иконке корзины; по прилёту иконка «подпрыгивает».
  */
-export function flyToCart(fromEl, emoji = '📦') {
+export function flyToCart(fromEl, emoji = '📦', image = null) {
   if (typeof document === 'undefined' || !fromEl) return
   const target = document.querySelector('[data-cart-target]')
   if (!target) return
@@ -20,7 +20,11 @@ export function flyToCart(fromEl, emoji = '📦') {
   const dy = b.top + b.height / 2 - y0
 
   const el = document.createElement('div')
-  el.textContent = emoji
+  if (image) {
+    el.style.backgroundImage = `url("${image}")`
+    el.style.backgroundSize = 'cover'
+    el.style.backgroundPosition = 'center'
+  } else el.textContent = emoji
   el.setAttribute('aria-hidden', 'true')
   Object.assign(el.style, {
     position: 'fixed',

@@ -4,6 +4,7 @@ import { ArrowRight, Check, ChevronDown, HelpCircle, PackageCheck, RotateCcw, Tr
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
+import ProductImage from '../components/ProductImage.jsx'
 import { Tap } from '../components/ui.jsx'
 import { getProduct } from '../lib/catalog'
 import { cn } from '../lib/cn'
@@ -135,14 +136,10 @@ export default function DecorPackPage() {
                   disabled={removed}
                   className="flex min-w-0 flex-1 items-center gap-3 text-left"
                 >
-                  <span
-                    className={cn(
-                      'flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-panel text-[24px] transition',
-                      removed && 'opacity-40 grayscale',
-                    )}
-                  >
-                    {product.emoji}
-                  </span>
+                  <ProductImage
+                    product={product}
+                    className={cn('h-14 w-14 transition', removed && 'opacity-40 grayscale')}
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-bold tracking-wide text-muted uppercase">{slot.title}</span>
                     <span
@@ -228,6 +225,7 @@ export default function DecorPackPage() {
                               >
                                 {sel && <Check size={12} className="text-white" strokeWidth={3.5} />}
                               </span>
+                              <ProductImage product={p} size={16} className="h-10 w-10" />
                               <span className="min-w-0 flex-1">
                                 <span className="block truncate text-[13px] font-semibold text-navy">{styleOf(p)}</span>
                                 <span className="block truncate text-[11px] text-muted">

@@ -4,6 +4,7 @@ import { ArrowLeft, Check, ChevronRight, HardHat, MessageCircleMore, ShieldCheck
 import { useNavigate, useParams } from 'react-router-dom'
 import ChatSheet from '../components/ChatSheet.jsx'
 import { QuickContact } from '../components/CrewContacts.jsx'
+import ProductImage from '../components/ProductImage.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import { crewById } from '../data/crews'
 import { Card, PrimaryButton, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
@@ -236,7 +237,7 @@ export default function ProjectPage() {
               {lines.slice(0, 5).map((l) => (
                 <div key={l.product.id} className="flex items-center justify-between gap-3">
                   <span className="flex min-w-0 items-center gap-2 text-[12.5px] font-medium text-navy">
-                    <span className="text-[15px]">{l.product.emoji}</span>
+                    <ProductImage product={l.product} size={14} rounded="rounded-md" className="h-7 w-7" />
                     <span className="truncate">{l.product.name}</span>
                     <span className="shrink-0 text-muted">×{l.qty}</span>
                   </span>

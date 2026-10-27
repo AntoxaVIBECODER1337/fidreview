@@ -1,7 +1,11 @@
 import rawProducts from '../data/products.json'
 import rawCategories from '../data/categories.json'
 
-export const products = rawProducts
+/**
+ * Картинка товара: поле image из products.json (настоящее фото), иначе
+ * сгенерированная иллюстрация public/img/products/<id>.webp
+ */
+export const products = rawProducts.map((p) => ({ ...p, image: p.image ?? `/img/products/${p.id}.webp` }))
 export const categories = rawCategories
 
 export const getProduct = (id) => products.find((p) => p.id === id)
