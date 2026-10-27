@@ -1,0 +1,104 @@
+[
+  {
+    "id": "interier",
+    "name": "Интерьер и отделка",
+    "image": "/img/cats/interier.png",
+    "subcategories": ["Напольные покрытия", "Плитные материалы", "Сухие смеси", "Изоляция", "Листовые материалы"]
+  },
+  {
+    "id": "blagoustroystvo",
+    "name": "Благоустройство",
+    "image": "/img/cats/blagoustroystvo.png",
+    "subcategories": ["Садовая техника", "Садовый инвентарь", "Полив", "Газон и растения"]
+  },
+  {
+    "id": "stroymaterialy",
+    "name": "Строительные материалы",
+    "image": "/img/cats/stroymaterialy.png",
+    "subcategories": ["Сухие смеси", "Листовые материалы", "Изоляция"]
+  },
+  {
+    "id": "instrument",
+    "name": "Инструмент",
+    "image": "/img/cats/instrument.png",
+    "subcategories": ["Электроинструмент", "Ручной инструмент", "Измерительный", "Насадки и оснастка"]
+  },
+  {
+    "id": "mebel",
+    "name": "Мебель",
+    "image": "/img/cats/mebel.png",
+    "subcategories": ["Мягкая мебель", "Мебель для спальни", "Столы и стулья", "Шкафы"]
+  },
+  {
+    "id": "bytovaya-tehnika",
+    "name": "Бытовая техника",
+    "image": "/img/cats/bytovaya-tehnika.png",
+    "subcategories": ["Стиральные машины", "Холодильники", "Посудомоечные машины", "Мелкая техника"]
+  },
+  {
+    "id": "tovary-dlya-doma",
+    "name": "Товары для дома",
+    "image": "/img/cats/tovary-dlya-doma.png",
+    "subcategories": ["Хранение", "Текстиль", "Декор", "Зеркала", "Посуда"]
+  },
+  {
+    "id": "santehnika",
+    "name": "Сантехника",
+    "image": "/img/cats/santehnika.png",
+    "subcategories": ["Смесители", "Раковины и унитазы", "Трубы и фитинги", "Душевые системы"]
+  },
+  {
+    "id": "electrika",
+    "name": "Электрика",
+    "image": "/img/cats/electrika.png",
+    "subcategories": ["Кабель и провод", "Светильники", "Розетки и выключатели", "Автоматика"]
+  },
+  {
+    "id": "inzhenernye-sistemy",
+    "name": "Инженерные системы",
+    "image": "/img/cats/inzhenernye-sistemy.png",
+    "subcategories": ["Отопление", "Водоснабжение"]
+  },
+  {
+    "id": "sport-i-otdyh",
+    "name": "Спорт и отдых",
+    "image": "/img/cats/sport-i-otdyh.png",
+    "subcategories": ["Тренажёры", "Велоспорт", "Игры", "Туризм"]
+  },
+  {
+    "id": "novyy-god",
+    "name": "Новый год",
+    "image": "/img/cats/novyy-god.png",
+    "subcategories": ["Ёлки", "Гирлянды", "Ёлочные игрушки", "Подарочные мешки"]
+  },
+  {
+    "id": "krepesh",
+    "name": "Крепеж",
+    "image": "/img/cats/krepesh.png",
+    "subcategories": ["Саморезы", "Дюбели", "Анкеры", "Гвозди"]
+  },
+  {
+    "id": "avtotovary",
+    "name": "Автотовары",
+    "image": "/img/cats/avtotovary.png",
+    "subcategories": ["Аксессуары", "Аккумуляторы"]
+  },
+  {
+    "id": "elektronika",
+    "name": "Электроника",
+    "image": "/img/cats/elektronika.png",
+    "subcategories": ["Телевизоры", "Компьютеры", "Аудио", "Гаджеты"]
+  },
+  {
+    "id": "tovary-dlya-detey",
+    "name": "Товары для детей",
+    "image": "/img/cats/tovary-dlya-detey.png",
+    "subcategories": ["Игрушки", "Канцелярия", "Для малышей", "Детский текстиль"]
+  },
+  {
+    "id": "krasota-i-zdorove",
+    "name": "Красота и здоровье",
+    "image": "/img/cats/krasota-i-zdorove.png",
+    "subcategories": ["Уход за волосами", "Уход за телом", "Здоровье", "Аксессуары"]
+  }
+]

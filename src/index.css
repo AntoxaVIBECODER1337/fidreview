@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Синий бренд ОМА (кнопки, ссылки) */
+  --color-brand-50: #eef4fe;
+  --color-brand-100: #dce9fc;
+  --color-brand-200: #bad1f8;
+  --color-brand-300: #8db4f1;
+  --color-brand-400: #5c8fe4;
+  --color-brand-500: #2e71d6;
+  --color-brand-600: #1d5dbe;
+  --color-brand-700: #174c9d;
+  --color-brand-800: #123e80;
+  --color-brand-900: #0e3066;
+
+  /* Оранжевый акцент (активные иконки, бейджи корзины, звёзды) */
+  --color-accent: #f5871f;
+  --color-accent-dark: #e2710a;
+  --color-accent-soft: #fef3e6;
+
+  /* Цена / скидки */
+  --color-price: #e30613;
+
+  /* Тёмно-синие заголовки как в приложении */
+  --color-navy: #1e3a5c;
+  --color-ink: #25334a;
+  --color-muted: #8a94a6;
+  --color-line: #e8ecf1;
+  --color-bg: #f4f6f8;
+  --color-panel: #f2f4f7;
+
+  --font-sans: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-[#e9edf2] text-ink font-sans antialiased;
+    margin: 0;
+    overscroll-behavior-y: none;
+  }
+
+  button {
+    @apply cursor-pointer select-none;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    outline: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-tap {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
