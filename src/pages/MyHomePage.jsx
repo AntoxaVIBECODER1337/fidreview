@@ -4,6 +4,7 @@ import {
   ArrowRight,
   ChevronRight,
   Hammer,
+  HardHat,
   House,
   MapPin,
   Minus,
@@ -48,7 +49,7 @@ export default function MyHomePage() {
   }
 
   const aiToProject = ({ items, crew, area }) => {
-    createProject({ title: ai.task, items, crew, area })
+    createProject({ title: ai.task, items, crew, area, scenario: ai.result.scenario.id })
     setAi(null)
     setMode('projects')
     scrollToList()
@@ -163,6 +164,7 @@ export default function MyHomePage() {
                       project={p}
                       onOpen={() => openProject(p.id)}
                       onApprove={() => approveProject(p.id)}
+                      onPickCrew={() => navigate(`/crews?project=${p.id}`)}
                     />
                   </motion.div>
                 ))
@@ -190,7 +192,7 @@ export default function MyHomePage() {
 }
 
 /** Карточка проекта: статус, состав, сумма, CTA */
-function ProjectCard({ project, onOpen, onApprove }) {
+function ProjectCard({ project, onOpen, onApprove, onPickCrew }) {
   const pending = project.status === 'pending'
   return (
     <Card className="overflow-hidden">
@@ -240,6 +242,17 @@ function ProjectCard({ project, onOpen, onApprove }) {
         </div>
       </div>
 
+      {!project.crew && (
+        <Tap
+          onClick={onPickCrew}
+          className="flex w-full items-center justify-between border-t border-line bg-brand-50/50 px-4 py-2.5 text-left"
+        >
+          <span className="flex items-center gap-2 text-[12.5px] font-bold text-brand-700">
+            <HardHat size={15} /> Выбрать бригаду для проекта
+          </span>
+          <ChevronRight size={16} className="text-brand-600" />
+        </Tap>
+      )}
       {pending ? (
         <div className="border-t border-line p-3">
           <Tap

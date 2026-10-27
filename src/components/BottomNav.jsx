@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
-import { CircleUserRound, Heart, LayoutGrid, ListFilter, ShoppingBag } from 'lucide-react'
+import { CircleUserRound, HardHat, Heart, LayoutGrid, ListFilter, ShoppingBag } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
 
@@ -27,6 +27,7 @@ export const TABS = [
   { to: '/', label: 'Главная', Icon: LayoutGrid },
   { to: '/catalog', label: 'Каталог', Icon: ListFilter },
   { to: '/my-home', label: 'Мой дом', Icon: HouseIcon },
+  { to: '/crews', label: 'Бригады', Icon: HardHat },
   { to: '/cart', label: 'Корзина', Icon: ShoppingBag },
   { to: '/favorites', label: 'Избранное', Icon: Heart },
   { to: '/profile', label: 'Профиль', Icon: CircleUserRound },
@@ -37,9 +38,10 @@ export function tabIndexFor(pathname) {
   if (pathname === '/') return 0
   if (pathname.startsWith('/catalog') || pathname.startsWith('/category') || pathname.startsWith('/sections') || pathname.startsWith('/product') || pathname.startsWith('/search')) return 1
   if (pathname.startsWith('/my-home')) return 2
-  if (pathname.startsWith('/cart') || pathname.startsWith('/checkout') || pathname.startsWith('/order')) return 3
-  if (pathname.startsWith('/favorites')) return 4
-  if (pathname.startsWith('/profile') || pathname.startsWith('/login') || pathname.startsWith('/orders')) return 5
+  if (pathname.startsWith('/crews')) return 3
+  if (pathname.startsWith('/cart') || pathname.startsWith('/checkout') || pathname.startsWith('/order-success')) return 4
+  if (pathname.startsWith('/favorites')) return 5
+  if (pathname.startsWith('/profile') || pathname.startsWith('/login') || pathname.startsWith('/orders')) return 6
   return -1
 }
 
@@ -51,9 +53,9 @@ export default function BottomNav() {
 
   return (
     <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <div className="pointer-events-auto mx-auto w-full max-w-[430px] px-3">
+      <div className="pointer-events-auto mx-auto w-full max-w-[430px] px-2">
         <div className="rounded-3xl border border-white/60 bg-white/70 shadow-glass backdrop-blur-xl">
-          <ul className="flex items-stretch justify-between p-1.5">
+          <ul className="flex items-stretch justify-between p-1">
             {TABS.map((t, i) => {
               const active = i === activeIdx
               const { Icon } = t
@@ -95,7 +97,7 @@ export default function BottomNav() {
                       </span>
                       <span
                         className={cn(
-                          'relative z-10 max-w-full truncate px-0.5 text-[9.5px] leading-none transition-colors duration-200',
+                          'relative z-10 max-w-full truncate text-[9px] leading-none tracking-[-0.02em] transition-colors duration-200',
                           active ? 'font-bold text-brand-600' : 'font-medium text-muted',
                         )}
                       >

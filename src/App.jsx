@@ -19,6 +19,7 @@ import OrdersPage from './pages/OrdersPage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import ProjectPage from './pages/ProjectPage.jsx'
+import CrewsPage from './pages/CrewsPage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
 
 /* Направленные слайды между экранами (из oma-ozon) */
@@ -79,6 +80,7 @@ export default function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/my-home" element={<MyHomePage />} />
                 <Route path="/my-home/project/:id" element={<ProjectPage />} />
+                <Route path="/crews" element={<CrewsPage />} />
                 <Route
                   path="*"
                   element={

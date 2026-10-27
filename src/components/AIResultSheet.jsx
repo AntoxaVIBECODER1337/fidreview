@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, ChevronDown, Ruler, Sparkles, Star, Users, X } from 'lucide-react'
-import { CREWS, kitTotal } from '../lib/ai'
+import { Check, ChevronDown, HardHat, Ruler, Sparkles, Star, Users, X } from 'lucide-react'
+import { crewSnapshot, crewsForCity, specialtyLabel, startLabel } from '../data/crews'
+import { kitTotal } from '../lib/ai'
+import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
 import { rub } from '../lib/format'
 
@@ -13,17 +15,26 @@ import { rub } from '../lib/format'
  */
 export default function AIResultSheet({ task, result, onClose, onToCart, onToProject }) {
   const { kits, area, scenario, recognized } = result
+  const { city } = useStore()
+  /* Бригады города: ОМА первая, затем 2 лучших партнёра под задачу */
+  const crews = useMemo(() => {
+    const bySpec = crewsForCity(city, { specialty: scenario.id })
+    const any = crewsForCity(city)
+    const oma = bySpec.oma ?? any.oma
+    const partners = (bySpec.partners.length ? bySpec.partners : any.partners).slice(0, oma ? 2 : 3)
+    return oma ? [oma, ...partners] : partners
+  }, [city, scenario.id])
   const [kitId, setKitId] = useState('std')
   const [withCrew, setWithCrew] = useState(false)
-  const [crewId, setCrewId] = useState(CREWS[0].id)
+  const [crewId, setCrewId] = useState(crews[0]?.id)
   const [expanded, setExpanded] = useState('std')
   const [excluded, setExcluded] = useState(() => new Set())
 
   const kit = kits.find((k) => k.id === kitId)
-  const crew = CREWS.find((c) => c.id === crewId)
+  const crew = crews.find((c) => c.id === crewId) ?? crews[0]
 
   const itemsTotal = useMemo(() => kitTotal(kit.items, excluded), [kit, excluded])
-  const crewTotal = withCrew ? crew.rate * area : 0
+  const crewTotal = withCrew && crew ? crew.rate * area : 0
   const grand = itemsTotal + crewTotal
   const chosen = kit.items.filter((i) => !excluded.has(i.id))
 
@@ -37,7 +48,7 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
 
   const submit = () => {
     if (!chosen.length) return
-    if (withCrew) onToProject({ items: chosen, crew, area })
+    if (withCrew && crew) onToProject({ items: chosen, crew: crewSnapshot(crew), area })
     else onToCart(chosen)
   }
 
@@ -246,11 +257,11 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
                   <div className="mb-2 flex items-center gap-2 px-1">
                     <Users size={15} className="text-brand-600" />
                     <span className="text-[13px] font-bold text-navy">
-                      Бригада-партнёр ОМА • на {area} м²
+                      Бригады в г. {city} • на {area} м²
                     </span>
                   </div>
                   <div className="flex flex-col gap-2">
-                    {CREWS.map((c) => (
+                    {crews.map((c) => (
                       <CrewCard
                         key={c.id}
                         crew={c}
@@ -266,8 +277,8 @@ export default function AIResultSheet({ task, result, onClose, onToCart, onToPro
           </AnimatePresence>
 
           <p className="mt-3 px-1 text-center text-[11px] leading-relaxed text-muted">
-            Товары зарезервируются в магазине ОМА. Бригада свяжется для уточнения деталей —
-            выезд на замер бесплатный.
+            Товары зарезервируются в магазине ОМА. Все бригады города и их отзывы — во
+            вкладке «Бригады»: там можно сменить бригаду для проекта.
           </p>
         </div>
 
@@ -305,17 +316,17 @@ function CrewCard({ crew, area, selected, onClick }) {
     <button
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition-colors',
-        selected ? 'border-brand-600 bg-brand-50/50' : 'border-line bg-white',
+        'relative flex w-full items-center gap-3 overflow-hidden rounded-xl border-2 p-3 text-left transition-colors',
+        selected ? 'border-brand-600 bg-brand-50/50' : crew.isOma ? 'border-brand-600/40 bg-brand-50/30' : 'border-line bg-white',
       )}
     >
       <span
         className={cn(
           'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[13px] font-black text-white transition-colors',
-          selected ? 'bg-brand-600' : 'bg-muted/50',
+          crew.isOma || selected ? 'bg-brand-600' : 'bg-muted/50',
         )}
       >
-        {crew.name.slice(0, 1)}
+        {crew.isOma ? <HardHat size={18} /> : crew.name.slice(0, 1)}
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5">
@@ -326,8 +337,13 @@ function CrewCard({ crew, area, selected, onClick }) {
           </span>
           <span className="text-[10.5px] text-muted">({crew.reviews})</span>
         </span>
-        <span className="mt-0.5 block text-[11px] text-muted">
-          {crew.rate} р./м² • {crew.term}
+        <span className="mt-0.5 block truncate text-[11px] text-muted">
+          {crew.isOma ? (
+            <span className="font-bold text-brand-600">Официальная бригада ОМА • </span>
+          ) : (
+            `${specialtyLabel(crew.specialties[0])} • `
+          )}
+          {crew.rate} р./м² • {startLabel(crew.startDays)}
         </span>
       </span>
       <span

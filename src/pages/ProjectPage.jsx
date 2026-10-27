@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check, MessageCircleMore, ShieldCheck, ShoppingBag, Users } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, HardHat, MessageCircleMore, ShieldCheck, ShoppingBag, Star, Users } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import { Card, PrimaryButton, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
@@ -100,6 +100,58 @@ export default function ProjectPage() {
         animate="show"
         className="flex flex-col gap-4 px-4 pt-4 pb-6"
       >
+        {/* Бригада */}
+        <motion.div variants={staggerChild}>
+          {project.crew ? (
+            <Card className="flex items-center gap-3 p-4">
+              <span
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[15px] font-black text-white ${
+                  project.crew.isOma ? 'bg-brand-600' : 'bg-navy'
+                }`}
+              >
+                {project.crew.isOma ? <HardHat size={20} /> : project.crew.name.slice(0, 1)}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-semibold text-muted">
+                  {project.crew.isOma ? 'Официальная бригада ОМА' : 'Бригада-партнёр ОМА'}
+                </span>
+                <span className="flex items-center gap-1.5 text-[15px] font-extrabold text-navy">
+                  {project.crew.name}
+                  <span className="flex items-center gap-0.5 text-[12px] font-bold text-accent">
+                    <Star size={11} fill="currentColor" />
+                    {project.crew.rating}
+                  </span>
+                </span>
+                <span className="block text-[11.5px] text-muted">
+                  {project.crew.rate} р./м² • {project.area} м²
+                </span>
+              </span>
+              {pending && (
+                <Tap
+                  onClick={() => navigate(`/crews?project=${project.id}`)}
+                  className="shrink-0 rounded-lg border border-brand-600/30 px-3 py-2 text-[12px] font-bold text-brand-600 active:bg-brand-50"
+                >
+                  Сменить
+                </Tap>
+              )}
+            </Card>
+          ) : (
+            <Tap
+              onClick={() => navigate(`/crews?project=${project.id}`)}
+              className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-brand-600/40 bg-brand-50/50 p-4 text-left"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white">
+                <HardHat size={20} className="text-brand-600" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[14px] font-extrabold text-navy">Бригада не выбрана</span>
+                <span className="block text-[12px] text-muted">Бригада ОМА и проверенные партнёры вашего города</span>
+              </span>
+              <ChevronRight size={18} className="shrink-0 text-brand-600" />
+            </Tap>
+          )}
+        </motion.div>
+
         {/* Этапы */}
         <motion.div variants={staggerChild}>
           <Card className="p-4">

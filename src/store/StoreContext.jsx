@@ -8,6 +8,7 @@ const ORDERS_KEY = 'oma.orders'
 const USER_KEY = 'oma.user'
 const PROMO_KEY = 'oma.promo'
 const PROJECTS_KEY = 'oma.projects'
+const CITY_KEY = 'oma.city'
 
 /** Этапы проекта — 4 шага как в репозитории oma-ozon */
 export const PROJECT_STAGES = [
@@ -46,6 +47,7 @@ export function StoreProvider({ children }) {
   const [user, setUser] = useState(() => load(USER_KEY, null))
   const [promo, setPromo] = useState(() => load(PROMO_KEY, null))
   const [projects, setProjects] = useState(() => load(PROJECTS_KEY, []))
+  const [city, setCity] = useState(() => load(CITY_KEY, 'Минск'))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -54,6 +56,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(USER_KEY, user), [user])
   useEffect(() => persist(PROMO_KEY, promo), [promo])
   useEffect(() => persist(PROJECTS_KEY, projects), [projects])
+  useEffect(() => persist(CITY_KEY, city), [city])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -174,7 +177,7 @@ export function StoreProvider({ children }) {
 
   /** Проект из ИИ-подборки: материалы + (опционально) бригада ОМА */
   const createProject = useCallback(
-    ({ title, items, crew = null, area = null }) => {
+    ({ title, items, crew = null, area = null, scenario = null }) => {
       const clean = items.filter((i) => getProduct(i.id))
       const itemsTotal = clean.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
       const crewTotal = crew && area ? crew.rate * area : 0
@@ -186,12 +189,24 @@ export function StoreProvider({ children }) {
         crewTotal,
         crew,
         area,
+        scenario,
         status: 'pending',
         currentStage: 0,
       }
       setProjects((prev) => [project, ...prev])
       showToast(crew ? `Проект с бригадой ${crew.name} создан` : 'Проект создан')
       return project
+    },
+    [showToast],
+  )
+
+  /** Выбор бригады для проекта: цена работ = ставка × площадь */
+  const assignCrew = useCallback(
+    (projectId, crew, area) => {
+      setProjects((prev) =>
+        prev.map((p) => (p.id === projectId ? { ...p, crew, area, crewTotal: crew.rate * area } : p)),
+      )
+      showToast(`Бригада ${crew.name} выбрана для проекта`)
     },
     [showToast],
   )
@@ -233,6 +248,9 @@ export function StoreProvider({ children }) {
         toast,
         createProjectFromCart,
         createProject,
+        assignCrew,
+        city,
+        setCity,
         approveProject,
         advanceStage,
         addToCart,

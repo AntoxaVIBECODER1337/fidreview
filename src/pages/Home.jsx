@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Blocks, ChevronDown, Droplet, Lamp, Lightbulb, MapPin, Nut, Sprout, Wrench } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import CityPicker from '../components/CityPicker.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { staggerChild, staggerParent } from '../components/ui.jsx'
 import { popularProducts, saleProducts } from '../lib/catalog'
+import { useStore } from '../store/StoreContext'
 
 const CHIPS = [
   { label: 'Шуруповёрты', to: '/category/instrument', Icon: Wrench },
@@ -43,6 +45,8 @@ const BANNERS = [
 
 export default function Home() {
   const [bannerIdx, setBannerIdx] = useState(0)
+  const [cityOpen, setCityOpen] = useState(false)
+  const { city } = useStore()
 
   /** Определяет ближайший баннер к левому краю — для точек-индикаторов */
   const onBannerScroll = (e) => {
@@ -70,9 +74,12 @@ export default function Home() {
           <Link to="/" className="flex items-center gap-2 hide-tap">
             <span className="text-[22px] font-black tracking-wide text-brand-600">ОМА</span>
           </Link>
-          <button className="flex items-center gap-1 text-[14px] font-semibold text-navy hide-tap">
+          <button
+            onClick={() => setCityOpen(true)}
+            className="flex items-center gap-1 text-[14px] font-semibold text-navy hide-tap"
+          >
             <MapPin className="h-4 w-4 text-brand-600" />
-            Минск
+            {city}
             <ChevronDown className="h-4 w-4 text-muted" />
           </button>
         </div>
@@ -179,6 +186,8 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      <AnimatePresence>{cityOpen && <CityPicker onClose={() => setCityOpen(false)} />}</AnimatePresence>
 
       <footer className="mt-10 pb-2 text-center text-[11px] text-muted">
         ОМА · всё для дома и ремонта · MVP для хакатона
