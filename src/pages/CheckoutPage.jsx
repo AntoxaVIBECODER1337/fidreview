@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { Banknote, CheckCircle2, CreditCard, MapPin, ShoppingBag, Truck, Zap } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
+import { Banknote, CheckCircle2, CreditCard, MapPin, Plus, ShoppingBag, Truck, Zap } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import CardFormSheet from '../components/CardFormSheet.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import { getProduct } from '../lib/catalog'
@@ -15,7 +17,7 @@ const STORE_ADDRESS = 'Самовывоз: г. Минск, ул. Притыцк�
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
-  const { cart, placeOrder, showToast, user, demoLogin, bonus, bundles } = useStore()
+  const { cart, placeOrder, showToast, user, demoLogin, bonus, bundles, cards } = useStore()
   const [useBonus, setUseBonus] = useState(false)
   /* Данные получателя подставляются из профиля */
   const [name, setName] = useState(user?.name ?? '')
@@ -30,6 +32,10 @@ export default function CheckoutPage() {
     setAddress(DEMO_USER.address)
   }
   const [payment, setPayment] = useState('При получении')
+  const [cardOpen, setCardOpen] = useState(false)
+  const [selectedCard, setSelectedCard] = useState(null)
+  /* Выбранная карта: явный тап или первая привязанная */
+  const activeCard = cards.find((c) => c.id === selectedCard) ?? cards[0] ?? null
 
   const items = Object.entries(cart).flatMap(([id, qty]) => {
     const p = getProduct(id)
@@ -62,7 +68,20 @@ export default function CheckoutPage() {
       showToast('Заполните имя, телефон и адрес')
       return
     }
-    placeOrder({ name, phone, delivery, address, payment, useBonus, fee })
+    if (payment === 'Картой онлайн' && !activeCard) {
+      setCardOpen(true)
+      showToast('Сначала привяжите карту')
+      return
+    }
+    placeOrder({
+      name,
+      phone,
+      delivery,
+      address,
+      payment: payment === 'Картой онлайн' && activeCard ? `Картой онлайн •••• ${activeCard.last4}` : payment,
+      useBonus,
+      fee,
+    })
     navigate('/order-success')
   }
 
@@ -159,22 +178,80 @@ export default function CheckoutPage() {
 
       <section className="mt-5 px-4">
         <h3 className="text-[14px] font-bold text-navy">Оплата</h3>
-        <div className="mt-2 flex gap-2">
-          {[
-            { id: 'При получении', icon: Banknote },
-            { id: 'Картой онлайн', icon: CreditCard },
-          ].map(({ id, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setPayment(id)}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl border p-3 text-[13px] font-semibold hide-tap ${
-                payment === id ? 'border-brand-600 text-brand-700' : 'border-line text-[#3f4756]'
+        <div className="mt-2 flex flex-col gap-2">
+          <button
+            onClick={() => setPayment('При получении')}
+            className={`flex items-center gap-3 rounded-lg border p-3 text-left hide-tap ${
+              payment === 'При получении' ? 'border-brand-600 bg-brand-50/60' : 'border-line bg-white'
+            }`}
+          >
+            <Banknote className="h-5 w-5 shrink-0 text-brand-600" />
+            <span className="flex-1">
+              <span className="block text-[14px] font-semibold text-navy">При получении</span>
+              <span className="block text-[11px] text-muted">Наличными или картой курьеру</span>
+            </span>
+            <span
+              className={`h-5 w-5 shrink-0 rounded-full border-2 ${
+                payment === 'При получении' ? 'border-brand-600 bg-brand-600' : 'border-[#c9d2dd]'
               }`}
+            />
+          </button>
+
+          <div
+            className={`rounded-lg border ${
+              payment === 'Картой онлайн' ? 'border-brand-600 bg-brand-50/60' : 'border-line bg-white'
+            }`}
+          >
+            <button
+              onClick={() => {
+                setPayment('Картой онлайн')
+                if (cards.length === 0) setCardOpen(true)
+              }}
+              className="flex w-full items-center gap-3 p-3 text-left hide-tap"
             >
-              <Icon className="h-4 w-4" />
-              {id}
+              <CreditCard className="h-5 w-5 shrink-0 text-brand-600" />
+              <span className="flex-1">
+                <span className="block text-[14px] font-semibold text-navy">Картой онлайн</span>
+                <span className="block text-[11px] text-muted">Списание сразу при подтверждении</span>
+              </span>
+              <span
+                className={`h-5 w-5 shrink-0 rounded-full border-2 ${
+                  payment === 'Картой онлайн' ? 'border-brand-600 bg-brand-600' : 'border-[#c9d2dd]'
+                }`}
+              />
             </button>
-          ))}
+
+            {payment === 'Картой онлайн' && (
+              <div className="flex flex-col gap-1.5 px-3 pb-3">
+                {cards.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setSelectedCard(c.id)}
+                    className={`flex w-full items-center gap-2.5 rounded-lg border bg-white px-2.5 py-2 text-left hide-tap ${
+                      activeCard?.id === c.id ? 'border-brand-600' : 'border-line'
+                    }`}
+                  >
+                    <span className="flex h-6 w-9 shrink-0 items-center justify-center rounded bg-[linear-gradient(135deg,#1e3a5c,#1d5dbe)] text-[7.5px] font-black text-white">
+                      {c.brand === 'MASTERCARD' ? 'MC' : c.brand === 'VISA' ? 'VISA' : 'КАРТ'}
+                    </span>
+                    <span className="flex-1 text-[13px] font-bold tracking-wide text-navy">•••• {c.last4}</span>
+                    <span className="text-[11px] text-muted">до {c.exp}</span>
+                    <span
+                      className={`h-4 w-4 shrink-0 rounded-full border-2 ${
+                        activeCard?.id === c.id ? 'border-brand-600 bg-brand-600' : 'border-[#c9d2dd]'
+                      }`}
+                    />
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCardOpen(true)}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-brand-600/50 py-2 text-[13px] font-bold text-brand-600 hide-tap active:bg-white"
+                >
+                  <Plus size={14} /> Привязать карту
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
@@ -240,6 +317,19 @@ export default function CheckoutPage() {
           </p>
         )}
       </section>
+
+      {/* Привязка карты */}
+      <AnimatePresence>
+        {cardOpen && (
+          <CardFormSheet
+            onClose={() => setCardOpen(false)}
+            onAdded={(id) => {
+              setSelectedCard(id)
+              setPayment('Картой онлайн')
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

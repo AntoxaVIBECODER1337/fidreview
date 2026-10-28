@@ -18,6 +18,8 @@ const BONUS_KEY = 'oma.bonus'
 const ONBOARD_KEY = 'oma.onboarded'
 const BUNDLES_KEY = 'oma.bundles'
 const LAYOUT_KEY = 'oma.layout'
+/* Привязанные карты: [{ id, last4, brand, name, exp }] — полный номер не храним */
+const CARDS_KEY = 'oma.cards'
 
 /** Сравнение — не больше 4 товаров */
 export const COMPARE_MAX = 4
@@ -57,6 +59,14 @@ function persist(key, value) {
   }
 }
 
+/** Платёжная система по первой цифре номера (для отображения) */
+export function cardBrand(digits) {
+  const d = String(digits).replace(/\D/g, '')
+  if (d.startsWith('4')) return 'VISA'
+  if (/^[52]/.test(d)) return 'MASTERCARD'
+  return 'КАРТА'
+}
+
 const StoreCtx = createContext(null)
 
 /** Тосты-уведомления доступны компонентам ниже по дереву */
@@ -80,6 +90,7 @@ export function StoreProvider({ children }) {
   const [bundles, setBundles] = useState(() => load(BUNDLES_KEY, []))
   /* Планировка: { name, dwelling, floors: [{ id, name }], rooms: [...] } или null — ещё не создана */
   const [layout, setLayout] = useState(() => load(LAYOUT_KEY, null))
+  const [cards, setCards] = useState(() => load(CARDS_KEY, []))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -95,6 +106,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(ONBOARD_KEY, onboarded), [onboarded])
   useEffect(() => persist(BUNDLES_KEY, bundles), [bundles])
   useEffect(() => persist(LAYOUT_KEY, layout), [layout])
+  useEffect(() => persist(CARDS_KEY, cards), [cards])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -231,6 +243,22 @@ export function StoreProvider({ children }) {
     setUser(null)
     showToast('Вы вышли из аккаунта')
   }, [showToast])
+
+  /** Привязать карту — в хранилище попадают только последние 4 цифры, срок и имя */
+  const addCard = useCallback(({ number, name, exp }) => {
+    const digits = String(number).replace(/\D/g, '')
+    const card = {
+      id: `card-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+      last4: digits.slice(-4),
+      brand: cardBrand(digits),
+      name: String(name || '').trim(),
+      exp,
+    }
+    setCards((c) => [...c, card])
+    return card.id
+  }, [])
+
+  const removeCard = useCallback((id) => setCards((c) => c.filter((x) => x.id !== id)), [])
 
   const applyPromo = useCallback(
     (code) => {
@@ -507,6 +535,9 @@ export function StoreProvider({ children }) {
         login,
         demoLogin,
         logout,
+        cards,
+        addCard,
+        removeCard,
         applyPromo,
         clearPromo,
         placeOrder,

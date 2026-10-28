@@ -19,12 +19,8 @@ export default function DecorPacksPage() {
         animate="show"
         className="grid grid-cols-2 items-stretch gap-3 px-4 pt-4 pb-6"
       >
-        {DECOR_PACKS.map((p, i) => (
-          <motion.div
-            key={p.id}
-            variants={staggerChild}
-            className={`h-full ${i === 0 && DECOR_PACKS.length % 2 ? 'col-span-2' : ''}`}
-          >
+        {DECOR_PACKS.map((p) => (
+          <motion.div key={p.id} variants={staggerChild} className="h-full">
             <PackCard pack={p} wide />
           </motion.div>
         ))}

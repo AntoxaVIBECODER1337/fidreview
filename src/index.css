@@ -21,8 +21,8 @@
   /* Звёзды рейтинга */
   --color-star: #f5a623;
 
-  /* Цена / скидки */
-  --color-price: #e30613;
+  /* Цена / скидки — бордовый, как в приложении */
+  --color-price: #9b1b34;
 
   /* Тёмно-синие заголовки как в приложении */
   --color-navy: #1e3a5c;
@@ -37,8 +37,9 @@
   --shadow-lift: 0 2px 4px rgb(30 58 92 / 0.06), 0 12px 32px rgb(30 58 92 / 0.14);
   --shadow-glass: 0 8px 32px rgb(30 58 92 / 0.16);
 
-  --font-sans: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Шрифт в стиле iPhone: настоящий SF на устройствах Apple, веб-SF Pro Display на остальных */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter',
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 @layer base {
@@ -84,6 +85,13 @@
     scrollbar-width: thin;
     scrollbar-color: rgb(138 148 166 / 0.35) transparent;
   }
+}
+
+/* Все кнопки — прямоугольные с одинаковым скруглением,
+   за основу — кнопка «В корзину» у карточек товара (rounded-lg = 8px).
+   Правило вне @layer, поэтому перебивает утилиты Tailwind. */
+button {
+  border-radius: 8px;
 }
 
 /* Из oma-ozon: убираем подсветку тапа на мобильных */

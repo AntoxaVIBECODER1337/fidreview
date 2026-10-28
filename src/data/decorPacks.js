@@ -8,8 +8,8 @@ export const DECOR_PACKS = [
     "name": "Для кухни",
     "room": "Кухня",
     "emoji": "🍳",
-    "from": "#f5871f",
-    "to": "#e2710a",
+    "from": "#5c8fe4",
+    "to": "#1d5dbe",
     "desc": "Текстиль, хранение и мелочи, которые делают кухню уютной",
     "slots": [
       {
@@ -239,7 +239,7 @@ export const DECOR_PACKS = [
     "name": "Для гостиной",
     "room": "Гостиная",
     "emoji": "🛋️",
-    "from": "#5c4b8a",
+    "from": "#8db4f1",
     "to": "#2e71d6",
     "desc": "Подушки, плед, свет, растения и детали для уюта",
     "slots": [

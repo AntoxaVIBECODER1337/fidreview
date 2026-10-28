@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Hammer, ShoppingCart, Sparkles } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
-import avatar from '../assets/avatar.jpg'
+import { useLocation } from 'react-router-dom'
 import { DEFAULT_TASK, SCENARIOS } from '../lib/ai'
 import { products } from '../lib/catalog'
-import { useStore } from '../store/StoreContext'
 import { PrimaryButton, Tap, staggerChild, staggerParent } from './ui.jsx'
 
 const LOADER_STEPS = {
@@ -39,8 +37,6 @@ const CHOICES = [
  * По окончании «подбора» зовёт onResult(task).
  */
 export default function AIAssistant({ onResult }) {
-  const { user } = useStore()
-  const userName = user?.name?.split(' ')[0]
   const { state } = useLocation()
   /* Задача может прийти из «Моей планировки» (кнопка «Ремонт этой комнаты с ИИ») */
   const [task, setTask] = useState(state?.task ?? DEFAULT_TASK)
@@ -85,15 +81,8 @@ export default function AIAssistant({ onResult }) {
 
       <div className="relative z-10">
         {/* Шапка */}
-        <header className="flex h-16 items-center justify-between px-4">
+        <header className="flex h-16 items-center px-4">
           <h1 className="text-[20px] font-black tracking-tight text-white">Мой дом</h1>
-          <Link
-            to="/profile"
-            aria-label="Профиль"
-            className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/40 bg-white/20 shadow-glass backdrop-blur-md hide-tap"
-          >
-            <img src={avatar} alt="" className="h-8 w-8 rounded-full object-cover" draggable={false} />
-          </Link>
         </header>
 
         <motion.div
@@ -102,10 +91,6 @@ export default function AIAssistant({ onResult }) {
           animate="show"
           className="flex flex-col gap-4 px-4 pt-2"
         >
-          <motion.p variants={staggerChild} className="text-[15px] font-semibold text-white/90">
-            Здравствуйте{userName ? `, ${userName}` : ''} 👋
-          </motion.p>
-
           {/* Карточка ввода */}
           <motion.div
             variants={staggerChild}

@@ -71,15 +71,17 @@ export const PhoneFrame = forwardRef(function PhoneFrame({ children, overlay }, 
 
         <div className="flex h-full w-full flex-col overflow-clip rounded-[50px] bg-white">
           <StatusBar />
-          {/* Экран: transform делает его «окном» для fixed-элементов */}
-          <div className="relative flex-1 overflow-clip" style={{ transform: 'translateZ(0)' }}>
+          {/* Экран: transform делает его «окном» для fixed-элементов.
+              Отрицательный margin растягивает окно на полосу «домой» —
+              стекло меню доходит до самого края экрана, без белой полосы */}
+          <div className="relative -mb-[22px] flex-1 overflow-clip" style={{ transform: 'translateZ(0)' }}>
             <div ref={scrollRef} className="no-scrollbar absolute inset-0 overflow-x-clip overflow-y-auto">
               {children}
             </div>
             {overlay}
           </div>
-          {/* Полоска «домой» */}
-          <div className="flex h-[22px] shrink-0 items-center justify-center bg-white">
+          {/* Полоска «домой»: прозрачная (под ней стекло меню), «домик» поверх стекла */}
+          <div className="pointer-events-none relative z-50 flex h-[22px] shrink-0 items-center justify-center">
             <span className="h-[5px] w-[134px] rounded-full bg-navy/85" />
           </div>
         </div>

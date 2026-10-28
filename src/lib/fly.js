@@ -1,9 +1,11 @@
 /**
  * Микроанимация «полёта» товара в иконку корзины (нижнее меню).
- * Рисуем копию (эмодзи товара) поверх всего и ведём её по дуге
+ * Рисуем копию (иконку товара) поверх всего и ведём её по дуге
  * от кнопки к иконке корзины; по прилёту иконка «подпрыгивает».
  */
-export function flyToCart(fromEl, emoji = '📦', image = null) {
+import { packGlyphMarkup } from '../components/PackIcon.jsx'
+
+export function flyToCart(fromEl, glyph = packGlyphMarkup('📦'), image = null) {
   if (typeof document === 'undefined' || !fromEl) return
   const target = document.querySelector('[data-cart-target]')
   if (!target) return
@@ -24,7 +26,7 @@ export function flyToCart(fromEl, emoji = '📦', image = null) {
     el.style.backgroundImage = `url("${image}")`
     el.style.backgroundSize = 'cover'
     el.style.backgroundPosition = 'center'
-  } else el.textContent = emoji
+  } else el.innerHTML = glyph
   el.setAttribute('aria-hidden', 'true')
   Object.assign(el.style, {
     position: 'fixed',

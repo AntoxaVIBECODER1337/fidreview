@@ -246,7 +246,7 @@ export default function Home() {
       )}
 
       <footer className="mt-10 pb-2 text-center text-[11px] text-muted">
-        ОМА · всё для дома и ремонта · MVP для хакатона
+        ОМА · всё для дома и ремонта
       </footer>
           </motion.div>
         )}

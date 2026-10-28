@@ -106,12 +106,12 @@ export default function LayoutPage() {
                     setSelected(null)
                   }}
                   className={cn(
-                    'relative h-8 shrink-0 rounded-full px-3.5 text-[12.5px] font-bold transition-colors',
+                    'relative h-8 shrink-0 rounded-lg px-3.5 text-[12.5px] font-bold transition-colors',
                     active ? 'text-white' : 'bg-panel text-muted',
                   )}
                 >
                   {active && (
-                    <motion.span layoutId="floor-pill" className="absolute inset-0 rounded-full bg-navy" transition={{ type: 'spring', stiffness: 480, damping: 36 }} />
+                    <motion.span layoutId="floor-pill" className="absolute inset-0 rounded-lg bg-navy" transition={{ type: 'spring', stiffness: 480, damping: 36 }} />
                   )}
                   <span className="relative z-10">{f.name}</span>
                 </button>
