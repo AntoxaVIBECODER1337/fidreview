@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUp, Hammer, RotateCcw, ShoppingCart, Sparkles } from '
 import { Link, useLocation } from 'react-router-dom'
 import avatar from '../assets/avatar.jpg'
 import { DEFAULT_TASK, SCENARIOS } from '../lib/ai'
-import { hasLiveAI, runTurn, sanitizePackage } from '../lib/aiLive'
+import { hasLiveAI, runTurn, sanitizePackage, filterRejected } from '../lib/aiLive'
 import { products } from '../lib/catalog'
 import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
@@ -104,6 +104,9 @@ export default function AIAssistant({ onResult }) {
       let data = await runTurn(historyRef.current)
       if (data.type === 'package') {
         data = sanitizePackage(data)
+        /* Отказы пользователя — высший приоритет: вычищаем отвергнутое */
+        const userTexts = historyRef.current.filter((h) => h.role === 'user').map((h) => h.content)
+        data = filterRejected(data, userTexts)
         /* Все позиции отсеялись — один переспрос с поправкой */
         if (!data.items.length && retry) {
           return askLlm('В выбранном пакете нет ни одного товара из каталога. Пересобери пакет из реальных id каталога.', { retry: false })
