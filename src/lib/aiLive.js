@@ -14,7 +14,7 @@ import { getProduct, products } from './catalog'
  */
 const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || '/llm-api'
 const API_KEY = import.meta.env.VITE_LLM_API_KEY || ''
-const MODEL = import.meta.env.VITE_LLM_MODEL || 'glm-5.3-flash'
+const MODEL = import.meta.env.VITE_LLM_MODEL || 'glm-5.2'
 
 export const hasLiveAI = () => Boolean(API_KEY)
 
