@@ -8,6 +8,7 @@ import FloorPlan from '../components/FloorPlan.jsx'
 import NewProjectSheet from '../components/NewProjectSheet.jsx'
 import { Card, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { analyzeTask } from '../lib/ai'
+import { buildLiveResult } from '../lib/aiLive'
 import { roomArea } from '../data/rooms'
 import { cn } from '../lib/cn'
 import { rub } from '../lib/format'
@@ -45,7 +46,11 @@ export default function MyHomePage() {
 
   return (
     <div>
-      <AIAssistant onResult={(task, mode) => setAi({ task, mode, result: analyzeTask(task) })} />
+      <AIAssistant
+        onResult={(task, mode, livePkg) =>
+          setAi({ task, mode, result: livePkg ? buildLiveResult(livePkg) : analyzeTask(task) })
+        }
+      />
 
       <AnimatePresence>
         {ai && (

@@ -28,13 +28,13 @@ export default function AIResultSheet({ task, mode = 'project', result, onClose,
     const partners = (bySpec.partners.length ? bySpec.partners : any.partners).slice(0, oma ? 2 : 3)
     return oma ? [oma, ...partners] : partners
   }, [city, scenario.id])
-  const [kitId, setKitId] = useState('std')
+  const [kitId, setKitId] = useState(kits[0]?.id)
   const [withCrew, setWithCrew] = useState(false)
   const [crewId, setCrewId] = useState(crews[0]?.id)
-  const [expanded, setExpanded] = useState('std')
+  const [expanded, setExpanded] = useState(kits[0]?.id ?? null)
   const [excluded, setExcluded] = useState(() => new Set())
 
-  const kit = kits.find((k) => k.id === kitId)
+  const kit = kits.find((k) => k.id === kitId) ?? kits[0]
   const crew = crews.find((c) => c.id === crewId) ?? crews[0]
 
   const itemsTotal = useMemo(() => kitTotal(kit.items, excluded), [kit, excluded])
@@ -102,7 +102,7 @@ export default function AIResultSheet({ task, mode = 'project', result, onClose,
           {/* Что понял ИИ */}
           <div className="mt-3 flex flex-wrap gap-1.5">
             <span className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700">
-              <scenario.Icon size={12} />
+              {scenario.Icon ? <scenario.Icon size={12} /> : <Sparkles size={12} />}
               {recognized ? scenario.name : `${scenario.name} (по умолчанию)`}
             </span>
             <span className="flex items-center gap-1 rounded-full bg-panel px-2.5 py-1 text-[11px] font-semibold text-navy">
