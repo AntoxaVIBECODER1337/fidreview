@@ -9,7 +9,7 @@ import { getProduct, products } from './catalog'
 
 const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || 'https://api.hcnsec.cn/v1'
 const API_KEY = import.meta.env.VITE_LLM_API_KEY || ''
-const MODEL = import.meta.env.VITE_LLM_MODEL || 'gpt-4o-mini'
+const MODEL = import.meta.env.VITE_LLM_MODEL || 'Qwen3.8-Flash-Next'
 
 export const hasLiveAI = () => Boolean(API_KEY)
 
@@ -40,7 +40,11 @@ ${catalogList()}
 {"type":"package","summary":"одно предложение о подобранном пакете","area":20,"items":[{"id":"cement-cem-42","qty":12}]}
 где area — площадь в м² (число, если не названа — поставь 0), items — товары из каталога.`
 
-/** Один ход диалога: история [{role, content}], возвращает разобранный JSON-ответ LLM */
+/**
+ * Один ход диалога: история [{role, content}], возвращает разобранный JSON-ответ LLM.
+ * Релей api.hcnsec.cn отдаёт только потоковый ответ (SSE), поэтому читаем
+ * стрим и склеиваем дельты content в полный текст.
+ */
 export async function runTurn(history) {
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: 'POST',
@@ -52,17 +56,52 @@ export async function runTurn(history) {
       model: MODEL,
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...history],
       temperature: 0.4,
-      max_tokens: 1600,
+      max_tokens: 2000,
+      stream: true,
     }),
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(60000),
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
     throw new Error(`LLM ${res.status}: ${text.slice(0, 200)}`)
   }
-  const data = await res.json()
-  const raw = data.choices?.[0]?.message?.content ?? ''
+  const raw = await readSseContent(res)
+  if (!raw.trim()) throw new Error('LLM вернул пустой ответ')
   return parseLlmJson(raw)
+}
+
+/** Читает SSE-стрим OpenAI-формата и собирает полный текст ответа */
+async function readSseContent(res) {
+  /* Fallback на обычный JSON, если стрим недоступен */
+  if (!res.body || typeof res.body.getReader !== 'function') {
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? ''
+  }
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buf = ''
+  let out = ''
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buf += decoder.decode(value, { stream: true })
+    const lines = buf.split('\n')
+    buf = lines.pop()
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed.startsWith('data:')) continue
+      const payload = trimmed.slice(5).trim()
+      if (!payload || payload === '[DONE]') continue
+      try {
+        const json = JSON.parse(payload)
+        const delta = json.choices?.[0]?.delta
+        if (delta?.content) out += delta.content
+      } catch {
+        /* неполный чанк — игнорируем */
+      }
+    }
+  }
+  return out
 }
 
 /** Достаём JSON из ответа (LLM иногда оборачивает в ```json) */
