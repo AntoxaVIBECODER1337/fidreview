@@ -7,9 +7,9 @@ import { getProduct, products } from './catalog'
  * на детерминированный скрипт из src/lib/ai.js.
  */
 
-const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || 'https://api.hcnsec.cn/v1'
+const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4'
 const API_KEY = import.meta.env.VITE_LLM_API_KEY || ''
-const MODEL = import.meta.env.VITE_LLM_MODEL || 'Qwen3.8-Flash-Next'
+const MODEL = import.meta.env.VITE_LLM_MODEL || 'glm-5.3-flash'
 
 export const hasLiveAI = () => Boolean(API_KEY)
 
@@ -58,6 +58,8 @@ export async function runTurn(history) {
       temperature: 0.4,
       max_tokens: 2000,
       stream: true,
+      /* Zhipu glm-5.3-flash всегда думает — ставим минимальный бюджет размышлений */
+      reasoning_effort: 'low',
     }),
     signal: AbortSignal.timeout(60000),
   })
