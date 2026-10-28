@@ -1,6 +1,7 @@
 [
   {
     "id": "laminate-sunfloor",
+    "image": "/img/products/laminate-sunfloor.jpg",
     "cat": "interier",
     "sub": "Напольные покрытия",
     "name": "Ламинат Sunfloor Сосна Тахо 52 33 кл.",
@@ -22,6 +23,7 @@
   },
   {
     "id": "osb-3-9",
+    "image": "/img/products/osb-3-9.jpg",
     "cat": "interier",
     "sub": "Плитные материалы",
     "name": "Плита OSB-3 9x1250x2500 мм",
@@ -44,6 +46,7 @@
   },
   {
     "id": "cement-cem-42",
+    "image": "/img/products/cement-cem-42.jpg",
     "cat": "stroymaterialy",
     "sub": "Сухие смеси",
     "name": "Портландцемент ЦЕМ I 42,5Н 25 кг",
@@ -66,6 +69,7 @@
   },
   {
     "id": "gipsokarton-12",
+    "image": "/img/products/gipsokarton-12.jpg",
     "cat": "stroymaterialy",
     "sub": "Листовые материалы",
     "name": "Гипсокартон Knauf 12.5 мм 1200x2500",
@@ -86,6 +90,7 @@
   },
   {
     "id": "teplolux-izolyaciya",
+    "image": "/img/products/teplolux-izolyaciya.jpg",
     "cat": "stroymaterialy",
     "sub": "Изоляция",
     "name": "Утеплитель ТЕХНОНИКОЛЬ Лайт Экстра 50 мм",
@@ -108,6 +113,7 @@
   },
   {
     "id": "klej-plitochny",
+    "image": "/img/products/klej-plitochny.jpg",
     "cat": "stroymaterialy",
     "sub": "Сухие смеси",
     "name": "Клей плиточный Uni 25 кг",
@@ -129,6 +135,7 @@
   },
   {
     "id": "sifon-rakoviny",
+    "image": "/img/products/sifon-rakoviny.jpg",
     "cat": "santehnika",
     "sub": "Душевые системы",
     "name": "Сифон для раковины модель S-100",
@@ -149,6 +156,7 @@
   },
   {
     "id": "shurupovert-makita",
+    "image": "/img/products/shurupovert-makita.jpg",
     "cat": "instrument",
     "sub": "Электроинструмент",
     "name": "Шуруповёрт Makita DF333DW 12 В",
@@ -171,6 +179,7 @@
   },
   {
     "id": "perforator-bosch",
+    "image": "/img/products/perforator-bosch.jpg",
     "cat": "instrument",
     "sub": "Электроинструмент",
     "name": "Перфоратор Bosch PBH 2900 FRE",
@@ -193,6 +202,7 @@
   },
   {
     "id": "nabor-instrumentov",
+    "image": "/img/products/nabor-instrumentov.jpg",
     "cat": "instrument",
     "sub": "Ручной инструмент",
     "name": "Набор инструментов 128 предметов",
@@ -213,6 +223,7 @@
   },
   {
     "id": "uroven-60",
+    "image": "/img/products/uroven-60.jpg",
     "cat": "instrument",
     "sub": "Измерительный",
     "name": "Уровень строительный 600 мм",
@@ -233,6 +244,7 @@
   },
   {
     "id": "uroven-lazerny",
+    "image": "/img/products/uroven-lazerny.jpg",
     "cat": "instrument",
     "sub": "Измерительный",
     "name": "Лазерный уровень ADA Cube 2D",
@@ -254,6 +266,7 @@
   },
   {
     "id": "smesitel-grohe",
+    "image": "/img/products/smesitel-grohe.jpg",
     "cat": "santehnika",
     "sub": "Смесители",
     "name": "Смеситель Grohe Eurosmart для раковины",
@@ -276,6 +289,7 @@
   },
   {
     "id": "unitaz-cersanit",
+    "image": "/img/products/unitaz-cersanit.jpg",
     "cat": "santehnika",
     "sub": "Раковины и унитазы",
     "name": "Унитаз-компакт Cersanit Parva",
@@ -297,6 +311,7 @@
   },
   {
     "id": "truba-pp-25",
+    "image": "/img/products/truba-pp-25.jpg",
     "cat": "santehnika",
     "sub": "Трубы и фитинги",
     "name": "Труба полипропиленовая PN20 25 мм, 4 м",
@@ -317,6 +332,7 @@
   },
   {
     "id": "reditel-kabel-2x2",
+    "image": "/img/products/reditel-kabel-2x2.jpg",
     "cat": "electrika",
     "sub": "Кабель и провод",
     "name": "Кабель ВВГнг-LS 2x2.5, 100 м",
@@ -337,6 +353,7 @@
   },
   {
     "id": "lampa-led-9",
+    "image": "/img/products/lampa-led-9.jpg",
     "cat": "electrika",
     "sub": "Светильники",
     "name": "Лампа светодиодная LED 9 Вт E27",
@@ -359,6 +376,7 @@
   },
   {
     "id": "avtomat-16a",
+    "image": "/img/products/avtomat-16a.jpg",
     "cat": "electrika",
     "sub": "Автоматика",
     "name": "Автоматический выключатель 16 А ABB SH204L",
@@ -379,6 +397,7 @@
   },
   {
     "id": "rozetka-legrand",
+    "image": "/img/products/rozetka-legrand.jpg",
     "cat": "electrika",
     "sub": "Розетки и выключатели",
     "name": "Розетка двойная Legrand Etika 16А",
@@ -399,6 +418,7 @@
   },
   {
     "id": "divan-sonata",
+    "image": "/img/products/divan-sonata.jpg",
     "cat": "mebel",
     "sub": "Мягкая мебель",
     "name": "Диван-кровать «Соната» угловой",
@@ -421,6 +441,7 @@
   },
   {
     "id": "krovat-palermo",
+    "image": "/img/products/krovat-palermo.jpg",
     "cat": "mebel",
     "sub": "Мебель для спальни",
     "name": "Кровать «Palermo» 160×200",
@@ -441,6 +462,7 @@
   },
   {
     "id": "stol-obedenny",
+    "image": "/img/products/stol-obedenny.jpg",
     "cat": "mebel",
     "sub": "Столы и стулья",
     "name": "Стол обеденный «Лофт» 120×80",
@@ -461,6 +483,7 @@
   },
   {
     "id": "stil-viktoriya",
+    "image": "/img/products/stil-viktoriya.jpg",
     "cat": "mebel",
     "sub": "Столы и стулья",
     "name": "Стул деревянный «Виктория»",
@@ -481,6 +504,7 @@
   },
   {
     "id": "stiralnaya-lg",
+    "image": "/img/products/stiralnaya-lg.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Стиральные машины",
     "name": "Стиральная машина LG TW-V3 6 кг",
@@ -502,6 +526,7 @@
   },
   {
     "id": "holodilnik-biryusa",
+    "image": "/img/products/holodilnik-biryusa.png",
     "cat": "bytovaya-tehnika",
     "sub": "Холодильники",
     "name": "Холодильник Бирюса 137К 300 л",
@@ -524,6 +549,7 @@
   },
   {
     "id": "pylesos-samsung",
+    "image": "/img/products/pylesos-samsung.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Мелкая техника",
     "name": "Пылесос Samsung VC15 2000 Вт",
@@ -544,6 +570,7 @@
   },
   {
     "id": "multivarka",
+    "image": "/img/products/multivarka.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Мелкая техника",
     "name": "Мультиварка Redmond 5 л",
@@ -565,6 +592,7 @@
   },
   {
     "id": "shtory-blackout",
+    "image": "/img/products/shtory-blackout.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Текстиль",
     "name": "Шторы блэкаут 200×280 см",
@@ -585,6 +613,7 @@
   },
   {
     "id": "kover-bliss",
+    "image": "/img/products/kover-bliss.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Декор",
     "name": "Ковёр наматрасник Bliss 160×230",
@@ -606,6 +635,7 @@
   },
   {
     "id": "organayzer",
+    "image": "/img/products/organayzer.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Хранение",
     "name": "Органайзер для хранения вещей 80 л",
@@ -626,6 +656,7 @@
   },
   {
     "id": "skovoroda-24",
+    "image": "/img/products/skovoroda-24.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Посуда",
     "name": "Сковорода Ballarini 24 см чугун",
@@ -648,6 +679,7 @@
   },
   {
     "id": "kastryulya-5",
+    "image": "/img/products/kastryulya-5.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Посуда",
     "name": "Кастрюля Jungle 5 л с крышкой",
@@ -668,6 +700,7 @@
   },
   {
     "id": "nabor-nozhey",
+    "image": "/img/products/nabor-nozhey.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Посуда",
     "name": "Набор ножей 5 предметов Oak",
@@ -689,6 +722,7 @@
   },
   {
     "id": "gazonokosilka",
+    "image": "/img/products/gazonokosilka.jpg",
     "cat": "blagoustroystvo",
     "sub": "Садовая техника",
     "name": "Косилка электрическая Gardena 1800 Вт",
@@ -711,6 +745,7 @@
   },
   {
     "id": "shlang-sadovy",
+    "image": "/img/products/shlang-sadovy.jpg",
     "cat": "blagoustroystvo",
     "sub": "Полив",
     "name": "Шланг поливочный 3/4, 20 м",
@@ -731,6 +766,7 @@
   },
   {
     "id": "mangal",
+    "image": "/img/products/mangal.jpg",
     "cat": "blagoustroystvo",
     "sub": "Садовый инвентарь",
     "name": "Мангал садовый 60×30 см",
@@ -752,6 +788,7 @@
   },
   {
     "id": "linoleum-4m",
+    "image": "/img/products/linoleum-4m.jpg",
     "cat": "interier",
     "sub": "Напольные покрытия",
     "name": "Линолеум бытовой 4 м рулон",
@@ -774,6 +811,7 @@
   },
   {
     "id": "plitka-30x30",
+    "image": "/img/products/plitka-30x30.jpg",
     "cat": "interier",
     "sub": "Плитные материалы",
     "name": "Плитка керамическая 30×30 белая",
@@ -795,6 +833,7 @@
   },
   {
     "id": "shpaklevka-finish",
+    "image": "/img/products/shpaklevka-finish.png",
     "cat": "interier",
     "sub": "Сухие смеси",
     "name": "Шпаклёвка финишная 20 кг",
@@ -815,6 +854,7 @@
   },
   {
     "id": "trimmer-benzin",
+    "image": "/img/products/trimmer-benzin.jpg",
     "cat": "blagoustroystvo",
     "sub": "Садовая техника",
     "name": "Триммер бензиновый 2.2 л.с.",
@@ -837,6 +877,7 @@
   },
   {
     "id": "poliv-kapelnyy",
+    "image": "/img/products/poliv-kapelnyy.jpg",
     "cat": "blagoustroystvo",
     "sub": "Полив",
     "name": "Система полива капельная 20 м",
@@ -857,6 +898,7 @@
   },
   {
     "id": "pesok-50",
+    "image": "/img/products/pesok-50.jpg",
     "cat": "stroymaterialy",
     "sub": "Сухие смеси",
     "name": "Песок просеянный 50 кг",
@@ -877,6 +919,7 @@
   },
   {
     "id": "profnastil-c8",
+    "image": "/img/products/profnastil-c8.jpg",
     "cat": "stroymaterialy",
     "sub": "Листовые материалы",
     "name": "Профнастил С8 лист 1150 мм",
@@ -898,6 +941,7 @@
   },
   {
     "id": "smesitel-vanna",
+    "image": "/img/products/smesitel-vanna.jpg",
     "cat": "santehnika",
     "sub": "Смесители",
     "name": "Смеситель для ванны Grohe",
@@ -920,6 +964,7 @@
   },
   {
     "id": "rakovina-55",
+    "image": "/img/products/rakovina-55.jpg",
     "cat": "santehnika",
     "sub": "Раковины и унитазы",
     "name": "Раковина керамическая 55 см",
@@ -940,6 +985,7 @@
   },
   {
     "id": "dushevaya-sistema",
+    "image": "/img/products/dushevaya-sistema.jpg",
     "cat": "santehnika",
     "sub": "Душевые системы",
     "name": "Душевая система с тропическим душем",
@@ -961,6 +1007,7 @@
   },
   {
     "id": "ugloshlifmashina",
+    "image": "/img/products/ugloshlifmashina.jpg",
     "cat": "instrument",
     "sub": "Электроинструмент",
     "name": "Углошлифмашина 125 мм 900 Вт",
@@ -983,6 +1030,7 @@
   },
   {
     "id": "nabor-burov",
+    "image": "/img/products/nabor-burov.jpg",
     "cat": "instrument",
     "sub": "Насадки и оснастка",
     "name": "Набор буров по бетону 5 предметов",
@@ -1003,6 +1051,7 @@
   },
   {
     "id": "svetilnik-led-36",
+    "image": "/img/products/svetilnik-led-36.jpg",
     "cat": "electrika",
     "sub": "Светильники",
     "name": "Светильник накладной LED 36 Вт",
@@ -1023,6 +1072,7 @@
   },
   {
     "id": "vyklyuchatel-2",
+    "image": "/img/products/vyklyuchatel-2.jpg",
     "cat": "electrika",
     "sub": "Розетки и выключатели",
     "name": "Выключатель двойной Legrand Etika",
@@ -1043,6 +1093,7 @@
   },
   {
     "id": "udlinitel-5",
+    "image": "/img/products/udlinitel-5.jpg",
     "cat": "electrika",
     "sub": "Розетки и выключатели",
     "name": "Удлинитель 5 розеток 3 м",
@@ -1065,6 +1116,7 @@
   },
   {
     "id": "komod-4",
+    "image": "/img/products/komod-4.jpg",
     "cat": "mebel",
     "sub": "Мебель для спальни",
     "name": "Комод с 4 ящиками 90 см",
@@ -1085,6 +1137,7 @@
   },
   {
     "id": "shkaf-kupe",
+    "image": "/img/products/shkaf-kupe.jpg",
     "cat": "mebel",
     "sub": "Шкафы",
     "name": "Шкаф-купе 240×215 см",
@@ -1107,6 +1160,7 @@
   },
   {
     "id": "posudomoyka-6",
+    "image": "/img/products/posudomoyka-6.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Посудомоечные машины",
     "name": "Посудомоечная машина 6 комплектов",
@@ -1128,6 +1182,7 @@
   },
   {
     "id": "chaynik-17",
+    "image": "/img/products/chaynik-17.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Мелкая техника",
     "name": "Электрочайник 1.7 л",
@@ -1148,6 +1203,7 @@
   },
   {
     "id": "mikrovolnovka-20",
+    "image": "/img/products/mikrovolnovka-20.jpg",
     "cat": "bytovaya-tehnika",
     "sub": "Мелкая техника",
     "name": "Микроволновая печь 20 л",
@@ -1169,6 +1225,7 @@
   },
   {
     "id": "zerkalo-70x90",
+    "image": "/img/products/zerkalo-70x90.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Зеркала",
     "name": "Зеркало в раме 70×90 см",
@@ -1189,6 +1246,7 @@
   },
   {
     "id": "podushka-dekor",
+    "image": "/img/products/podushka-dekor.jpg",
     "cat": "tovary-dlya-doma",
     "sub": "Текстиль",
     "name": "Подушка декоративная 45×45 см",
@@ -1210,6 +1268,7 @@
   },
   {
     "id": "radiator-10",
+    "image": "/img/products/radiator-10.jpg",
     "cat": "inzhenernye-sistemy",
     "sub": "Отопление",
     "name": "Радиатор алюминиевый 10 секций",
@@ -1231,6 +1290,7 @@
   },
   {
     "id": "kotel-24",
+    "image": "/img/products/kotel-24.jpg",
     "cat": "inzhenernye-sistemy",
     "sub": "Отопление",
     "name": "Котёл газовый настенный 24 кВт",
@@ -1252,6 +1312,7 @@
   },
   {
     "id": "nasos-tsirk",
+    "image": "/img/products/nasos-tsirk.jpg",
     "cat": "inzhenernye-sistemy",
     "sub": "Отопление",
     "name": "Насос циркуляционный 25-60",
@@ -1272,6 +1333,7 @@
   },
   {
     "id": "vodonagrevatel-80",
+    "image": "/img/products/vodonagrevatel-80.jpg",
     "cat": "inzhenernye-sistemy",
     "sub": "Водоснабжение",
     "name": "Водонагреватель электрический 80 л",
@@ -1294,6 +1356,7 @@
   },
   {
     "id": "filtr-vody-3",
+    "image": "/img/products/filtr-vody-3.jpg",
     "cat": "inzhenernye-sistemy",
     "sub": "Водоснабжение",
     "name": "Фильтр для воды 3 ступени",
@@ -1314,6 +1377,7 @@
   },
   {
     "id": "velosiped-26",
+    "image": "/img/products/velosiped-26.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Велоспорт",
     "name": "Велосипед горный 26 дюймов",
@@ -1336,6 +1400,7 @@
   },
   {
     "id": "ganteli-2x10",
+    "image": "/img/products/ganteli-2x10.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Тренажёры",
     "name": "Набор гантелей 2×10 кг",
@@ -1356,6 +1421,7 @@
   },
   {
     "id": "begovaya-dorozhka",
+    "image": "/img/products/begovaya-dorozhka.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Тренажёры",
     "name": "Беговая дорожка электрическая",
@@ -1377,6 +1443,7 @@
   },
   {
     "id": "myach-futbolny",
+    "image": "/img/products/myach-futbolny.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Игры",
     "name": "Мяч футбольный размер 5",
@@ -1397,6 +1464,7 @@
   },
   {
     "id": "darts-mishen",
+    "image": "/img/products/darts-mishen.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Игры",
     "name": "Дартс с мишенью 40 см",
@@ -1418,6 +1486,7 @@
   },
   {
     "id": "palatka-4",
+    "image": "/img/products/palatka-4.jpg",
     "cat": "sport-i-otdyh",
     "sub": "Туризм",
     "name": "Палатка туристическая 4-местная",
@@ -1439,6 +1508,7 @@
   },
   {
     "id": "elka-210",
+    "image": "/img/products/elka-210.jpg",
     "cat": "novyy-god",
     "sub": "Ёлки",
     "name": "Ёлка искусственная 2.1 м",
@@ -1461,6 +1531,7 @@
   },
   {
     "id": "girlyanda-10m",
+    "image": "/img/products/girlyanda-10m.jpg",
     "cat": "novyy-god",
     "sub": "Гирлянды",
     "name": "Гирлянда LED 10 м, 100 диодов",
@@ -1483,6 +1554,7 @@
   },
   {
     "id": "shary-yolka-20",
+    "image": "/img/products/shary-yolka-20.jpg",
     "cat": "novyy-god",
     "sub": "Ёлочные игрушки",
     "name": "Шары ёлочные, набор 20 шт",
@@ -1503,6 +1575,7 @@
   },
   {
     "id": "igrushka-yolka-12",
+    "image": "/img/products/igrushka-yolka-12.jpg",
     "cat": "novyy-god",
     "sub": "Ёлочные игрушки",
     "name": "Игрушки ёлочные стеклянные, 12 шт",
@@ -1523,6 +1596,7 @@
   },
   {
     "id": "meshok-podarok",
+    "image": "/img/products/meshok-podarok.jpg",
     "cat": "novyy-god",
     "sub": "Подарочные мешки",
     "name": "Мешок подарочный 90 см",
@@ -1543,6 +1617,7 @@
   },
   {
     "id": "samorezy-krovel",
+    "image": "/img/products/samorezy-krovel.jpg",
     "cat": "krepesh",
     "sub": "Саморезы",
     "name": "Саморезы кровельные 4.8×35, 250 шт",
@@ -1564,6 +1639,7 @@
   },
   {
     "id": "samorezy-derevo",
+    "image": "/img/products/samorezy-derevo.jpg",
     "cat": "krepesh",
     "sub": "Саморезы",
     "name": "Саморезы по дереву 5×70, 100 шт",
@@ -1584,6 +1660,7 @@
   },
   {
     "id": "dyubeli-8x60",
+    "image": "/img/products/dyubeli-8x60.jpg",
     "cat": "krepesh",
     "sub": "Дюбели",
     "name": "Дюбель-гвоздь 8×60, 100 шт",
@@ -1604,6 +1681,7 @@
   },
   {
     "id": "ankery-m10",
+    "image": "/img/products/ankery-m10.jpg",
     "cat": "krepesh",
     "sub": "Анкеры",
     "name": "Анкер клиновой М10, 20 шт",
@@ -1625,6 +1703,7 @@
   },
   {
     "id": "gvozdi-120",
+    "image": "/img/products/gvozdi-120.jpg",
     "cat": "krepesh",
     "sub": "Гвозди",
     "name": "Гвозди строительные 120 мм, 1 кг",
@@ -1645,6 +1724,7 @@
   },
   {
     "id": "vinty-mebelnye",
+    "image": "/img/products/vinty-mebelnye.jpg",
     "cat": "krepesh",
     "sub": "Саморезы",
     "name": "Винты мебельные 6×50, 100 шт",
@@ -1665,6 +1745,7 @@
   },
   {
     "id": "akkumulator-60",
+    "image": "/img/products/akkumulator-60.jpg",
     "cat": "avtotovary",
     "sub": "Аккумуляторы",
     "name": "Аккумулятор 60 А·ч 12 В",
@@ -1687,6 +1768,7 @@
   },
   {
     "id": "maslo-5w40",
+    "image": "/img/products/maslo-5w40.jpg",
     "cat": "avtotovary",
     "sub": "Аксессуары",
     "name": "Масло моторное 5W-40, 4 л",
@@ -1708,6 +1790,7 @@
   },
   {
     "id": "kovry-avto",
+    "image": "/img/products/kovry-avto.jpg",
     "cat": "avtotovary",
     "sub": "Аксессуары",
     "name": "Ковры автомобильные, набор 4 шт",
@@ -1728,6 +1811,7 @@
   },
   {
     "id": "zaryadnoe-12v",
+    "image": "/img/products/zaryadnoe-12v.jpg",
     "cat": "avtotovary",
     "sub": "Аккумуляторы",
     "name": "Зарядное устройство 12 В 6 А",
@@ -1748,6 +1832,7 @@
   },
   {
     "id": "holodilnik-avto",
+    "image": "/img/products/holodilnik-avto.jpg",
     "cat": "avtotovary",
     "sub": "Аксессуары",
     "name": "Автохолодильник 12 л",
@@ -1769,6 +1854,7 @@
   },
   {
     "id": "televizor-43",
+    "image": "/img/products/televizor-43.jpg",
     "cat": "elektronika",
     "sub": "Телевизоры",
     "name": "Телевизор LED 43\" 4K UHD",
@@ -1791,6 +1877,7 @@
   },
   {
     "id": "noutbuk-156",
+    "image": "/img/products/noutbuk-156.png",
     "cat": "elektronika",
     "sub": "Компьютеры",
     "name": "Ноутбук 15.6\" 8/512 ГБ",
@@ -1811,6 +1898,7 @@
   },
   {
     "id": "monitor-24",
+    "image": "/img/products/monitor-24.jpg",
     "cat": "elektronika",
     "sub": "Компьютеры",
     "name": "Монитор 24\" IPS 75 Гц",
@@ -1832,6 +1920,7 @@
   },
   {
     "id": "naushniki-bt",
+    "image": "/img/products/naushniki-bt.jpg",
     "cat": "elektronika",
     "sub": "Гаджеты",
     "name": "Наушники Bluetooth накладные",
@@ -1854,6 +1943,7 @@
   },
   {
     "id": "kolonka-bt",
+    "image": "/img/products/kolonka-bt.jpg",
     "cat": "elektronika",
     "sub": "Аудио",
     "name": "Колонка Bluetooth 20 Вт",
@@ -1874,6 +1964,7 @@
   },
   {
     "id": "router-wifi6",
+    "image": "/img/products/router-wifi6.jpg",
     "cat": "elektronika",
     "sub": "Гаджеты",
     "name": "Роутер Wi-Fi 6 двухдиапазонный",
@@ -1894,6 +1985,7 @@
   },
   {
     "id": "konstruktor-500",
+    "image": "/img/products/konstruktor-500.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Игрушки",
     "name": "Конструктор, 500 деталей",
@@ -1916,6 +2008,7 @@
   },
   {
     "id": "kukla-kolyaska",
+    "image": "/img/products/kukla-kolyaska.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Игрушки",
     "name": "Кукла с коляской",
@@ -1936,6 +2029,7 @@
   },
   {
     "id": "karandashi-24",
+    "image": "/img/products/karandashi-24.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Канцелярия",
     "name": "Карандаши цветные, 24 цвета",
@@ -1956,6 +2050,7 @@
   },
   {
     "id": "pelenki-3",
+    "image": "/img/products/pelenki-3.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Для малышей",
     "name": "Пелёнки махровые, 3 шт",
@@ -1976,6 +2071,7 @@
   },
   {
     "id": "pled-detskiy",
+    "image": "/img/products/pled-detskiy.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Детский текстиль",
     "name": "Плед детский 110×140 см",
@@ -1997,6 +2093,7 @@
   },
   {
     "id": "myagkaya-igrushka",
+    "image": "/img/products/myagkaya-igrushka.jpg",
     "cat": "tovary-dlya-detey",
     "sub": "Игрушки",
     "name": "Мягкая игрушка Зайчик 40 см",
@@ -2017,6 +2114,7 @@
   },
   {
     "id": "fen-2000",
+    "image": "/img/products/fen-2000.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Уход за волосами",
     "name": "Фен для волос 2000 Вт",
@@ -2039,6 +2137,7 @@
   },
   {
     "id": "britva-elektr",
+    "image": "/img/products/britva-elektr.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Уход за телом",
     "name": "Электробритва сухая/влажная",
@@ -2060,6 +2159,7 @@
   },
   {
     "id": "massazher-shei",
+    "image": "/img/products/massazher-shei.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Здоровье",
     "name": "Массажёр для шеи и плеч",
@@ -2080,6 +2180,7 @@
   },
   {
     "id": "vesy-napolnye",
+    "image": "/img/products/vesy-napolnye.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Здоровье",
     "name": "Весы напольные электронные",
@@ -2101,6 +2202,7 @@
   },
   {
     "id": "nabor-kistey",
+    "image": "/img/products/nabor-kistey.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Аксессуары",
     "name": "Набор кистей маникюрных, 12 шт",
@@ -2121,6 +2223,7 @@
   },
   {
     "id": "zerkalo-kosmet",
+    "image": "/img/products/zerkalo-kosmet.jpg",
     "cat": "krasota-i-zdorove",
     "sub": "Аксессуары",
     "name": "Зеркало косметическое с подсветкой",
@@ -2142,6 +2245,7 @@
   },
   {
     "id": "dekor-kitchen-1-1",
+    "image": "/img/products/dekor-kitchen-1-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца кухонные «Лён», бежевые, 3 шт",
@@ -2163,6 +2267,7 @@
   },
   {
     "id": "dekor-kitchen-1-2",
+    "image": "/img/products/dekor-kitchen-1-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца кухонные «Клетка», красно-белые, 3 шт",
@@ -2184,6 +2289,7 @@
   },
   {
     "id": "dekor-kitchen-1-3",
+    "image": "/img/products/dekor-kitchen-1-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца кухонные «Олива», зелёные, 3 шт",
@@ -2205,6 +2311,7 @@
   },
   {
     "id": "dekor-kitchen-1-4",
+    "image": "/img/products/dekor-kitchen-1-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца кухонные «Вафля», молочные, 3 шт",
@@ -2226,6 +2333,7 @@
   },
   {
     "id": "dekor-kitchen-1-5",
+    "image": "/img/products/dekor-kitchen-1-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца кухонные «Egypt», графит, 3 шт",
@@ -2247,6 +2355,7 @@
   },
   {
     "id": "dekor-kitchen-2-1",
+    "image": "/img/products/dekor-kitchen-2-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Прихватки и рукавица «Классик», серые",
@@ -2268,6 +2377,7 @@
   },
   {
     "id": "dekor-kitchen-2-2",
+    "image": "/img/products/dekor-kitchen-2-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Прихватки и рукавица «Прованс», лавандовые",
@@ -2289,6 +2399,7 @@
   },
   {
     "id": "dekor-kitchen-2-3",
+    "image": "/img/products/dekor-kitchen-2-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Прихватки и рукавица «Сканди», белые",
@@ -2310,6 +2421,7 @@
   },
   {
     "id": "dekor-kitchen-2-4",
+    "image": "/img/products/dekor-kitchen-2-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Прихватки и рукавица «Термо», чёрные",
@@ -2331,6 +2443,7 @@
   },
   {
     "id": "dekor-kitchen-2-5",
+    "image": "/img/products/dekor-kitchen-2-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Прихватки и рукавица «Шеф», антрацит",
@@ -2352,6 +2465,7 @@
   },
   {
     "id": "dekor-kitchen-3-1",
+    "image": "/img/products/dekor-kitchen-3-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Банки для сыпучих «Прозрачные», с бамбуковой крышкой, 3 шт",
@@ -2373,6 +2487,7 @@
   },
   {
     "id": "dekor-kitchen-3-2",
+    "image": "/img/products/dekor-kitchen-3-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Банки для сыпучих «Матовые», белые, 3 шт",
@@ -2394,6 +2509,7 @@
   },
   {
     "id": "dekor-kitchen-3-3",
+    "image": "/img/products/dekor-kitchen-3-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Банки для сыпучих «Ретро», с металлической крышкой, 3 шт",
@@ -2415,6 +2531,7 @@
   },
   {
     "id": "dekor-kitchen-3-4",
+    "image": "/img/products/dekor-kitchen-3-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Банки для сыпучих «Вакуум», серые, 3 шт",
@@ -2436,6 +2553,7 @@
   },
   {
     "id": "dekor-kitchen-3-5",
+    "image": "/img/products/dekor-kitchen-3-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Банки для сыпучих «Керамика», терракота, 3 шт",
@@ -2457,6 +2575,7 @@
   },
   {
     "id": "dekor-kitchen-4-1",
+    "image": "/img/products/dekor-kitchen-4-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Сушилка для посуды «Компакт», белая",
@@ -2478,6 +2597,7 @@
   },
   {
     "id": "dekor-kitchen-4-2",
+    "image": "/img/products/dekor-kitchen-4-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Сушилка для посуды «Двухъярусная», чёрная",
@@ -2499,6 +2619,7 @@
   },
   {
     "id": "dekor-kitchen-4-3",
+    "image": "/img/products/dekor-kitchen-4-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Сушилка для посуды «Бамбук», натуральная",
@@ -2520,6 +2641,7 @@
   },
   {
     "id": "dekor-kitchen-4-4",
+    "image": "/img/products/dekor-kitchen-4-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Сушилка для посуды «Нерж», хром",
@@ -2541,6 +2663,7 @@
   },
   {
     "id": "dekor-kitchen-4-5",
+    "image": "/img/products/dekor-kitchen-4-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Сушилка для посуды «Над мойкой», хром",
@@ -2562,6 +2685,7 @@
   },
   {
     "id": "dekor-kitchen-5-1",
+    "image": "/img/products/dekor-kitchen-5-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик кухонный «Плетёный», бежевый",
@@ -2583,6 +2707,7 @@
   },
   {
     "id": "dekor-kitchen-5-2",
+    "image": "/img/products/dekor-kitchen-5-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик кухонный «Графика», серый",
@@ -2604,6 +2729,7 @@
   },
   {
     "id": "dekor-kitchen-5-3",
+    "image": "/img/products/dekor-kitchen-5-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик кухонный «Шахматы», чёрно-белый",
@@ -2625,6 +2751,7 @@
   },
   {
     "id": "dekor-kitchen-5-4",
+    "image": "/img/products/dekor-kitchen-5-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик кухонный «Антиусталость», графит",
@@ -2646,6 +2773,7 @@
   },
   {
     "id": "dekor-kitchen-5-5",
+    "image": "/img/products/dekor-kitchen-5-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик кухонный «Джут», натуральный",
@@ -2667,6 +2795,7 @@
   },
   {
     "id": "dekor-kitchen-6-1",
+    "image": "/img/products/dekor-kitchen-6-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Часы настенные «Минимал», белые",
@@ -2688,6 +2817,7 @@
   },
   {
     "id": "dekor-kitchen-6-2",
+    "image": "/img/products/dekor-kitchen-6-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Часы настенные «Лофт», чёрные",
@@ -2709,6 +2839,7 @@
   },
   {
     "id": "dekor-kitchen-6-3",
+    "image": "/img/products/dekor-kitchen-6-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Часы настенные «Кухня», мятные",
@@ -2730,6 +2861,7 @@
   },
   {
     "id": "dekor-kitchen-6-4",
+    "image": "/img/products/dekor-kitchen-6-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Часы настенные «Дерево», дуб",
@@ -2751,6 +2883,7 @@
   },
   {
     "id": "dekor-kitchen-6-5",
+    "image": "/img/products/dekor-kitchen-6-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Часы настенные «Бесшумные», латунь",
@@ -2772,6 +2905,7 @@
   },
   {
     "id": "dekor-bath-1-1",
+    "image": "/img/products/dekor-bath-1-1.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Коврик для ванной «Мох», серый",
@@ -2793,6 +2927,7 @@
   },
   {
     "id": "dekor-bath-1-2",
+    "image": "/img/products/dekor-bath-1-2.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Коврик для ванной «Волна», голубой",
@@ -2814,6 +2949,7 @@
   },
   {
     "id": "dekor-bath-1-3",
+    "image": "/img/products/dekor-bath-1-3.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Коврик для ванной «Галька», бежевый",
@@ -2835,6 +2971,7 @@
   },
   {
     "id": "dekor-bath-1-4",
+    "image": "/img/products/dekor-bath-1-4.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Коврик для ванной «Облако», белый",
@@ -2856,6 +2993,7 @@
   },
   {
     "id": "dekor-bath-1-5",
+    "image": "/img/products/dekor-bath-1-5.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Коврик для ванной «Бамбук», натуральный",
@@ -2877,6 +3015,7 @@
   },
   {
     "id": "dekor-bath-2-1",
+    "image": "/img/products/dekor-bath-2-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца банные «Классик», белые, 2 шт",
@@ -2898,6 +3037,7 @@
   },
   {
     "id": "dekor-bath-2-2",
+    "image": "/img/products/dekor-bath-2-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца банные «Пудра», розовые, 2 шт",
@@ -2919,6 +3059,7 @@
   },
   {
     "id": "dekor-bath-2-3",
+    "image": "/img/products/dekor-bath-2-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца банные «Шалфей», зелёные, 2 шт",
@@ -2940,6 +3081,7 @@
   },
   {
     "id": "dekor-bath-2-4",
+    "image": "/img/products/dekor-bath-2-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца банные «Отель», белые, 2 шт",
@@ -2961,6 +3103,7 @@
   },
   {
     "id": "dekor-bath-2-5",
+    "image": "/img/products/dekor-bath-2-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Полотенца банные «Турция», графит, 2 шт",
@@ -2982,6 +3125,7 @@
   },
   {
     "id": "dekor-bath-3-1",
+    "image": "/img/products/dekor-bath-3-1.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Шкафчик-зеркало «Стандарт», белый",
@@ -3003,6 +3147,7 @@
   },
   {
     "id": "dekor-bath-3-2",
+    "image": "/img/products/dekor-bath-3-2.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Шкафчик-зеркало «Дуб», светлое дерево",
@@ -3024,6 +3169,7 @@
   },
   {
     "id": "dekor-bath-3-3",
+    "image": "/img/products/dekor-bath-3-3.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Шкафчик-зеркало «Графит», серый",
@@ -3045,6 +3191,7 @@
   },
   {
     "id": "dekor-bath-3-4",
+    "image": "/img/products/dekor-bath-3-4.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Шкафчик-зеркало «LED», белый, подсветка",
@@ -3066,6 +3213,7 @@
   },
   {
     "id": "dekor-bath-3-5",
+    "image": "/img/products/dekor-bath-3-5.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Шкафчик-зеркало «Smart», белый, подсветка и антизапотевание",
@@ -3087,6 +3235,7 @@
   },
   {
     "id": "dekor-bath-4-1",
+    "image": "/img/products/dekor-bath-4-1.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Полочка для ванной «Угловая», хром",
@@ -3108,6 +3257,7 @@
   },
   {
     "id": "dekor-bath-4-2",
+    "image": "/img/products/dekor-bath-4-2.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Полочка для ванной «Прямая», белая",
@@ -3129,6 +3279,7 @@
   },
   {
     "id": "dekor-bath-4-3",
+    "image": "/img/products/dekor-bath-4-3.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Полочка для ванной «Двойная», чёрная",
@@ -3150,6 +3301,7 @@
   },
   {
     "id": "dekor-bath-4-4",
+    "image": "/img/products/dekor-bath-4-4.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Полочка для ванной «Стекло», прозрачная",
@@ -3171,6 +3323,7 @@
   },
   {
     "id": "dekor-bath-4-5",
+    "image": "/img/products/dekor-bath-4-5.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Полочка для ванной «Без сверления», матовая сталь",
@@ -3192,6 +3345,7 @@
   },
   {
     "id": "dekor-bath-5-1",
+    "image": "/img/products/dekor-bath-5-1.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Держатель для полотенец «Штанга», хром",
@@ -3213,6 +3367,7 @@
   },
   {
     "id": "dekor-bath-5-2",
+    "image": "/img/products/dekor-bath-5-2.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Держатель для полотенец «Кольцо», хром",
@@ -3234,6 +3389,7 @@
   },
   {
     "id": "dekor-bath-5-3",
+    "image": "/img/products/dekor-bath-5-3.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Держатель для полотенец «Крючки», чёрный, 3 шт",
@@ -3255,6 +3411,7 @@
   },
   {
     "id": "dekor-bath-5-4",
+    "image": "/img/products/dekor-bath-5-4.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Держатель для полотенец «Двойной», матовый хром",
@@ -3276,6 +3433,7 @@
   },
   {
     "id": "dekor-bath-5-5",
+    "image": "/img/products/dekor-bath-5-5.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Держатель для полотенец «Поворотный», сатин",
@@ -3297,6 +3455,7 @@
   },
   {
     "id": "dekor-bath-6-1",
+    "image": "/img/products/dekor-bath-6-1.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Набор аксессуаров: дозатор + стакан + мыльница «Мрамор», белый",
@@ -3318,6 +3477,7 @@
   },
   {
     "id": "dekor-bath-6-2",
+    "image": "/img/products/dekor-bath-6-2.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Набор аксессуаров: дозатор + стакан + мыльница «Матовый», чёрный",
@@ -3339,6 +3499,7 @@
   },
   {
     "id": "dekor-bath-6-3",
+    "image": "/img/products/dekor-bath-6-3.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Набор аксессуаров: дозатор + стакан + мыльница «Морской», голубой",
@@ -3360,6 +3521,7 @@
   },
   {
     "id": "dekor-bath-6-4",
+    "image": "/img/products/dekor-bath-6-4.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Набор аксессуаров: дозатор + стакан + мыльница «Бамбук», натуральный",
@@ -3381,6 +3543,7 @@
   },
   {
     "id": "dekor-bath-6-5",
+    "image": "/img/products/dekor-bath-6-5.webp",
     "cat": "dekor",
     "sub": "Ванная",
     "name": "Набор аксессуаров: дозатор + стакан + мыльница «Латунь», золото",
@@ -3402,6 +3565,7 @@
   },
   {
     "id": "dekor-hall-1-1",
+    "image": "/img/products/dekor-hall-1-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик придверный «Грязезащита», серый",
@@ -3423,6 +3587,7 @@
   },
   {
     "id": "dekor-hall-1-2",
+    "image": "/img/products/dekor-hall-1-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик придверный «Welcome», коричневый",
@@ -3444,6 +3609,7 @@
   },
   {
     "id": "dekor-hall-1-3",
+    "image": "/img/products/dekor-hall-1-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик придверный «Полоска», чёрный",
@@ -3465,6 +3631,7 @@
   },
   {
     "id": "dekor-hall-1-4",
+    "image": "/img/products/dekor-hall-1-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик придверный «Влагосборный», графит",
@@ -3486,6 +3653,7 @@
   },
   {
     "id": "dekor-hall-1-5",
+    "image": "/img/products/dekor-hall-1-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик придверный «Кокос XL», натуральный",
@@ -3507,6 +3675,7 @@
   },
   {
     "id": "dekor-hall-2-1",
+    "image": "/img/products/dekor-hall-2-1.webp",
     "cat": "dekor",
     "sub": "Мебель",
     "name": "Пуфик «Круглый», серый",
@@ -3528,6 +3697,7 @@
   },
   {
     "id": "dekor-hall-2-2",
+    "image": "/img/products/dekor-hall-2-2.webp",
     "cat": "dekor",
     "sub": "Мебель",
     "name": "Пуфик «Куб», бежевый",
@@ -3549,6 +3719,7 @@
   },
   {
     "id": "dekor-hall-2-3",
+    "image": "/img/products/dekor-hall-2-3.webp",
     "cat": "dekor",
     "sub": "Мебель",
     "name": "Пуфик «Сканди», горчичный",
@@ -3570,6 +3741,7 @@
   },
   {
     "id": "dekor-hall-2-4",
+    "image": "/img/products/dekor-hall-2-4.webp",
     "cat": "dekor",
     "sub": "Мебель",
     "name": "Пуфик «С ящиком», графит",
@@ -3591,6 +3763,7 @@
   },
   {
     "id": "dekor-hall-2-5",
+    "image": "/img/products/dekor-hall-2-5.webp",
     "cat": "dekor",
     "sub": "Мебель",
     "name": "Пуфик «Банкетка», изумрудный",
@@ -3612,6 +3785,7 @@
   },
   {
     "id": "dekor-hall-3-1",
+    "image": "/img/products/dekor-hall-3-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Вешалка настенная для курток «Планка», белая",
@@ -3633,6 +3807,7 @@
   },
   {
     "id": "dekor-hall-3-2",
+    "image": "/img/products/dekor-hall-3-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Вешалка настенная для курток «Лофт», чёрная",
@@ -3654,6 +3829,7 @@
   },
   {
     "id": "dekor-hall-3-3",
+    "image": "/img/products/dekor-hall-3-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Вешалка настенная для курток «Сосна», натуральная",
@@ -3675,6 +3851,7 @@
   },
   {
     "id": "dekor-hall-3-4",
+    "image": "/img/products/dekor-hall-3-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Вешалка настенная для курток «С полкой», дуб",
@@ -3696,6 +3873,7 @@
   },
   {
     "id": "dekor-hall-3-5",
+    "image": "/img/products/dekor-hall-3-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Вешалка настенная для курток «Дизайн», латунь",
@@ -3717,6 +3895,7 @@
   },
   {
     "id": "dekor-hall-4-1",
+    "image": "/img/products/dekor-hall-4-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение в кашпо малое «Замиокулькас», белое кашпо",
@@ -3738,6 +3917,7 @@
   },
   {
     "id": "dekor-hall-4-2",
+    "image": "/img/products/dekor-hall-4-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение в кашпо малое «Сансевиерия», серое кашпо",
@@ -3759,6 +3939,7 @@
   },
   {
     "id": "dekor-hall-4-3",
+    "image": "/img/products/dekor-hall-4-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение в кашпо малое «Спатифиллум», бежевое кашпо",
@@ -3780,6 +3961,7 @@
   },
   {
     "id": "dekor-hall-4-4",
+    "image": "/img/products/dekor-hall-4-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение в кашпо малое «Монстера», плетёное кашпо",
@@ -3801,6 +3983,7 @@
   },
   {
     "id": "dekor-hall-4-5",
+    "image": "/img/products/dekor-hall-4-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение в кашпо малое «Фикус», кашпо на ножках",
@@ -3822,6 +4005,7 @@
   },
   {
     "id": "dekor-hall-5-1",
+    "image": "/img/products/dekor-hall-5-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Ключница «Домик», белая",
@@ -3843,6 +4027,7 @@
   },
   {
     "id": "dekor-hall-5-2",
+    "image": "/img/products/dekor-hall-5-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Ключница «Полочка», дуб",
@@ -3864,6 +4049,7 @@
   },
   {
     "id": "dekor-hall-5-3",
+    "image": "/img/products/dekor-hall-5-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Ключница «Минимал», чёрная",
@@ -3885,6 +4071,7 @@
   },
   {
     "id": "dekor-hall-5-4",
+    "image": "/img/products/dekor-hall-5-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Ключница «С зеркалом», светлое дерево",
@@ -3906,6 +4093,7 @@
   },
   {
     "id": "dekor-hall-5-5",
+    "image": "/img/products/dekor-hall-5-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Ключница «Магнитная», орех",
@@ -3927,6 +4115,7 @@
   },
   {
     "id": "dekor-hall-6-1",
+    "image": "/img/products/dekor-hall-6-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Обувница «Открытая», белая",
@@ -3948,6 +4137,7 @@
   },
   {
     "id": "dekor-hall-6-2",
+    "image": "/img/products/dekor-hall-6-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Обувница «Ярусная», бамбук",
@@ -3969,6 +4159,7 @@
   },
   {
     "id": "dekor-hall-6-3",
+    "image": "/img/products/dekor-hall-6-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Обувница «Узкая», чёрная",
@@ -3990,6 +4181,7 @@
   },
   {
     "id": "dekor-hall-6-4",
+    "image": "/img/products/dekor-hall-6-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Обувница «С сиденьем», дуб",
@@ -4011,6 +4203,7 @@
   },
   {
     "id": "dekor-hall-6-5",
+    "image": "/img/products/dekor-hall-6-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Обувница «Закрытая», белая",
@@ -4032,6 +4225,7 @@
   },
   {
     "id": "dekor-living-1-1",
+    "image": "/img/products/dekor-living-1-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Подушки декоративные «Букле», молочные, 2 шт",
@@ -4053,6 +4247,7 @@
   },
   {
     "id": "dekor-living-1-2",
+    "image": "/img/products/dekor-living-1-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Подушки декоративные «Велюр», серые, 2 шт",
@@ -4074,6 +4269,7 @@
   },
   {
     "id": "dekor-living-1-3",
+    "image": "/img/products/dekor-living-1-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Подушки декоративные «Геометрия», синие, 2 шт",
@@ -4095,6 +4291,7 @@
   },
   {
     "id": "dekor-living-1-4",
+    "image": "/img/products/dekor-living-1-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Подушки декоративные «Лён», терракота, 2 шт",
@@ -4116,6 +4313,7 @@
   },
   {
     "id": "dekor-living-1-5",
+    "image": "/img/products/dekor-living-1-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Подушки декоративные «Бархат», изумрудные, 2 шт",
@@ -4137,6 +4335,7 @@
   },
   {
     "id": "dekor-living-2-1",
+    "image": "/img/products/dekor-living-2-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Плед «Флис», серый",
@@ -4158,6 +4357,7 @@
   },
   {
     "id": "dekor-living-2-2",
+    "image": "/img/products/dekor-living-2-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Плед «Косы», бежевый",
@@ -4179,6 +4379,7 @@
   },
   {
     "id": "dekor-living-2-3",
+    "image": "/img/products/dekor-living-2-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Плед «Клетка», зелёный",
@@ -4200,6 +4401,7 @@
   },
   {
     "id": "dekor-living-2-4",
+    "image": "/img/products/dekor-living-2-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Плед «Шерсть», горчичный",
@@ -4221,6 +4423,7 @@
   },
   {
     "id": "dekor-living-2-5",
+    "image": "/img/products/dekor-living-2-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Плед «Крупная вязка», молочный",
@@ -4242,6 +4445,7 @@
   },
   {
     "id": "dekor-living-3-1",
+    "image": "/img/products/dekor-living-3-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Ваза «Цилиндр», белая",
@@ -4263,6 +4467,7 @@
   },
   {
     "id": "dekor-living-3-2",
+    "image": "/img/products/dekor-living-3-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Ваза «Бутыль», дымчатая",
@@ -4284,6 +4489,7 @@
   },
   {
     "id": "dekor-living-3-3",
+    "image": "/img/products/dekor-living-3-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Ваза «Волна», песочная",
@@ -4305,6 +4511,7 @@
   },
   {
     "id": "dekor-living-3-4",
+    "image": "/img/products/dekor-living-3-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Ваза «Ручная работа», терракота",
@@ -4326,6 +4533,7 @@
   },
   {
     "id": "dekor-living-3-5",
+    "image": "/img/products/dekor-living-3-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Ваза «Хрусталь», прозрачная",
@@ -4347,6 +4555,7 @@
   },
   {
     "id": "dekor-living-4-1",
+    "image": "/img/products/dekor-living-4-1.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Лампа настольная «Классика», белая",
@@ -4368,6 +4577,7 @@
   },
   {
     "id": "dekor-living-4-2",
+    "image": "/img/products/dekor-living-4-2.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Лампа настольная «Гриб», бежевая",
@@ -4389,6 +4599,7 @@
   },
   {
     "id": "dekor-living-4-3",
+    "image": "/img/products/dekor-living-4-3.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Лампа настольная «Шар», молочная",
@@ -4410,6 +4621,7 @@
   },
   {
     "id": "dekor-living-4-4",
+    "image": "/img/products/dekor-living-4-4.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Лампа настольная «Ротанг», натуральная",
@@ -4431,6 +4643,7 @@
   },
   {
     "id": "dekor-living-4-5",
+    "image": "/img/products/dekor-living-4-5.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Лампа настольная «Латунь», золото",
@@ -4452,6 +4665,7 @@
   },
   {
     "id": "dekor-living-5-1",
+    "image": "/img/products/dekor-living-5-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Рамки для фото «Тонкие», чёрные, 3 шт",
@@ -4473,6 +4687,7 @@
   },
   {
     "id": "dekor-living-5-2",
+    "image": "/img/products/dekor-living-5-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Рамки для фото «Дерево», дуб, 3 шт",
@@ -4494,6 +4709,7 @@
   },
   {
     "id": "dekor-living-5-3",
+    "image": "/img/products/dekor-living-5-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Рамки для фото «Белые», белые, 3 шт",
@@ -4515,6 +4731,7 @@
   },
   {
     "id": "dekor-living-5-4",
+    "image": "/img/products/dekor-living-5-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Рамки для фото «Металл», латунь, 3 шт",
@@ -4536,6 +4753,7 @@
   },
   {
     "id": "dekor-living-5-5",
+    "image": "/img/products/dekor-living-5-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Рамки для фото «Галерея», орех, 3 шт",
@@ -4557,6 +4775,7 @@
   },
   {
     "id": "dekor-living-6-1",
+    "image": "/img/products/dekor-living-6-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение напольное «Драцена», белое кашпо",
@@ -4578,6 +4797,7 @@
   },
   {
     "id": "dekor-living-6-2",
+    "image": "/img/products/dekor-living-6-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение напольное «Юкка», серое кашпо",
@@ -4599,6 +4819,7 @@
   },
   {
     "id": "dekor-living-6-3",
+    "image": "/img/products/dekor-living-6-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение напольное «Замиокулькас», чёрное кашпо",
@@ -4620,6 +4841,7 @@
   },
   {
     "id": "dekor-living-6-4",
+    "image": "/img/products/dekor-living-6-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение напольное «Монстера», плетёная корзина",
@@ -4641,6 +4863,7 @@
   },
   {
     "id": "dekor-living-6-5",
+    "image": "/img/products/dekor-living-6-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Растение напольное «Оливковое дерево», бетонное кашпо",
@@ -4662,6 +4885,7 @@
   },
   {
     "id": "dekor-living-7-1",
+    "image": "/img/products/dekor-living-7-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Свечи ароматические «Ваниль», белые, 2 шт",
@@ -4683,6 +4907,7 @@
   },
   {
     "id": "dekor-living-7-2",
+    "image": "/img/products/dekor-living-7-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Свечи ароматические «Хлопок», серые, 2 шт",
@@ -4704,6 +4929,7 @@
   },
   {
     "id": "dekor-living-7-3",
+    "image": "/img/products/dekor-living-7-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Свечи ароматические «Хвоя», зелёные, 2 шт",
@@ -4725,6 +4951,7 @@
   },
   {
     "id": "dekor-living-7-4",
+    "image": "/img/products/dekor-living-7-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Свечи ароматические «Сандал», в стекле, 2 шт",
@@ -4746,6 +4973,7 @@
   },
   {
     "id": "dekor-living-7-5",
+    "image": "/img/products/dekor-living-7-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Свечи ароматические «Инжир», в керамике, 2 шт",
@@ -4767,6 +4995,7 @@
   },
   {
     "id": "dekor-bedroom-1-1",
+    "image": "/img/products/dekor-bedroom-1-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Комплект постельного белья евро «Бязь», серый",
@@ -4788,6 +5017,7 @@
   },
   {
     "id": "dekor-bedroom-1-2",
+    "image": "/img/products/dekor-bedroom-1-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Комплект постельного белья евро «Поплин», белый",
@@ -4809,6 +5039,7 @@
   },
   {
     "id": "dekor-bedroom-1-3",
+    "image": "/img/products/dekor-bedroom-1-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Комплект постельного белья евро «Полоска», голубой",
@@ -4830,6 +5061,7 @@
   },
   {
     "id": "dekor-bedroom-1-4",
+    "image": "/img/products/dekor-bedroom-1-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Комплект постельного белья евро «Сатин», шампань",
@@ -4851,6 +5083,7 @@
   },
   {
     "id": "dekor-bedroom-1-5",
+    "image": "/img/products/dekor-bedroom-1-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Комплект постельного белья евро «Лён», оливковый",
@@ -4872,6 +5105,7 @@
   },
   {
     "id": "dekor-bedroom-2-1",
+    "image": "/img/products/dekor-bedroom-2-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Покрывало «Стёганое», серое",
@@ -4893,6 +5127,7 @@
   },
   {
     "id": "dekor-bedroom-2-2",
+    "image": "/img/products/dekor-bedroom-2-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Покрывало «Вафля», бежевое",
@@ -4914,6 +5149,7 @@
   },
   {
     "id": "dekor-bedroom-2-3",
+    "image": "/img/products/dekor-bedroom-2-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Покрывало «Ромб», белое",
@@ -4935,6 +5171,7 @@
   },
   {
     "id": "dekor-bedroom-2-4",
+    "image": "/img/products/dekor-bedroom-2-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Покрывало «Бархат», пыльная роза",
@@ -4956,6 +5193,7 @@
   },
   {
     "id": "dekor-bedroom-2-5",
+    "image": "/img/products/dekor-bedroom-2-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Покрывало «Муслин», песочное",
@@ -4977,6 +5215,7 @@
   },
   {
     "id": "dekor-bedroom-3-1",
+    "image": "/img/products/dekor-bedroom-3-1.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Ночник «Луна», белый",
@@ -4998,6 +5237,7 @@
   },
   {
     "id": "dekor-bedroom-3-2",
+    "image": "/img/products/dekor-bedroom-3-2.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Ночник «Облако», молочный",
@@ -5019,6 +5259,7 @@
   },
   {
     "id": "dekor-bedroom-3-3",
+    "image": "/img/products/dekor-bedroom-3-3.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Ночник «Куб», дуб",
@@ -5040,6 +5281,7 @@
   },
   {
     "id": "dekor-bedroom-3-4",
+    "image": "/img/products/dekor-bedroom-3-4.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Ночник «Сенсорный», латунь",
@@ -5061,6 +5303,7 @@
   },
   {
     "id": "dekor-bedroom-3-5",
+    "image": "/img/products/dekor-bedroom-3-5.webp",
     "cat": "dekor",
     "sub": "Свет",
     "name": "Ночник «Будильник-рассвет», белый",
@@ -5082,6 +5325,7 @@
   },
   {
     "id": "dekor-bedroom-4-1",
+    "image": "/img/products/dekor-bedroom-4-1.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик прикроватный «Шегги», серый",
@@ -5103,6 +5347,7 @@
   },
   {
     "id": "dekor-bedroom-4-2",
+    "image": "/img/products/dekor-bedroom-4-2.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик прикроватный «Берберский», молочный",
@@ -5124,6 +5369,7 @@
   },
   {
     "id": "dekor-bedroom-4-3",
+    "image": "/img/products/dekor-bedroom-4-3.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик прикроватный «Овал», бежевый",
@@ -5145,6 +5391,7 @@
   },
   {
     "id": "dekor-bedroom-4-4",
+    "image": "/img/products/dekor-bedroom-4-4.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик прикроватный «Овчина», белый",
@@ -5166,6 +5413,7 @@
   },
   {
     "id": "dekor-bedroom-4-5",
+    "image": "/img/products/dekor-bedroom-4-5.webp",
     "cat": "dekor",
     "sub": "Декор",
     "name": "Коврик прикроватный «Шерсть», песочный",
@@ -5187,6 +5435,7 @@
   },
   {
     "id": "dekor-bedroom-5-1",
+    "image": "/img/products/dekor-bedroom-5-1.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Шторы блэкаут «Базовые», графит, 2 шт",
@@ -5208,6 +5457,7 @@
   },
   {
     "id": "dekor-bedroom-5-2",
+    "image": "/img/products/dekor-bedroom-5-2.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Шторы блэкаут «Лён-эффект», бежевые, 2 шт",
@@ -5229,6 +5479,7 @@
   },
   {
     "id": "dekor-bedroom-5-3",
+    "image": "/img/products/dekor-bedroom-5-3.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Шторы блэкаут «Мокко», коричневые, 2 шт",
@@ -5250,6 +5501,7 @@
   },
   {
     "id": "dekor-bedroom-5-4",
+    "image": "/img/products/dekor-bedroom-5-4.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Шторы блэкаут «Бархат», синие, 2 шт",
@@ -5271,6 +5523,7 @@
   },
   {
     "id": "dekor-bedroom-5-5",
+    "image": "/img/products/dekor-bedroom-5-5.webp",
     "cat": "dekor",
     "sub": "Текстиль",
     "name": "Шторы блэкаут «Термо», серо-голубые, 2 шт",
@@ -5292,6 +5545,7 @@
   },
   {
     "id": "dekor-bedroom-6-1",
+    "image": "/img/products/dekor-bedroom-6-1.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Корзина для белья «Складная», серая",
@@ -5313,6 +5567,7 @@
   },
   {
     "id": "dekor-bedroom-6-2",
+    "image": "/img/products/dekor-bedroom-6-2.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Корзина для белья «Плетёная», белая",
@@ -5334,6 +5589,7 @@
   },
   {
     "id": "dekor-bedroom-6-3",
+    "image": "/img/products/dekor-bedroom-6-3.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Корзина для белья «Хлопок», бежевая",
@@ -5355,6 +5611,7 @@
   },
   {
     "id": "dekor-bedroom-6-4",
+    "image": "/img/products/dekor-bedroom-6-4.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Корзина для белья «Ротанг», натуральная",
@@ -5376,6 +5633,7 @@
   },
   {
     "id": "dekor-bedroom-6-5",
+    "image": "/img/products/dekor-bedroom-6-5.webp",
     "cat": "dekor",
     "sub": "Хранение",
     "name": "Корзина для белья «Две секции», графит",
