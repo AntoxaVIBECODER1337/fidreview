@@ -39,8 +39,8 @@ export default function LayoutPage() {
   const anyWork = layout.rooms.some((r) => r.status === 'work')
 
   const selectRoom = (id) => {
-    if (selected === id) setEditing({ room: layout.rooms.find((r) => r.id === id) })
-    else setSelected(id)
+    setSelected(id)
+    setEditing({ room: layout.rooms.find((r) => r.id === id) })
   }
 
   const newFloor = () => {
@@ -106,12 +106,12 @@ export default function LayoutPage() {
                     setSelected(null)
                   }}
                   className={cn(
-                    'relative h-8 shrink-0 rounded-full px-3.5 text-[12.5px] font-bold transition-colors',
+                    'relative h-8 shrink-0 rounded-lg px-3.5 text-[12.5px] font-bold transition-colors',
                     active ? 'text-white' : 'bg-panel text-muted',
                   )}
                 >
                   {active && (
-                    <motion.span layoutId="floor-pill" className="absolute inset-0 rounded-full bg-navy" transition={{ type: 'spring', stiffness: 480, damping: 36 }} />
+                    <motion.span layoutId="floor-pill" className="absolute inset-0 rounded-lg bg-navy" transition={{ type: 'spring', stiffness: 480, damping: 36 }} />
                   )}
                   <span className="relative z-10">{f.name}</span>
                 </button>
@@ -142,7 +142,7 @@ export default function LayoutPage() {
           </div>
           {rooms.length > 0 && (
             <p className="mt-2 px-1 text-[11.5px] text-muted">
-              {floor.name}: {floorArea} м² · нажмите на комнату, повторно — откроются настройки
+              {floor.name}: {floorArea} м² · нажмите на комнату — откроются параметры и товары
             </p>
           )}
 
@@ -177,8 +177,11 @@ export default function LayoutPage() {
                   key={r.id}
                   room={r}
                   selected={r.id === selected}
-                  onSelect={() => setSelected(r.id)}
-                  onEdit={() => setEditing({ room: r })}
+                  onSelect={() => {
+                    setSelected(r.id)
+                    setEditing({ room: r })
+                  }}
+                  onEdit={() => setEditing({ room: r, edit: true })}
                 />
               ))}
             </AnimatePresence>
@@ -192,6 +195,7 @@ export default function LayoutPage() {
             key={editing.room?.id ?? 'new'}
             room={editing.room}
             floorId={floor.id}
+            editInitial={!!editing.edit}
             onClose={() => setEditing(null)}
           />
         )}

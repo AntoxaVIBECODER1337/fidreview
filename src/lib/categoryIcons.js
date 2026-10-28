@@ -69,6 +69,7 @@ const WORK = {
   heating: Flame,
   furniture: Sofa,
   garden: Sprout,
+  cleaning: Sparkles,
   repair: Drill,
 }
 

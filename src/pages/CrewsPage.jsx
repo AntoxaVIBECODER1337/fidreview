@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, ChevronDown, Handshake, Hammer, HardHat, House, Info, MapPin, X } from 'lucide-react'
+import { ArrowRight, ChevronDown, Handshake, Hammer, HardHat, House, Info, MapPin, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import ChatSheet from '../components/ChatSheet.jsx'
 import CityPicker from '../components/CityPicker.jsx'
 import CrewCard from '../components/CrewCard.jsx'
+import CrewFiltersSheet from '../components/CrewFiltersSheet.jsx'
 import CrewSheet from '../components/CrewSheet.jsx'
 import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { SORTS, SPECIALTIES, crewsForCity, omaCities } from '../data/crews'
-import { getWorkIcon } from '../lib/categoryIcons'
 import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 
@@ -26,13 +26,24 @@ export default function CrewsPage() {
   const forProject = projects.find((p) => p.id === params.get('project')) ?? null
   const initialSpec = SPECIALTIES.some((s) => s.id === forProject?.scenario) ? forProject.scenario : null
 
-  const [specialty, setSpecialty] = useState(initialSpec)
+  const [filters, setFilters] = useState(() => ({
+    specialties: initialSpec ? [initialSpec] : [],
+    price: 'any',
+    minRating: 0,
+  }))
+  const [query, setQuery] = useState('')
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const [sort, setSort] = useState('rec')
   const [cityOpen, setCityOpen] = useState(false)
   const [openCrew, setOpenCrew] = useState(null)
   const [chatCrew, setChatCrew] = useState(null)
 
-  const { oma, partners, omaInCity } = crewsForCity(city, { specialty, sort })
+  const { oma, partners, omaInCity } = crewsForCity(city, { ...filters, query, sort })
+  const activeFilters = filters.specialties.length + (filters.price !== 'any' ? 1 : 0) + (filters.minRating > 0 ? 1 : 0)
+  const resetFilters = () => {
+    setFilters({ specialties: [], price: 'any', minRating: 0 })
+    setQuery('')
+  }
 
   return (
     <div className="min-h-dvh bg-bg">
@@ -55,36 +66,36 @@ export default function CrewsPage() {
 
       {/* Фильтр и сортировка — закреплены при прокрутке */}
       <div className="sticky top-0 z-30 border-b border-line/70 bg-bg/90 py-2.5 backdrop-blur-md">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4">
-          {[{ id: null, label: 'Все работы' }, ...SPECIALTIES].map((s) => {
-            const active = specialty === s.id
-            return (
-              <Tap
-                key={s.label}
-                onClick={() => setSpecialty(s.id)}
-                className={cn(
-                  'relative h-9 shrink-0 rounded-full border px-3.5 text-[12.5px] font-semibold transition-colors',
-                  active ? 'border-brand-600 text-white' : 'border-line bg-white text-navy',
-                )}
+        <div className="flex items-center gap-2 px-4">
+          <div className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl border border-line bg-white px-3 focus-within:border-brand-600">
+            <Search size={16} className="shrink-0 text-muted" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Поиск: название или специализация"
+              className="min-w-0 flex-1 bg-transparent text-[13px] font-medium text-navy outline-none placeholder:text-muted"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                aria-label="Очистить поиск"
+                className="shrink-0 text-muted active:text-navy"
               >
-                {active && (
-                  <motion.span
-                    layoutId="spec-pill"
-                    className="absolute inset-0 rounded-full bg-brand-600"
-                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
-                  />
-                )}
-                <span className="relative z-10 flex items-center gap-1.5">
-                  {s.id &&
-                    (() => {
-                      const I = getWorkIcon(s.id)
-                      return <I size={14} strokeWidth={2} />
-                    })()}
-                  {s.label}
-                </span>
-              </Tap>
-            )
-          })}
+                <X size={15} />
+              </button>
+            )}
+          </div>
+          <Tap
+            onClick={() => setFiltersOpen(true)}
+            className="relative flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-line bg-white px-3.5 text-[13px] font-bold text-navy active:bg-panel"
+          >
+            <SlidersHorizontal size={15} /> Фильтры
+            {activeFilters > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[10px] font-black text-white">
+                {activeFilters}
+              </span>
+            )}
+          </Tap>
         </div>
         <div className="no-scrollbar mt-2 flex gap-1.5 overflow-x-auto px-4">
           {SORTS.map((s) => (
@@ -173,9 +184,13 @@ export default function CrewsPage() {
           {partners.length === 0 ? (
             <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-line bg-white px-6 py-8 text-center">
               <Info size={22} className="text-muted" />
-              <p className="text-[13px] font-semibold text-navy">Партнёров с такой специализацией в городе пока нет</p>
-              <button onClick={() => setSpecialty(null)} className="text-[12.5px] font-bold text-brand-600">
-                Показать все работы
+              <p className="text-[13px] font-semibold text-navy">
+                {query
+                  ? `По запросу «${query}» и фильтрам бригад не нашлось`
+                  : 'По фильтрам в городе пока нет бригад'}
+              </p>
+              <button onClick={resetFilters} className="text-[12.5px] font-bold text-brand-600">
+                Сбросить фильтры и поиск
               </button>
             </div>
           ) : (
@@ -192,7 +207,7 @@ export default function CrewsPage() {
                   >
                     <CrewCard
                       crew={c}
-                      highlightSpecialty={specialty}
+                      highlightSpecialty={filters.specialties[0]}
                       onOpen={() => setOpenCrew(c)}
                       onChat={() => setChatCrew(c)}
                     />
@@ -227,6 +242,20 @@ export default function CrewsPage() {
 
       <AnimatePresence>
         {cityOpen && <CityPicker onClose={() => setCityOpen(false)} />}
+      </AnimatePresence>
+      <AnimatePresence>
+        {filtersOpen && (
+          <CrewFiltersSheet
+            city={city}
+            query={query}
+            value={filters}
+            onApply={(f) => {
+              setFilters(f)
+              setFiltersOpen(false)
+            }}
+            onClose={() => setFiltersOpen(false)}
+          />
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {openCrew && (

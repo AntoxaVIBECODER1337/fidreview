@@ -18,6 +18,8 @@ const BONUS_KEY = 'oma.bonus'
 const ONBOARD_KEY = 'oma.onboarded'
 const BUNDLES_KEY = 'oma.bundles'
 const LAYOUT_KEY = 'oma.layout'
+/* Привязанные карты: [{ id, last4, brand, name, exp }] — полный номер не храним */
+const CARDS_KEY = 'oma.cards'
 
 /** Сравнение — не больше 4 товаров */
 export const COMPARE_MAX = 4
@@ -57,6 +59,14 @@ function persist(key, value) {
   }
 }
 
+/** Платёжная система по первой цифре номера (для отображения) */
+export function cardBrand(digits) {
+  const d = String(digits).replace(/\D/g, '')
+  if (d.startsWith('4')) return 'VISA'
+  if (/^[52]/.test(d)) return 'MASTERCARD'
+  return 'КАРТА'
+}
+
 const StoreCtx = createContext(null)
 
 /** Тосты-уведомления доступны компонентам ниже по дереву */
@@ -80,6 +90,7 @@ export function StoreProvider({ children }) {
   const [bundles, setBundles] = useState(() => load(BUNDLES_KEY, []))
   /* Планировка: { name, dwelling, floors: [{ id, name }], rooms: [...] } или null — ещё не создана */
   const [layout, setLayout] = useState(() => load(LAYOUT_KEY, null))
+  const [cards, setCards] = useState(() => load(CARDS_KEY, []))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -95,6 +106,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(ONBOARD_KEY, onboarded), [onboarded])
   useEffect(() => persist(BUNDLES_KEY, bundles), [bundles])
   useEffect(() => persist(LAYOUT_KEY, layout), [layout])
+  useEffect(() => persist(CARDS_KEY, cards), [cards])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -231,6 +243,22 @@ export function StoreProvider({ children }) {
     setUser(null)
     showToast('Вы вышли из аккаунта')
   }, [showToast])
+
+  /** Привязать карту — в хранилище попадают только последние 4 цифры, срок и имя */
+  const addCard = useCallback(({ number, name, exp }) => {
+    const digits = String(number).replace(/\D/g, '')
+    const card = {
+      id: `card-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+      last4: digits.slice(-4),
+      brand: cardBrand(digits),
+      name: String(name || '').trim(),
+      exp,
+    }
+    setCards((c) => [...c, card])
+    return card.id
+  }, [])
+
+  const removeCard = useCallback((id) => setCards((c) => c.filter((x) => x.id !== id)), [])
 
   const applyPromo = useCallback(
     (code) => {
@@ -411,6 +439,51 @@ export function StoreProvider({ children }) {
     )
   }, [])
 
+  /** Смета проекта: добавить позицию (или увеличить количество существующей) */
+  const addProjectItem = useCallback((projectId, id, qty = 1) => {
+    setProjects((prev) =>
+      prev.map((p) => {
+        if (p.id !== projectId || !getProduct(id)) return p
+        const items = p.items.some((i) => i.id === id)
+          ? p.items.map((i) => (i.id === id ? { ...i, qty: i.qty + qty } : i))
+          : [...p.items, { id, qty }]
+        const itemsTotal = items.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
+        return { ...p, items, itemsTotal }
+      }),
+    )
+  }, [])
+
+  /** Смета проекта: изменить количество позиции (0 — удалить её) */
+  const setProjectItemQty = useCallback((projectId, id, qty) => {
+    setProjects((prev) =>
+      prev.map((p) => {
+        if (p.id !== projectId) return p
+        const items =
+          qty <= 0 ? p.items.filter((i) => i.id !== id) : p.items.map((i) => (i.id === id ? { ...i, qty } : i))
+        const itemsTotal = items.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
+        return { ...p, items, itemsTotal }
+      }),
+    )
+  }, [])
+
+  /** Материалы сметы проекта → корзина (суммируются с уже лежащими).
+   *  Возвращает число добавленных штук. */
+  const addProjectToCart = useCallback(
+    (projectId) => {
+      const p = projects.find((x) => x.id === projectId)
+      const valid = p?.items.filter((i) => getProduct(i.id)) ?? []
+      if (!valid.length) return 0
+      setCart((prev) => {
+        const next = { ...prev }
+        for (const i of valid) next[i.id] = (next[i.id] ?? 0) + i.qty
+        return next
+      })
+      vibrate(HAPTIC.add)
+      return valid.reduce((s, i) => s + i.qty, 0)
+    },
+    [projects],
+  )
+
   const cartCount = Object.values(cart).reduce((s, q) => s + q, 0) + bundles.length
 
   return (
@@ -451,6 +524,9 @@ export function StoreProvider({ children }) {
         setCity,
         approveProject,
         advanceStage,
+        addProjectItem,
+        setProjectItemQty,
+        addProjectToCart,
         addToCart,
         setQty,
         removeFromCart,
@@ -459,6 +535,9 @@ export function StoreProvider({ children }) {
         login,
         demoLogin,
         logout,
+        cards,
+        addCard,
+        removeCard,
         applyPromo,
         clearPromo,
         placeOrder,

@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, Check, ChevronRight, HardHat, MessageCircleMore, ShieldCheck, ShoppingBag, Star, Users } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, HardHat, MessageCircleMore, ShieldCheck, Star, Users } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ChatSheet from '../components/ChatSheet.jsx'
 import { QuickContact } from '../components/CrewContacts.jsx'
-import ProductImage from '../components/ProductImage.jsx'
+import EstimateCard from '../components/EstimateCard.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import { crewById } from '../data/crews'
 import { Card, PrimaryButton, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
-import { getProduct } from '../lib/catalog'
-import { rub } from '../lib/format'
 import { PROJECT_STAGES, useStore } from '../store/StoreContext'
 import { HelpCircle } from 'lucide-react'
 
@@ -19,8 +17,6 @@ const STAGE_HINTS = [
   'Начинаются черновые работы',
   'Финишная отделка и подписание акта',
 ]
-
-const round2 = (n) => Math.round(n * 100) / 100
 
 /** Экран проекта (перенос Project.tsx из oma-ozon) */
 export default function ProjectPage() {
@@ -39,10 +35,6 @@ export default function ProjectPage() {
 
   const pending = project.status === 'pending'
   const finished = !pending && project.currentStage >= PROJECT_STAGES.length - 1
-  const lines = project.items
-    .map((i) => ({ product: getProduct(i.id), qty: i.qty }))
-    .filter((l) => l.product)
-  const total = project.itemsTotal + project.crewTotal
 
   const onCta = () => {
     if (pending) approveProject(project.id)
@@ -226,52 +218,9 @@ export default function ProjectPage() {
           </Card>
         </motion.div>
 
-        {/* Материалы */}
+        {/* Материалы — смета проекта (просмотр и редактирование) */}
         <motion.div variants={staggerChild}>
-          <Card className="p-4">
-            <h2 className="mb-3 flex items-center gap-2 text-[15px] font-extrabold text-navy">
-              <ShoppingBag size={16} className="text-brand-600" />
-              Материалы ОМА • {lines.length} поз.
-            </h2>
-            <div className="flex flex-col gap-2">
-              {lines.slice(0, 5).map((l) => (
-                <div key={l.product.id} className="flex items-center justify-between gap-3">
-                  <span className="flex min-w-0 items-center gap-2 text-[12.5px] font-medium text-navy">
-                    <ProductImage product={l.product} size={14} rounded="rounded-md" className="h-7 w-7" />
-                    <span className="truncate">{l.product.name}</span>
-                    <span className="shrink-0 text-muted">×{l.qty}</span>
-                  </span>
-                  <span className="shrink-0 text-[12px] font-semibold text-muted">
-                    {rub(round2(l.product.price * l.qty))}
-                  </span>
-                </div>
-              ))}
-              {lines.length > 5 && (
-                <p className="text-[11.5px] text-muted">…и ещё {lines.length - 5} поз.</p>
-              )}
-              {lines.length === 0 && (
-                <p className="text-[12.5px] text-muted">Материалы уточняются на замере</p>
-              )}
-            </div>
-            <div className="mt-3 border-t border-dashed border-line pt-2.5">
-              <div className="flex justify-between text-[12.5px]">
-                <span className="text-muted">Материалы</span>
-                <span className="font-semibold text-navy">{rub(round2(project.itemsTotal))}</span>
-              </div>
-              {project.crewTotal > 0 && (
-                <div className="mt-1 flex justify-between text-[12.5px]">
-                  <span className="text-brand-600">
-                    Работа {project.crew?.name} • {project.area} м²
-                  </span>
-                  <span className="font-semibold text-brand-600">{rub(project.crewTotal)}</span>
-                </div>
-              )}
-              <div className="mt-2 flex justify-between">
-                <span className="text-[13px] font-bold text-navy">Итого</span>
-                <span className="text-[15px] font-black text-navy">{rub(round2(total))}</span>
-              </div>
-            </div>
-          </Card>
+          <EstimateCard project={project} />
         </motion.div>
 
         {/* Гарантия */}

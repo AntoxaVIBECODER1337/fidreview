@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Calculator, Minus, Plus, Search, Sparkles, Trash2, X } from 'lucide-react'
+import { Calculator, Check, ChevronDown, Minus, Pencil, Plus, Search, Sparkles, Trash2, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
   ROOM_STATUSES,
@@ -22,15 +22,19 @@ import { PrimaryButton, Tap } from './ui.jsx'
 const WALL_NAMES = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З']
 
 /**
- * Создание и настройка комнаты: параметры (название, тип, этаж, площадь,
- * высота, стены, статус) и товары из каталога, использованные в ремонте.
+ * Карточка комнаты. По умолчанию — просмотр: параметры и товары, использованные
+ * в ремонте. Кнопки «Изменить» у каждого блока включают редактирование —
+ * параметры как раньше (инпуты), товары — с поиском из каталога и моих заказов.
+ * Новая комната открывается сразу в режиме редактирования.
  */
-export default function RoomSheet({ room, floorId, onClose }) {
+export default function RoomSheet({ room, floorId, onClose, editInitial = false }) {
   const navigate = useNavigate()
   const { layout, saveRoom, removeRoom, orders } = useStore()
   const isNew = !room?.id
-  const [tab, setTab] = useState('params')
+  const [editParams, setEditParams] = useState(isNew || editInitial)
+  const [editItems, setEditItems] = useState(isNew || editInitial)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [typeOpen, setTypeOpen] = useState(false)
   const [d, setD] = useState(() =>
     room?.id
       ? {
@@ -44,6 +48,14 @@ export default function RoomSheet({ room, floorId, onClose }) {
   )
   const set = (patch) => setD((x) => ({ ...x, ...patch }))
   const types = roomTypesFor(layout.dwelling)
+
+  /** Выбор типа из списка: подставляем название, если оно пустое или совпадало со старым типом */
+  const pickType = (id) => {
+    const prev = d.type ? roomType(d.type).label : ''
+    const label = roomType(id).label
+    set({ type: id, name: !d.name.trim() || d.name === prev ? label : d.name })
+    setTypeOpen(false)
+  }
 
   const auto = areaFromWalls(d.walls)
   const per = perimeter(d)
@@ -104,203 +116,343 @@ export default function RoomSheet({ room, floorId, onClose }) {
       footer={footer}
       maxH="92dvh"
     >
-      {/* Вкладки */}
-      <div className="sticky top-0 z-10 -mx-4 bg-white px-4 pt-1 pb-3">
-        <div className="flex rounded-xl bg-panel p-1">
-          {[
-            ['params', 'Параметры'],
-            ['items', `Товары${d.items.length ? ` · ${d.items.length}` : ''}`],
-          ].map(([id, label]) => (
-            <button
-              key={id}
-              onClick={() => setTab(id)}
-              className={cn('relative flex-1 rounded-lg py-2 text-[13px] font-bold transition-colors', tab === id ? 'text-white' : 'text-muted')}
-            >
-              {tab === id && (
-                <motion.span layoutId="room-tab" className="absolute inset-0 rounded-lg bg-brand-600" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />
+      <div className="pb-2">
+        {/* Параметры */}
+        <Section
+          title="Параметры"
+          editing={editParams}
+          onToggle={() => setEditParams((v) => !v)}
+        >
+          {editParams ? (
+            <div className="flex flex-col gap-4">
+              <Field label="Название">
+                <input
+                  id="room-name"
+                  value={d.name}
+                  onChange={(e) => set({ name: e.target.value })}
+                  placeholder={d.type ? roomType(d.type).label : 'Например, «Детская Маши»'}
+                  className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] text-navy placeholder:text-muted focus:border-brand-500"
+                />
+              </Field>
+
+              <Field label={`Тип комнаты${layout.dwelling === 'house' ? ' · дом' : ' · квартира'}`}>
+                <button
+                  onClick={() => setTypeOpen(true)}
+                  className="flex h-12 w-full items-center gap-2.5 rounded-xl border border-line bg-white px-3.5 text-left transition-colors active:bg-panel"
+                >
+                  {d.type ? (
+                    <>
+                      {(() => {
+                        const T = roomType(d.type).Icon
+                        return <T size={18} strokeWidth={1.9} className="shrink-0 text-brand-600" />
+                      })()}
+                      <span className="min-w-0 flex-1 truncate text-[14px] font-semibold text-navy">
+                        {roomType(d.type).label}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="min-w-0 flex-1 text-[14px] text-muted">Выберите тип комнаты</span>
+                  )}
+                  <ChevronDown size={17} className="shrink-0 text-muted" />
+                </button>
+              </Field>
+
+              {layout.floors.length > 1 && (
+                <Field label="Этаж">
+                  <div className="flex flex-wrap gap-1.5">
+                    {layout.floors.map((f) => (
+                      <button
+                        key={f.id}
+                        onClick={() => set({ floorId: f.id })}
+                        className={cn(
+                          'h-9 rounded-full border px-3.5 text-[12.5px] font-semibold',
+                          d.floorId === f.id ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-white text-navy',
+                        )}
+                      >
+                        {f.name}
+                      </button>
+                    ))}
+                  </div>
+                </Field>
               )}
-              <span className="relative z-10">{label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <AnimatePresence mode="wait" initial={false}>
-        {tab === 'params' ? (
-          <motion.div key="p" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} className="flex flex-col gap-4 pb-2">
-            <Field label="Название">
-              <input
-                id="room-name"
-                value={d.name}
-                onChange={(e) => set({ name: e.target.value })}
-                placeholder={d.type ? roomType(d.type).label : 'Например, «Детская Маши»'}
-                className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] text-navy placeholder:text-muted focus:border-brand-500"
-              />
-            </Field>
-
-            <Field label={`Тип комнаты${layout.dwelling === 'house' ? ' · дом' : ' · квартира'}`}>
-              <div className="grid grid-cols-3 gap-1.5">
-                {types.map((t) => {
-                  const active = d.type === t.id
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        const prev = d.type ? roomType(d.type).label : ''
-                        set({ type: t.id, name: !d.name.trim() || d.name === prev ? t.label : d.name })
-                      }}
-                      className={cn(
-                        'flex flex-col items-center gap-1 rounded-xl border-2 px-1 py-2 text-center transition-colors',
-                        active ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-line bg-white text-navy',
-                      )}
-                    >
-                      <t.Icon size={18} strokeWidth={1.9} className={active ? 'text-brand-600' : 'text-muted'} />
-                      <span className="text-[11px] leading-tight font-semibold">{t.label}</span>
+              <Field label="Стены, м">
+                <div className="grid grid-cols-4 gap-1.5">
+                  {d.walls.map((w, i) => (
+                    <label key={i} className="relative">
+                      <span className="pointer-events-none absolute top-1.5 left-2 text-[10px] font-bold text-muted">
+                        {WALL_NAMES[i] ?? i + 1}
+                      </span>
+                      <input
+                        id={`room-wall-${i}`}
+                        value={w}
+                        inputMode="decimal"
+                        onChange={(e) => set({ walls: d.walls.map((x, k) => (k === i ? e.target.value : x)) })}
+                        placeholder="0"
+                        className="h-12 w-full rounded-xl border border-line bg-white px-2 pt-3 text-center text-[14px] font-semibold text-navy tabular-nums focus:border-brand-500"
+                      />
+                    </label>
+                  ))}
+                </div>
+                <div className="mt-2 flex items-center gap-2">
+                  {d.walls.length < 8 && (
+                    <button onClick={() => set({ walls: [...d.walls, ''] })} className="flex items-center gap-1 text-[12px] font-bold text-brand-600">
+                      <Plus size={14} /> Стена
                     </button>
-                  )
-                })}
-              </div>
-            </Field>
+                  )}
+                  {d.walls.length > 2 && (
+                    <button onClick={() => set({ walls: d.walls.slice(0, -1) })} className="flex items-center gap-1 text-[12px] font-bold text-muted">
+                      <Minus size={14} /> Убрать
+                    </button>
+                  )}
+                  <span className="ml-auto text-[11.5px] text-muted">для Г-образных — до 8 стен</span>
+                </div>
+              </Field>
 
-            {layout.floors.length > 1 && (
-              <Field label="Этаж">
-                <div className="flex flex-wrap gap-1.5">
-                  {layout.floors.map((f) => (
+              <div className="grid grid-cols-2 gap-2">
+                <Field label="Площадь, м²">
+                  <input
+                    id="room-area"
+                    value={d.area}
+                    inputMode="decimal"
+                    onChange={(e) => set({ area: e.target.value })}
+                    placeholder={auto ? String(auto) : '0'}
+                    className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] font-semibold text-navy tabular-nums placeholder:text-muted focus:border-brand-500"
+                  />
+                  {auto > 0 && String(auto) !== String(d.area) && (
+                    <button onClick={() => set({ area: String(auto) })} className="mt-1.5 flex items-center gap-1 text-[11.5px] font-bold text-brand-600">
+                      <Calculator size={12} /> По стенам: {auto} м²
+                    </button>
+                  )}
+                </Field>
+                <Field label="Высота потолка, м">
+                  <input
+                    id="room-height"
+                    value={d.height}
+                    inputMode="decimal"
+                    onChange={(e) => set({ height: e.target.value })}
+                    className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] font-semibold text-navy tabular-nums focus:border-brand-500"
+                  />
+                </Field>
+              </div>
+
+              <Field label="Состояние">
+                <div className="grid grid-cols-4 gap-1 rounded-xl bg-panel p-1">
+                  {ROOM_STATUSES.map((s) => (
                     <button
-                      key={f.id}
-                      onClick={() => set({ floorId: f.id })}
+                      key={s.id}
+                      onClick={() => set({ status: s.id })}
                       className={cn(
-                        'h-9 rounded-full border px-3.5 text-[12.5px] font-semibold',
-                        d.floorId === f.id ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-white text-navy',
+                        'rounded-lg py-2 text-[11.5px] font-bold transition-colors',
+                        d.status === s.id ? 'bg-white text-brand-700 shadow-soft' : 'text-muted',
                       )}
                     >
-                      {f.name}
+                      {s.label}
                     </button>
                   ))}
                 </div>
               </Field>
-            )}
 
-            <Field label="Стены, м">
-              <div className="grid grid-cols-4 gap-1.5">
-                {d.walls.map((w, i) => (
-                  <label key={i} className="relative">
-                    <span className="pointer-events-none absolute top-1.5 left-2 text-[10px] font-bold text-muted">
-                      {WALL_NAMES[i] ?? i + 1}
-                    </span>
-                    <input
-                      id={`room-wall-${i}`}
-                      value={w}
-                      inputMode="decimal"
-                      onChange={(e) => set({ walls: d.walls.map((x, k) => (k === i ? e.target.value : x)) })}
-                      placeholder="0"
-                      className="h-12 w-full rounded-xl border border-line bg-white px-2 pt-3 text-center text-[14px] font-semibold text-navy tabular-nums focus:border-brand-500"
-                    />
-                  </label>
-                ))}
-              </div>
-              <div className="mt-2 flex items-center gap-2">
-                {d.walls.length < 8 && (
-                  <button onClick={() => set({ walls: [...d.walls, ''] })} className="flex items-center gap-1 text-[12px] font-bold text-brand-600">
-                    <Plus size={14} /> Стена
-                  </button>
-                )}
-                {d.walls.length > 2 && (
-                  <button onClick={() => set({ walls: d.walls.slice(0, -1) })} className="flex items-center gap-1 text-[12px] font-bold text-muted">
-                    <Minus size={14} /> Убрать
-                  </button>
-                )}
-                <span className="ml-auto text-[11.5px] text-muted">для Г-образных — до 8 стен</span>
-              </div>
-            </Field>
-
-            <div className="grid grid-cols-2 gap-2">
-              <Field label="Площадь, м²">
-                <input
-                  id="room-area"
-                  value={d.area}
-                  inputMode="decimal"
-                  onChange={(e) => set({ area: e.target.value })}
-                  placeholder={auto ? String(auto) : '0'}
-                  className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] font-semibold text-navy tabular-nums placeholder:text-muted focus:border-brand-500"
-                />
-                {auto > 0 && String(auto) !== String(d.area) && (
-                  <button onClick={() => set({ area: String(auto) })} className="mt-1.5 flex items-center gap-1 text-[11.5px] font-bold text-brand-600">
-                    <Calculator size={12} /> По стенам: {auto} м²
-                  </button>
-                )}
-              </Field>
-              <Field label="Высота потолка, м">
-                <input
-                  id="room-height"
-                  value={d.height}
-                  inputMode="decimal"
-                  onChange={(e) => set({ height: e.target.value })}
-                  className="h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[14px] font-semibold text-navy tabular-nums focus:border-brand-500"
+              <Field label="Заметка">
+                <textarea
+                  id="room-note"
+                  value={d.note}
+                  onChange={(e) => set({ note: e.target.value })}
+                  rows={2}
+                  placeholder="Например: тёплый пол, розетки у окна"
+                  className="w-full resize-none rounded-xl border border-line bg-white p-3 text-[13.5px] text-navy placeholder:text-muted focus:border-brand-500"
                 />
               </Field>
+
+              {d.type && (
+                <Tap
+                  onClick={repairWithAI}
+                  className="flex items-center gap-2.5 rounded-xl border border-brand-600/25 bg-brand-50 p-3 text-left"
+                >
+                  <Sparkles size={18} className="shrink-0 text-brand-600" />
+                  <span className="text-[12.5px] leading-snug text-navy">
+                    <b>Ремонт этой комнаты с ИИ</b> — подставим тип и площадь в задачу
+                  </span>
+                </Tap>
+              )}
             </div>
+          ) : (
+            <ParamsView d={d} layout={layout} auto={auto} per={per} wa={wa} />
+          )}
+        </Section>
 
-            {(per > 0 || wa > 0) && (
-              <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-panel p-2.5 text-center">
-                <Metric value={per ? `${per} м` : '—'} label="периметр" />
-                <Metric value={wa ? `${wa} м²` : '—'} label="площадь стен" />
-                <Metric value={toNum(d.area) || auto ? `${toNum(d.area) || auto} м²` : '—'} label="пол / потолок" />
-              </div>
-            )}
+        {/* Товары */}
+        <Section
+          title={`Товары${d.items.length ? ` · ${d.items.length}` : ''}`}
+          editing={editItems}
+          onToggle={() => setEditItems((v) => !v)}
+        >
+          {editItems ? (
+            <RoomItems items={d.items} orders={orders} onChange={(items) => set({ items })} total={itemsTotal} />
+          ) : (
+            <ItemsView items={d.items} total={itemsTotal} />
+          )}
+        </Section>
 
-            <Field label="Состояние">
-              <div className="grid grid-cols-4 gap-1 rounded-xl bg-panel p-1">
-                {ROOM_STATUSES.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => set({ status: s.id })}
-                    className={cn(
-                      'rounded-lg py-2 text-[11.5px] font-bold transition-colors',
-                      d.status === s.id ? 'bg-white text-brand-700 shadow-soft' : 'text-muted',
-                    )}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </Field>
-
-            <Field label="Заметка">
-              <textarea
-                id="room-note"
-                value={d.note}
-                onChange={(e) => set({ note: e.target.value })}
-                rows={2}
-                placeholder="Например: тёплый пол, розетки у окна"
-                className="w-full resize-none rounded-xl border border-line bg-white p-3 text-[13.5px] text-navy placeholder:text-muted focus:border-brand-500"
-              />
-            </Field>
-
-            {d.type && (
-              <Tap
-                onClick={repairWithAI}
-                className="flex items-center gap-2.5 rounded-xl border border-brand-600/25 bg-brand-50 p-3 text-left"
-              >
-                <Sparkles size={18} className="shrink-0 text-brand-600" />
-                <span className="text-[12.5px] leading-snug text-navy">
-                  <b>Ремонт этой комнаты с ИИ</b> — подставим тип и площадь в задачу
-                </span>
-              </Tap>
-            )}
-          </motion.div>
-        ) : (
-          <motion.div key="i" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} className="pb-2">
-            <RoomItems
-              items={d.items}
-              orders={orders}
-              onChange={(items) => set({ items })}
-              total={itemsTotal}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Выбор типа комнаты — выпадающий список с поиском */}
+        <AnimatePresence>
+          {typeOpen && <TypeSheet types={types} value={d.type} onPick={pickType} onClose={() => setTypeOpen(false)} />}
+        </AnimatePresence>
+      </div>
     </Sheet>
+  )
+}
+
+/** Выбор типа комнаты — компактная шторка со списком и поиском */
+function TypeSheet({ types, value, onPick, onClose }) {
+  const [q, setQ] = useState('')
+  const t = q.trim().toLowerCase()
+  const list = t ? types.filter((x) => x.label.toLowerCase().includes(t)) : types
+  return (
+    <Sheet
+      title="Тип комнаты"
+      subtitle={t ? `Найдено: ${list.length}` : 'Выберите из списка или введите название'}
+      onClose={onClose}
+      maxH="70dvh"
+    >
+      <div className="sticky top-0 -mx-4 bg-white px-4 pb-2">
+        <div className="flex h-11 items-center gap-2 rounded-xl bg-panel px-3">
+          <Search size={17} className="shrink-0 text-muted" />
+          <input
+            autoFocus
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Поиск: спальня, балкон…"
+            className="min-w-0 flex-1 bg-transparent text-[14px] text-navy placeholder:text-muted"
+          />
+          {q && (
+            <button onClick={() => setQ('')} aria-label="Очистить">
+              <X size={16} className="text-muted" />
+            </button>
+          )}
+        </div>
+      </div>
+      <ul className="flex flex-col gap-1 pt-1 pb-2">
+        {list.map((x) => {
+          const active = x.id === value
+          return (
+            <li key={x.id}>
+              <button
+                onClick={() => onPick(x.id)}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-left transition-colors',
+                  active ? 'border-brand-600 bg-brand-50/60' : 'border-transparent active:bg-panel',
+                )}
+              >
+                <x.Icon size={19} strokeWidth={1.9} className={active ? 'shrink-0 text-brand-600' : 'shrink-0 text-muted'} />
+                <span className="min-w-0 flex-1 text-[14px] font-bold text-navy">{x.label}</span>
+                {active && <Check size={17} className="shrink-0 text-brand-600" strokeWidth={3} />}
+              </button>
+            </li>
+          )
+        })}
+        {list.length === 0 && (
+          <li className="px-2 py-6 text-center text-[13px] text-muted">Ничего не нашлось — попробуйте другое слово</li>
+        )}
+      </ul>
+    </Sheet>
+  )
+}
+
+/** Заголовок блока с кнопкой «Изменить» / «Готово» */
+function Section({ title, editing, onToggle, children }) {
+  return (
+    <section className="mb-5 last:mb-0">
+      <div className="mb-2 flex items-center justify-between px-1">
+        <h3 className="text-[14px] font-extrabold text-navy">{title}</h3>
+        <button
+          onClick={onToggle}
+          className="flex shrink-0 items-center gap-1 rounded-lg border border-line bg-white px-2.5 py-1.5 text-[12px] font-bold text-navy transition-colors active:bg-panel"
+        >
+          {editing ? (
+            <>
+              <Check size={13} className="text-brand-600" /> Готово
+            </>
+          ) : (
+            <>
+              <Pencil size={13} /> Изменить
+            </>
+          )}
+        </button>
+      </div>
+      {children}
+    </section>
+  )
+}
+
+/** Параметры комнаты — просмотр */
+function ParamsView({ d, layout, auto, per, wa }) {
+  const area = toNum(d.area) || auto
+  const floor = layout.floors.find((f) => f.id === d.floorId)
+  const walls = (d.walls ?? []).map((w) => toNum(w)).filter((w) => w > 0)
+  const status = ROOM_STATUSES.find((s) => s.id === d.status)
+  const t = roomType(d.type)
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-4 gap-1.5 rounded-xl bg-panel p-2.5 text-center">
+        <Metric value={area ? `${area} м²` : '—'} label="площадь" />
+        <Metric value={toNum(d.height) ? `${toNum(d.height)} м` : '—'} label="высота" />
+        <Metric value={per ? `${per} м` : '—'} label="периметр" />
+        <Metric value={wa ? `${wa} м²` : '—'} label="площадь стен" />
+      </div>
+      <Row label="Тип" value={t.label} />
+      {layout.floors.length > 1 && floor && <Row label="Этаж" value={floor.name} />}
+      {walls.length > 0 && (
+        <Row label="Стены" value={walls.map((w, i) => `${WALL_NAMES[i] ?? i + 1} — ${w} м`).join(' · ')} />
+      )}
+      {status && <Row label="Состояние" value={status.label} />}
+      {d.note?.trim() && <Row label="Заметка" value={d.note} />}
+    </div>
+  )
+}
+
+function Row({ label, value }) {
+  return (
+    <div className="flex items-start justify-between gap-3 rounded-xl border border-line bg-white px-3 py-2.5">
+      <span className="shrink-0 text-[12px] font-bold text-muted">{label}</span>
+      <span className="text-right text-[13px] font-semibold text-navy">{value}</span>
+    </div>
+  )
+}
+
+/** Товары комнаты — просмотр */
+function ItemsView({ items, total }) {
+  const rows = items.map((i) => ({ p: getProduct(i.id), qty: i.qty })).filter((r) => r.p)
+  if (!rows.length)
+    return (
+      <p className="rounded-xl border border-dashed border-line px-4 py-5 text-center text-[12.5px] text-muted">
+        Пока ничего не добавлено. Нажмите «Изменить» — добавьте материалы из каталога или из ваших заказов
+      </p>
+    )
+  return (
+    <div>
+      <ul className="flex flex-col divide-y divide-line rounded-xl border border-line">
+        {rows.map(({ p, qty }) => (
+          <li key={p.id} className="flex items-center gap-2.5 px-2.5 py-2">
+            <ProductImage product={p} size={18} className="h-10 w-10" />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[12.5px] font-semibold text-navy">{p.name}</span>
+              <span className="block text-[11px] text-muted">
+                {rub(p.price)} / {p.unit}
+              </span>
+            </span>
+            <span className="shrink-0 text-[12.5px] font-bold text-navy tabular-nums">×{qty}</span>
+            <span className="w-[70px] shrink-0 text-right text-[12px] font-semibold text-muted">
+              {rub(Math.round(p.price * qty * 100) / 100)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-2 flex items-baseline justify-between px-1">
+        <span className="text-[12.5px] font-bold text-navy">Итого материалы</span>
+        <span className="text-[13px] font-black text-navy">{rub(Math.round(total * 100) / 100)}</span>
+      </div>
+    </div>
   )
 }
 
@@ -316,7 +468,7 @@ function Field({ label, children }) {
 function Metric({ value, label }) {
   return (
     <div>
-      <div className="text-[14px] font-black text-navy tabular-nums">{value}</div>
+      <div className="text-[13px] font-black text-navy tabular-nums">{value}</div>
       <div className="text-[10.5px] text-muted">{label}</div>
     </div>
   )

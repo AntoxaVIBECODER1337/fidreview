@@ -5,21 +5,22 @@ import { CircleUserRound, HardHat, LayoutGrid, ShoppingBag } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { cn } from '../lib/cn'
 
-/** Домик «Мой дом»: крыша + стены + окошко */
-function HouseIcon({ className, strokeWidth }) {
+/** Домик «Мой дом» — один в один с фото (залитый силуэт):
+ *  широкая крыша-полоса с зазором, корпус со сводчатой дверью-выемкой.
+ *  Цвет наследуется: в активной вкладке — наш brand-600, в неактивной — серый. */
+function HouseIcon({ className }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3.5 10.5 12 4l8.5 6.5" />
-      <path d="M5.5 9.2V20h13V9.2" />
-      <rect x="9.9" y="12.6" width="4.2" height="3.6" rx="0.5" />
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" stroke="none" aria-hidden>
+      {/* Шире обычного: растяжение по горизонтали от центра */}
+      <g transform="translate(12 0) scale(1.07 1) translate(-12 0)">
+        {/* Крыша: полоса с вертикальными срезами по концам */}
+        <path d="M12 3.2 4 10.4 4 12.8 12 5.6 20 12.8 20 10.4Z" />
+        {/* Корпус с арочной дверью-выемкой (evenodd = дырка) */}
+        <path
+          fillRule="evenodd"
+          d="M6.6 11.86 12 7l5.4 4.86V21H6.6Z M9.85 21v-3.6a2.15 2.15 0 1 1 4.3 0V21Z"
+        />
+      </g>
     </svg>
   )
 }
@@ -47,7 +48,7 @@ export function tabIndexFor(pathname) {
 export const screenKey = (pathname) =>
   pathname === '/' || pathname === '/catalog' ? 'home' : pathname === '/favorites' ? '/cart' : pathname
 
-/** Стеклянное плавающее меню с «пилюлей» активной вкладки (дизайн oma-ozon) */
+/** Меню, прижатое к низу экрана: прямая линия сверху от угла до угла, без отступов по бокам и снизу */
 export default function BottomNav() {
   const { pathname } = useLocation()
   const { cartCount } = useStore()
@@ -61,10 +62,13 @@ export default function BottomNav() {
   }, [])
 
   return (
-    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <div className="pointer-events-auto mx-auto w-full max-w-[430px] px-2">
-        <div className="rounded-3xl border border-white/60 bg-white/70 shadow-glass backdrop-blur-xl">
-          <ul className="flex items-stretch justify-between p-1">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40">
+      <div className="pointer-events-auto mx-auto w-full max-w-[430px]">
+        <div className="border-t border-black/[0.08] bg-white/80 backdrop-blur-xl">
+          <ul
+            className="flex items-stretch justify-between px-1 pt-1"
+            style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+          >
             {TABS.map((t, i) => {
               const active = i === activeIdx
               const { Icon } = t
@@ -72,44 +76,29 @@ export default function BottomNav() {
                 <li key={t.to} className="min-w-0 flex-1">
                   <Link to={t.to} aria-label={t.label} className="block hide-tap">
                     <motion.span
-                      whileTap={{ scale: 0.92 }}
+                      whileTap={{ scale: 0.9 }}
                       transition={{ type: 'spring', stiffness: 550, damping: 28 }}
-                      className="relative flex h-[52px] flex-col items-center justify-center gap-1 rounded-2xl"
+                      className="relative flex h-[52px] items-center justify-center rounded-2xl"
                     >
-                      {active && (
-                        <motion.span
-                          layoutId="tab-pill"
-                          className="absolute inset-0 rounded-2xl bg-brand-50"
-                          transition={{ type: 'spring', stiffness: 480, damping: 36 }}
-                        />
-                      )}
                       <span className="relative z-10" {...(t.to === '/cart' ? { 'data-cart-target': '' } : {})}>
                         <Icon
                           className={cn(
-                            'h-[21px] w-[21px] transition-colors duration-200',
+                            'h-[24px] w-[24px] transition-colors duration-200',
                             active ? 'text-brand-600' : 'text-muted',
                           )}
-                          strokeWidth={active ? 2.4 : 2}
-                                                  />
+                          strokeWidth={active ? 2.4 :1.9}
+                        />
                         {t.to === '/cart' && cartCount > 0 && (
                           <motion.span
                             key={`${cartCount}-${bumpKey}`}
                             initial={{ scale: 0.2 }}
                             animate={{ scale: [0.2, 1.45, 1] }}
                             transition={{ duration: 0.45, ease: 'easeOut' }}
-                            className="absolute -top-1.5 -right-2.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white"
+                            className="absolute -top-2 -right-3 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white"
                           >
                             {cartCount > 99 ? '99+' : cartCount}
                           </motion.span>
                         )}
-                      </span>
-                      <span
-                        className={cn(
-                          'relative z-10 max-w-full truncate text-[10.5px] leading-none transition-colors duration-200',
-                          active ? 'font-bold text-brand-600' : 'font-medium text-muted',
-                        )}
-                      >
-                        {t.label}
                       </span>
                     </motion.span>
                   </Link>

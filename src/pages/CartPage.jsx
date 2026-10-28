@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import ProductImage from '../components/ProductImage.jsx'
+import PackIcon from '../components/PackIcon.jsx'
 import { Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { cn } from '../lib/cn'
 import { bundlePrice, getPack } from '../lib/decor'
@@ -255,17 +256,17 @@ function CartView() {
 
           {/* Итог */}
           <section className="mx-4 mt-4 rounded-xl bg-navy p-4 text-white">
-            <div className="flex justify-between text-[13px]">
+            <div className="flex items-center justify-between text-[13px]">
               <span className="text-white/80">Скидка:</span>
               <span>{rub(savings)}</span>
             </div>
             {promo && (
-              <div className="mt-1 flex justify-between text-[13px]">
+              <div className="mt-1 flex items-center justify-between text-[13px]">
                 <span className="text-white/80">Промокод {promo}:</span>
                 <span>−{rub(promoAmount)}</span>
               </div>
             )}
-            <div className="mt-2 flex items-baseline justify-between">
+            <div className="mt-2 flex items-center justify-between">
               <span className="text-[15px] font-bold">Итого:</span>
               <span className="text-[20px] font-black">{rub(total)}</span>
             </div>
@@ -349,10 +350,13 @@ function BundleCard({ bundle, onRemove }) {
     >
       <div className="flex items-center gap-3 p-3">
         <span
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-[28px]"
+          className={cn(
+            'flex h-14 w-14 shrink-0 items-center justify-center rounded-xl',
+            pack ? 'text-white' : 'text-navy'
+          )}
           style={pack ? { background: `linear-gradient(150deg, ${pack.from}, ${pack.to})` } : undefined}
         >
-          {bundle.emoji}
+          <PackIcon emoji={bundle.emoji} size={28} />
         </span>
         <button onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 text-left">
           <span className="block text-[11px] font-bold tracking-wide text-brand-600 uppercase">Пакет декора</span>

@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import Header from '../components/Header.jsx'
 import ProductImage from '../components/ProductImage.jsx'
+import PackIcon, { packGlyphMarkup } from '../components/PackIcon.jsx'
 import { Tap } from '../components/ui.jsx'
 import { getProduct } from '../lib/catalog'
 import { cn } from '../lib/cn'
@@ -74,7 +75,7 @@ export default function DecorPackPage() {
 
   const toCart = (e) => {
     addBundle({ packId: pack.id, title: pack.name, emoji: pack.emoji, items: packItems(pack, choice) })
-    flyToCart(e.currentTarget, pack.emoji)
+    flyToCart(e.currentTarget, packGlyphMarkup(pack.emoji))
     setAdded(true)
   }
 
@@ -89,8 +90,8 @@ export default function DecorPackPage() {
       >
         <span className="mesh-blob absolute -top-14 -right-12 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.25),transparent_70%)]" />
         <div className="relative flex items-start gap-3">
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-[36px] backdrop-blur">
-            {pack.emoji}
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+            <PackIcon emoji={pack.emoji} size={36} />
           </span>
           <div className="min-w-0">
             <p className="text-[11px] font-bold tracking-wide text-white/75 uppercase">Пакет декора · {pack.room}</p>
