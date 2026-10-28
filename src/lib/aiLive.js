@@ -7,7 +7,12 @@ import { getProduct, products } from './catalog'
  * на детерминированный скрипт из src/lib/ai.js.
  */
 
-const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4'
+/**
+ * Базовый URL LLM API. По умолчанию — относительный путь через dev-прокси
+ * Vite (/llm-api → https://open.bigmodel.cn/api/paas/v4): браузер не может
+ * ходить на bigmodel.cn напрямую из-за CORS. Можно переопределить в .env.
+ */
+const BASE_URL = import.meta.env.VITE_LLM_BASE_URL || '/llm-api'
 const API_KEY = import.meta.env.VITE_LLM_API_KEY || ''
 const MODEL = import.meta.env.VITE_LLM_MODEL || 'glm-5.3-flash'
 
