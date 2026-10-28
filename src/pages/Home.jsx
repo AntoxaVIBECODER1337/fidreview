@@ -84,7 +84,7 @@ export default function Home() {
       {/* Логотип и город */}
       <div className="flex items-center justify-between bg-white px-4 pt-3 pb-1">
         <Link to="/" aria-label="ОМА — на главную" className="flex items-center hide-tap">
-          <Logo className="h-8 w-auto" />
+          <Logo className="h-9 w-auto" />
         </Link>
         <button
           onClick={() => setCityOpen(true)}
