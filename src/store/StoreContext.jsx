@@ -411,6 +411,51 @@ export function StoreProvider({ children }) {
     )
   }, [])
 
+  /** Смета проекта: добавить позицию (или увеличить количество существующей) */
+  const addProjectItem = useCallback((projectId, id, qty = 1) => {
+    setProjects((prev) =>
+      prev.map((p) => {
+        if (p.id !== projectId || !getProduct(id)) return p
+        const items = p.items.some((i) => i.id === id)
+          ? p.items.map((i) => (i.id === id ? { ...i, qty: i.qty + qty } : i))
+          : [...p.items, { id, qty }]
+        const itemsTotal = items.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
+        return { ...p, items, itemsTotal }
+      }),
+    )
+  }, [])
+
+  /** Смета проекта: изменить количество позиции (0 — удалить её) */
+  const setProjectItemQty = useCallback((projectId, id, qty) => {
+    setProjects((prev) =>
+      prev.map((p) => {
+        if (p.id !== projectId) return p
+        const items =
+          qty <= 0 ? p.items.filter((i) => i.id !== id) : p.items.map((i) => (i.id === id ? { ...i, qty } : i))
+        const itemsTotal = items.reduce((s, i) => s + getProduct(i.id).price * i.qty, 0)
+        return { ...p, items, itemsTotal }
+      }),
+    )
+  }, [])
+
+  /** Материалы сметы проекта → корзина (суммируются с уже лежащими).
+   *  Возвращает число добавленных штук. */
+  const addProjectToCart = useCallback(
+    (projectId) => {
+      const p = projects.find((x) => x.id === projectId)
+      const valid = p?.items.filter((i) => getProduct(i.id)) ?? []
+      if (!valid.length) return 0
+      setCart((prev) => {
+        const next = { ...prev }
+        for (const i of valid) next[i.id] = (next[i.id] ?? 0) + i.qty
+        return next
+      })
+      vibrate(HAPTIC.add)
+      return valid.reduce((s, i) => s + i.qty, 0)
+    },
+    [projects],
+  )
+
   const cartCount = Object.values(cart).reduce((s, q) => s + q, 0) + bundles.length
 
   return (
@@ -451,6 +496,9 @@ export function StoreProvider({ children }) {
         setCity,
         approveProject,
         advanceStage,
+        addProjectItem,
+        setProjectItemQty,
+        addProjectToCart,
         addToCart,
         setQty,
         removeFromCart,
