@@ -61,8 +61,29 @@ ${catalogList()}
  * Один ход диалога: история [{role, content}], возвращает разобранный JSON-ответ LLM.
  * GLM API отдаёт потоковый ответ (SSE), читаем стрим и склеиваем
  * дельты content в полный текст.
+ * Временные сбои шлюза (5xx, сеть) ретраим до 3 попыток; 4xx — сразу наружу.
  */
+const RETRY_DELAYS = [700, 1500]
+
 export async function runTurn(history) {
+  let lastError
+  for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+    if (attempt > 0) {
+      await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt - 1]))
+    }
+    try {
+      return await attemptTurn(history)
+    } catch (e) {
+      lastError = e
+      const msg = String(e?.message ?? e)
+      const transient = /LLM 5\d\d|NetworkError|Failed to fetch|LLM вернул пустой ответ|aborted|TimeoutError/i.test(msg)
+      if (!transient) throw e
+    }
+  }
+  throw lastError
+}
+
+async function attemptTurn(history) {
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: 'POST',
     headers: {

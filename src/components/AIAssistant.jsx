@@ -6,6 +6,7 @@ import avatar from '../assets/avatar.jpg'
 import { DEFAULT_TASK, SCENARIOS } from '../lib/ai'
 import { hasLiveAI, runTurn, sanitizePackage } from '../lib/aiLive'
 import { products } from '../lib/catalog'
+import { cn } from '../lib/cn'
 import { useStore } from '../store/StoreContext'
 import { PrimaryButton, Tap, staggerChild, staggerParent } from './ui.jsx'
 
@@ -61,9 +62,13 @@ export default function AIAssistant({ onResult }) {
   const [busy, setBusy] = useState(false)
   const [chatError, setChatError] = useState(null)
   const [liveResult, setLiveResult] = useState(null) // sanitized package
+  /* Выбранные чипы вариантов: 'msgIdx:qIdx' -> option; раунды, на которые уже ответили */
+  const [picks, setPicks] = useState({})
+  const [answered, setAnswered] = useState(() => new Set())
   /* История для LLM: [{role:'user'|'assistant', content}] */
   const historyRef = useRef([])
   const listRef = useRef(null)
+  const draftRef = useRef('') // черновик, собранный из чипов
 
   const onResultRef = useRef(onResult)
   onResultRef.current = onResult
@@ -126,6 +131,9 @@ export default function AIAssistant({ onResult }) {
       setMsgs([])
       setLiveResult(null)
       historyRef.current = []
+      setPicks({})
+      setAnswered(new Set())
+      draftRef.current = ''
       askLlm(task.trim())
     } else {
       setPhase('ask')
@@ -135,9 +143,61 @@ export default function AIAssistant({ onResult }) {
   const sendReply = (text) => {
     const t = (text ?? reply).trim()
     if (!t || busy || liveResult) return
+    /* Ручная отправка закрывает раунд вопросов */
+    if (lastQuestionsIdx >= 0) setAnswered((prev) => new Set(prev).add(lastQuestionsIdx))
+    setPicks({})
+    draftRef.current = ''
     setReply('')
     pushMsg({ role: 'user', text: t })
     askLlm(t)
+  }
+
+  /* Индекс последнего сообщения с вопросами (текущий раунд анкеты) */
+  const lastQuestionsIdx = msgs.reduce((acc, m, i) => (m.questions?.length ? i : acc), -1)
+
+  /** Собрать черновик ответа из выбранных чипов раунда */
+  const composePicks = (pickMap, msgIdx, questions) =>
+    questions
+      .map((qq, j) => {
+        const v = pickMap[`${msgIdx}:${j}`]
+        return v ? `${qq.text} — ${v}` : null
+      })
+      .filter(Boolean)
+      .join('; ')
+
+  /**
+   * Тап по чипу: ответ копится в поле ввода, запрос НЕ отправляется.
+   * Автоотправка — только когда выбран вариант каждого вопроса раунда
+   * и пользователь не написал свой текст.
+   */
+  const pickAnswer = (msgIdx, qIdx, q, o) => {
+    if (busy || liveResult || answered.has(msgIdx)) return
+    const questions = msgs[msgIdx]?.questions ?? []
+    const key = `${msgIdx}:${qIdx}`
+    const pickMap = { ...picks }
+    /* Повторный тап — снять выбор */
+    if (pickMap[key] === o) delete pickMap[key]
+    else pickMap[key] = o
+    setPicks(pickMap)
+
+    const draft = composePicks(pickMap, msgIdx, questions)
+    const userTyped = reply.trim().length > 0 && reply.trim() !== draftRef.current
+    const all = questions.length > 0 && questions.every((_, j) => pickMap[`${msgIdx}:${j}`])
+
+    if (all && !userTyped) {
+      /* Все вопросы раунда закрыты — отправляем одним сообщением */
+      setAnswered((prev) => new Set(prev).add(msgIdx))
+      setPicks({})
+      draftRef.current = ''
+      setReply('')
+      pushMsg({ role: 'user', text: draft })
+      askLlm(draft)
+      return
+    }
+    draftRef.current = draft
+    /* Свой текст пользователя сохраняем, выбор чипов дописывается после него */
+    const typed = reply.trim()
+    setReply(userTyped && draft ? `${typed.replace(/[;,\s]+$/, '')}; ${draft}` : draft)
   }
 
   const choose = (m) => {
@@ -152,6 +212,9 @@ export default function AIAssistant({ onResult }) {
     setLiveResult(null)
     historyRef.current = []
     setChatError(null)
+    setPicks({})
+    setAnswered(new Set())
+    draftRef.current = ''
   }
 
   const inChat = phase === 'chat'
@@ -228,16 +291,24 @@ export default function AIAssistant({ onResult }) {
                                 <div key={j} className="flex flex-col gap-1">
                                   <span className="px-0.5 text-[11.5px] font-semibold text-muted">{q.text}</span>
                                   <div className="flex flex-wrap gap-1.5">
-                                    {(q.options ?? []).map((o) => (
-                                      <Tap
-                                        key={o}
-                                        disabled={busy || Boolean(liveResult)}
-                                        onClick={() => sendReply(`${q.text} — ${o}`)}
-                                        className="rounded-full border border-brand-600/30 bg-white px-3 py-1.5 text-[12px] font-semibold text-brand-700 active:bg-brand-50 disabled:opacity-50"
-                                      >
-                                        {o}
-                                      </Tap>
-                                    ))}
+                                    {(q.options ?? []).map((o) => {
+                                      const picked = picks[`${i}:${j}`] === o
+                                      return (
+                                        <Tap
+                                          key={o}
+                                          disabled={busy || Boolean(liveResult) || answered.has(i)}
+                                          onClick={() => pickAnswer(i, j, q, o)}
+                                          className={cn(
+                                            'rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50',
+                                            picked
+                                              ? 'border-brand-600 bg-brand-600 text-white'
+                                              : 'border-brand-600/30 bg-white text-brand-700 active:bg-brand-50',
+                                          )}
+                                        >
+                                          {o}
+                                        </Tap>
+                                      )
+                                    })}
                                   </div>
                                 </div>
                               ))}
