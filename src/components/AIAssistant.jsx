@@ -108,7 +108,7 @@ export default function AIAssistant({ onResult }) {
         setLiveResult(data)
         pushMsg({ role: 'ai', text: data.summary || 'Готово! Собрал пакет материалов под твою задачу.' })
       } else {
-        const qs = (data.questions ?? []).slice(0, 3)
+        const qs = (data.questions ?? []).slice(0, 4)
         historyRef.current = [...historyRef.current, { role: 'assistant', content: JSON.stringify(data) }]
         pushMsg({ role: 'ai', text: data.intro || 'Уточню пару деталей:', questions: qs })
       }
