@@ -3,6 +3,7 @@ import { getProduct } from '../lib/catalog'
 import { PROMOS } from '../lib/promo'
 import { WELCOME_BONUS, cashbackFor } from '../lib/bonus'
 import { HAPTIC, vibrate } from '../lib/haptics'
+import { demoLayout, emptyLayout, newId } from '../data/rooms'
 
 const CART_KEY = 'oma.cart'
 const FAV_KEY = 'oma.favorites'
@@ -16,6 +17,7 @@ const COMPARE_KEY = 'oma.compare'
 const BONUS_KEY = 'oma.bonus'
 const ONBOARD_KEY = 'oma.onboarded'
 const BUNDLES_KEY = 'oma.bundles'
+const LAYOUT_KEY = 'oma.layout'
 
 /** Сравнение — не больше 4 товаров */
 export const COMPARE_MAX = 4
@@ -76,6 +78,8 @@ export function StoreProvider({ children }) {
   const [onboarded, setOnboarded] = useState(() => load(ONBOARD_KEY, false))
   /* Пакеты декора в корзине: [{ id, packId, title, emoji, items: [{ id, qty }] }] */
   const [bundles, setBundles] = useState(() => load(BUNDLES_KEY, []))
+  /* Планировка: { name, dwelling, floors: [{ id, name }], rooms: [...] } или null — ещё не создана */
+  const [layout, setLayout] = useState(() => load(LAYOUT_KEY, null))
   const [toast, setToast] = useState(null)
 
   useEffect(() => persist(CART_KEY, cart), [cart])
@@ -90,6 +94,7 @@ export function StoreProvider({ children }) {
   useEffect(() => persist(BONUS_KEY, bonus), [bonus])
   useEffect(() => persist(ONBOARD_KEY, onboarded), [onboarded])
   useEffect(() => persist(BUNDLES_KEY, bundles), [bundles])
+  useEffect(() => persist(LAYOUT_KEY, layout), [layout])
 
   const showToast = useCallback((text) => {
     setToast({ id: ++toastSeq, text })
@@ -125,6 +130,49 @@ export function StoreProvider({ children }) {
     setCart({})
     setBundles([])
   }, [])
+
+  /* ---------- Планировка ---------- */
+  const startLayout = useCallback((kind) => {
+    setLayout(kind === 'demo' ? demoLayout() : emptyLayout(kind))
+  }, [])
+  const updateLayout = useCallback((patch) => setLayout((l) => ({ ...l, ...patch })), [])
+  const addFloor = useCallback(() => {
+    const id = newId()
+    setLayout((l) => ({ ...l, floors: [...l.floors, { id, name: `${l.floors.length + 1} этаж` }] }))
+    return id
+  }, [])
+  const renameFloor = useCallback(
+    (id, name) => setLayout((l) => ({ ...l, floors: l.floors.map((f) => (f.id === id ? { ...f, name } : f)) })),
+    [],
+  )
+  const removeFloor = useCallback(
+    (id) =>
+      setLayout((l) =>
+        l.floors.length < 2
+          ? l
+          : { ...l, floors: l.floors.filter((f) => f.id !== id), rooms: l.rooms.filter((r) => r.floorId !== id) },
+      ),
+    [],
+  )
+  /** Сохранить комнату: новая (без id) или изменённая */
+  const saveRoom = useCallback(
+    (room) => {
+      const id = room.id ?? newId()
+      setLayout((l) => {
+        const exists = l.rooms.some((r) => r.id === id)
+        const next = { ...room, id }
+        return { ...l, rooms: exists ? l.rooms.map((r) => (r.id === id ? next : r)) : [...l.rooms, next] }
+      })
+      showToast(room.id ? 'Комната сохранена' : `Комната «${room.name}» добавлена`)
+      return id
+    },
+    [showToast],
+  )
+  const removeRoom = useCallback(
+    (id) => setLayout((l) => ({ ...l, rooms: l.rooms.filter((r) => r.id !== id) })),
+    [],
+  )
+  const resetLayout = useCallback(() => setLayout(null), [])
 
   /** Пакет декора → корзина (отдельной позицией) */
   const addBundle = useCallback(
@@ -387,6 +435,15 @@ export function StoreProvider({ children }) {
         bonus,
         onboarded,
         bundles,
+        layout,
+        startLayout,
+        updateLayout,
+        addFloor,
+        renameFloor,
+        removeFloor,
+        saveRoom,
+        removeRoom,
+        resetLayout,
         addBundle,
         removeBundle,
         setOnboarded,

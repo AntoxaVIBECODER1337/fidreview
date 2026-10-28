@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Hammer, ShoppingCart, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import avatar from '../assets/avatar.jpg'
 import { DEFAULT_TASK, SCENARIOS } from '../lib/ai'
 import { products } from '../lib/catalog'
@@ -41,7 +41,9 @@ const CHOICES = [
 export default function AIAssistant({ onResult }) {
   const { user } = useStore()
   const userName = user?.name?.split(' ')[0]
-  const [task, setTask] = useState(DEFAULT_TASK)
+  const { state } = useLocation()
+  /* Задача может прийти из «Моей планировки» (кнопка «Ремонт этой комнаты с ИИ») */
+  const [task, setTask] = useState(state?.task ?? DEFAULT_TASK)
   /* input → ask (ИИ уточняет: проект или закупка) → loading */
   const [phase, setPhase] = useState('input')
   const [mode, setMode] = useState(null)

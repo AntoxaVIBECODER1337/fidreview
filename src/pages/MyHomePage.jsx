@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronRight, Hammer, HardHat, House, Plus } from 'lucide-react'
+import { ChevronRight, Hammer, HardHat, House, LayoutPanelLeft, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import AIAssistant from '../components/AIAssistant.jsx'
 import AIResultSheet from '../components/AIResultSheet.jsx'
+import FloorPlan from '../components/FloorPlan.jsx'
 import NewProjectSheet from '../components/NewProjectSheet.jsx'
 import { Card, Tap, staggerChild, staggerParent } from '../components/ui.jsx'
 import { analyzeTask } from '../lib/ai'
+import { roomArea } from '../data/rooms'
 import { cn } from '../lib/cn'
 import { rub } from '../lib/format'
 import { PROJECT_STAGES, useStore } from '../store/StoreContext'
@@ -18,7 +20,7 @@ import { PROJECT_STAGES, useStore } from '../store/StoreContext'
  */
 export default function MyHomePage() {
   const navigate = useNavigate()
-  const { projects, createProject, approveProject, addToCart, showToast } = useStore()
+  const { projects, createProject, approveProject, addToCart, showToast, layout } = useStore()
   /* ИИ-подборка: { task, mode, result } */
   const [ai, setAi] = useState(null)
   const [manual, setManual] = useState(false)
@@ -61,6 +63,11 @@ export default function MyHomePage() {
       <AnimatePresence>
         {manual && <NewProjectSheet onClose={() => setManual(false)} onCreated={scrollToList} />}
       </AnimatePresence>
+
+      {/* Моя планировка */}
+      <section className="px-4 pt-1 pb-5">
+        <LayoutButton layout={layout} onOpen={() => navigate('/my-home/layout')} />
+      </section>
 
       {/* Проекты */}
       <section id="mh-list" className="scroll-mt-2 px-4 pt-1 pb-6">
@@ -204,3 +211,39 @@ function ProjectCard({ project, onOpen, onApprove, onPickCrew }) {
 }
 
 const round2 = (n) => Math.round(n * 100) / 100
+
+/** Кнопка «Моя планировка» с мини-схемой */
+function LayoutButton({ layout, onOpen }) {
+  const rooms = layout?.rooms ?? []
+  const firstFloor = layout?.floors[0]?.id
+  const area = Math.round(rooms.reduce((s, r) => s + roomArea(r), 0) * 10) / 10
+  const n = rooms.length
+  const word = n % 10 === 1 && n % 100 !== 11 ? 'комната' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'комнаты' : 'комнат'
+  return (
+    <motion.button
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 550, damping: 28 }}
+      onClick={onOpen}
+      className="flex w-full items-center gap-3 rounded-2xl border border-line/70 bg-white p-3 text-left shadow-soft"
+    >
+      {n ? (
+        <span className="w-[88px] shrink-0">
+          <FloorPlan rooms={rooms.filter((r) => r.floorId === firstFloor)} mini height={66} />
+        </span>
+      ) : (
+        <span className="flex h-[66px] w-[88px] shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-brand-600/30 bg-brand-50/50">
+          <LayoutPanelLeft size={26} className="text-brand-600" />
+        </span>
+      )}
+      <span className="min-w-0 flex-1">
+        <span className="block text-[16px] font-extrabold text-navy">Моя планировка</span>
+        <span className="mt-0.5 block text-[12.5px] leading-snug text-muted">
+          {n
+            ? `${layout.name} · ${n} ${word} · ${area} м²${layout.floors.length > 1 ? ` · ${layout.floors.length} этажа` : ''}`
+            : 'Комнаты, размеры стен и товары, которые использовали в ремонте'}
+        </span>
+      </span>
+      <ChevronRight size={18} className="shrink-0 text-brand-600" />
+    </motion.button>
+  )
+}

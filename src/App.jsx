@@ -22,6 +22,7 @@ import ProductPage from './pages/ProductPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import ProjectPage from './pages/ProjectPage.jsx'
 import CrewsPage from './pages/CrewsPage.jsx'
+import LayoutPage from './pages/LayoutPage.jsx'
 import DecorPackPage from './pages/DecorPackPage.jsx'
 import DecorPacksPage from './pages/DecorPacksPage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
@@ -87,6 +88,7 @@ export default function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/my-home" element={<MyHomePage />} />
                 <Route path="/my-home/project/:id" element={<ProjectPage />} />
+                <Route path="/my-home/layout" element={<LayoutPage />} />
                 <Route path="/crews" element={<CrewsPage />} />
                 <Route path="/compare" element={<ComparePage />} />
                 <Route path="/decor" element={<DecorPacksPage />} />
